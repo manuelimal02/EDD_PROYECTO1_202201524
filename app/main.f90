@@ -85,7 +85,7 @@ program PROYECTO_FASE_1
             call cola_cliente_recepcion%pop_cliente(info_cliente)
             call lista_ventanilla_repecion%asignar_ventanilla(info_cliente(1), info_cliente(2), info_cliente(3), info_cliente(4))
         else
-            print *, "TODAS LAS VENTANILLAS ESTÁN OCUPADAS"
+            print *, "TODAS LAS VENTANILLAS ESTAN OCUPADAS"
         end if
 
         print *, "---------------------------------------"

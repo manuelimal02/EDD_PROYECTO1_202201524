@@ -212,10 +212,10 @@ module modulo_lista_ventanilla
         end do
     end subroutine asignar_ventanilla
 
-    logical function ventanilla_disponible(self)
+    logical function ventanilla_disponible(self) result (hay_ventanilla_disponible)
         class(lista_ventanilla), intent(inout) :: self
         type(nodo_lista_cliente), pointer :: actual
-        logical :: hay_ventanilla_disponible = .false.
+        hay_ventanilla_disponible = .false.
         actual => self%cabeza
         do while (associated(actual))
             if (.not. actual%ocupada) then
@@ -224,6 +224,6 @@ module modulo_lista_ventanilla
             end if
             actual => actual%siguiente
         end do
-        ventanilla_disponible = hay_ventanilla_disponible
     end function ventanilla_disponible
 end module modulo_lista_ventanilla
+
