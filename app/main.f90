@@ -1,30 +1,25 @@
 program PROYECTO_FASE_1
     use :: json_module
-    use cola_module
+    use modulo_cola_cliente
+    use modulo_lista_ventanilla
     implicit none
-    !CLIENTE
-    type :: Cliente
-        character(len=:), allocatable :: id
-        character(len=:), allocatable :: nombre
-        character(len=:), allocatable :: img_p
-        character(len=:), allocatable :: img_g
-    end type Cliente
-    type(Cliente) :: mi_cliente
     !LECTURA JSON
     type(json_file) :: json
     type(json_core) :: jsonc
-    type(json_value), pointer :: listPointer, animalPointer, attributePointer
-    logical :: found
-    integer :: size, i
-    real(8) :: random_value
-    integer :: it, n, random_integer
-    character(:), allocatable :: id, nombre, img_peque, img_grande
-
-    !VARIABLES PARA EL USO DEL PROGRAMA
-    integer :: opcion_menu, opcion_menu_parametros
-
+    type(json_value), pointer :: lista_puntero, puntero, atributo_puntero
+    logical :: encontrado
+    logical :: hay_ventanilla_disponible
+    !VARIABLES LECTURA DESCOLAR
+    integer, parameter :: numero_info = 4
+    character(len=20) :: info_cliente(numero_info)
+    !VARIABLES - USO DEL PROGRAMA
+    character(:), allocatable :: id, nombre, img_pequena, img_grande, nulo
+    integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contado_4
+    integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla
     !COLA DE CLIENTES
-    type(cola) :: cola_recepcion
+    type(cola_cliente) :: cola_cliente_recepcion
+    !LISTA DE VENTANILLAS 
+    type(lista_ventanilla) :: lista_ventanilla_repecion
 
     do
         call Mostrar_Menu()
@@ -52,7 +47,7 @@ program PROYECTO_FASE_1
     contains
     subroutine Mostrar_Menu()
         print *, "---------------------------------------"
-        print *, "Menu Principal"
+        print *, "Menu Principal - Pixel Print Studio"
         print *, "1. Parametros Iniciales"
         print *, "2. Ejecutar Paso"
         print *, "3. Estado En Memoria De Las Estructuras"
@@ -75,13 +70,28 @@ program PROYECTO_FASE_1
                 call Carga_Masiva_Clientes()
             case(2)
                 call Cantidad_Ventanillas()
-
         end select
     end subroutine
 
     subroutine OPCION_2()
         print *, "---------------------------------------"
-        print *, "-- Ejecutar Paso --"
+        print *, "EJECUTAR PASO"   
+        print *, "---------------------------------------"
+
+        hay_ventanilla_disponible = lista_ventanilla_repecion%ventanilla_disponible()
+
+        if (hay_ventanilla_disponible) then
+            print *, "EXISTEN VENTANILLAS DISPONIBLES."
+            call cola_cliente_recepcion%pop_cliente(info_cliente)
+            call lista_ventanilla_repecion%asignar_ventanilla(info_cliente(1), info_cliente(2), info_cliente(3), info_cliente(4))
+        else
+            print *, "TODAS LAS VENTANILLAS ESTÁN OCUPADAS"
+        end if
+
+        print *, "---------------------------------------"
+        call cola_cliente_recepcion%print_cliente()
+        print *, "--------------------!!!!!-------------------"
+        call lista_ventanilla_repecion%print_ventanilla()
     end subroutine
 
     subroutine OPCION_3()
@@ -105,58 +115,50 @@ program PROYECTO_FASE_1
 
     subroutine Carga_Masiva_Clientes()
         print *, "---------------------------------------"
-        print *, "-- Carga Masiva Cliente --"
+        print *, "Carga Masiva Cliente"
+        print *, "---------------------------------------"
         call json%initialize()
         call json%load(filename='config.json')
-        call json%info('',n_children=size)
+        call json%info('',n_children=cantidad_cliente_json)
         call json%get_core(jsonc)
-        call json%get('', listPointer, found)
+        call json%get('', lista_puntero, encontrado)
     
-        do i = 1, size
-            call jsonc%get_child(listPointer, i, animalPointer, found)
+        do contado_2 = 1, cantidad_cliente_json
+            call jsonc%get_child(lista_puntero, contado_2, puntero, encontrado)
 
-            call jsonc%get_child(animalPointer, 'id', attributePointer, found)
-            call jsonc%get(attributePointer, id)
+            call jsonc%get_child(puntero, 'id', atributo_puntero, encontrado)
+            call jsonc%get(atributo_puntero, id)
     
-            call jsonc%get_child(animalPointer, 'nombre', attributePointer, found)
-            call jsonc%get(attributePointer, nombre)
+            call jsonc%get_child(puntero, 'nombre', atributo_puntero, encontrado)
+            call jsonc%get(atributo_puntero, nombre)
     
-            call jsonc%get_child(animalPointer, 'img_p', attributePointer, found) 
-            call jsonc%get(attributePointer, img_peque)
+            call jsonc%get_child(puntero, 'img_p', atributo_puntero, encontrado) 
+            call jsonc%get(atributo_puntero, img_pequena)
 
-            call jsonc%get_child(animalPointer, 'img_g', attributePointer, found) 
-            call jsonc%get(attributePointer, img_grande)
+            call jsonc%get_child(puntero, 'img_g', atributo_puntero, encontrado) 
+            call jsonc%get(atributo_puntero, img_grande)
 
-            mi_cliente%id = id
-            mi_cliente%nombre = nombre
-            mi_cliente%img_p = img_peque
-            mi_cliente%img_g = img_grande
-
-            print *, "----"
-            print *, 'ID: ', mi_cliente%id
-            print *, 'Nombre: ', mi_cliente%nombre
-            print *, 'img_p: ', mi_cliente%img_p
-            print *, 'img_g: ', mi_cliente%img_g
-
-            call cola_recepcion%append(1)
+            call cola_cliente_recepcion%push_cliente(trim(id), trim(nombre), trim(img_grande), trim(img_pequena))
 
         end do
         call json%destroy()
-        call cola_recepcion%print()
+        print *, "Clientes ingresados correctamente a la cola se recepcion."
+        call cola_cliente_recepcion%print_cliente()
     end subroutine
 
     subroutine Cantidad_Ventanillas()
         print *, "---------------------------------------"
-        print *, "-- Cantidad Ventanillas --"
-        call random_seed()
-
-
-    ! Generar y mostrar los números aleatorios enteros
-    do i = 1, 1
-        call random_number(random_value)
-        random_integer = mod(int(random_value * 5.0 + 0.5), 5)  ! Escalar y redondear
-        print *, 'Numero aleatorio ', i, ': ', random_integer
-    end do
+        print *, "Cantidad De Ventanillas"
+        print *, "---------------------------------------"
+        print *, "Seleccione El Numero De Ventanilla:"
+        read(*,*) cantidad_ventanilla
+        print *, "---------------------------------------"
+        contador_ventanilla = 1
+        do contado_3 = 1, cantidad_ventanilla
+            call  lista_ventanilla_repecion%agregar_ventanilla(contador_ventanilla, "NULL", "NULL", "NULL", "NULL")
+            contador_ventanilla=contador_ventanilla+1
+        end do
+        call  lista_ventanilla_repecion%print_ventanilla()
     end subroutine
 
 end program PROYECTO_FASE_1
