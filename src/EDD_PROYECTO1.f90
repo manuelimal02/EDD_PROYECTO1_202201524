@@ -121,7 +121,6 @@ module modulo_pila_imagenes
         type(nodo_pila_imagen), pointer :: actual
         actual => self%cabeza
         do while (associated(actual))
-            print *, "------------------------"
             print *, "Tipo Imagen: ", actual%tipo_imagen
             actual => actual%siguiente
         end do
@@ -138,10 +137,11 @@ module modulo_lista_ventanilla
         procedure :: print_ventanilla
         procedure :: asignar_ventanilla
         procedure :: ventanilla_disponible
+        procedure :: insertar_imprimir_imagenes
     end type lista_ventanilla
 
     type :: nodo_lista_cliente
-        integer :: numero_ventanilla
+        integer :: numero_ventanilla, pequena, grande
         character(len=:), allocatable :: id_cliente
         character(len=:), allocatable :: nombre
         character(len=:), allocatable :: img_grande
@@ -156,7 +156,6 @@ module modulo_lista_ventanilla
         class(lista_ventanilla), intent(inout) :: self
         integer, intent(in) :: numero_ventanilla
         character(len=*), intent(in) :: id_cliente, nombre, img_grande, img_pequena
-        
         type(nodo_lista_cliente), pointer :: actual, nuevo_nodo
         allocate(nuevo_nodo)
         nuevo_nodo%numero_ventanilla = numero_ventanilla
@@ -164,6 +163,8 @@ module modulo_lista_ventanilla
         nuevo_nodo%nombre = nombre
         nuevo_nodo%img_pequena = img_pequena
         nuevo_nodo%img_grande = img_grande
+        nuevo_nodo%pequena = 0
+        nuevo_nodo%grande = 0
         nuevo_nodo%ocupada = .false.
         nuevo_nodo%siguiente => null()
     
@@ -189,6 +190,8 @@ module modulo_lista_ventanilla
             print *, "Nombre: ", actual%nombre
             print *, "Img Pequena: ", actual%img_pequena
             print *, "Img Grande: ", actual%img_grande
+            print *, "Pequena: ", actual%pequena
+            print *, "Grande: ", actual%grande
             print *, "Ocupada: ", actual%ocupada
             actual => actual%siguiente
         end do
@@ -196,8 +199,11 @@ module modulo_lista_ventanilla
 
     subroutine asignar_ventanilla(self, id_cliente, nombre, img_pequena, img_grande)
         class(lista_ventanilla), intent(inout) :: self
+        integer :: pequena, grande
         character(len=*), intent(in) :: id_cliente, nombre, img_grande, img_pequena
         type(nodo_lista_cliente), pointer :: actual
+        READ(img_pequena, *) pequena
+        READ(img_grande, *) grande
         actual => self%cabeza
         do while (associated(actual))
             if (.not. actual%ocupada) then
@@ -205,6 +211,8 @@ module modulo_lista_ventanilla
                 actual%nombre = nombre
                 actual%img_pequena = img_pequena
                 actual%img_grande = img_grande
+                actual%pequena = pequena
+                actual%grande = grande
                 actual%ocupada = .true.
                 exit
             end if
@@ -225,5 +233,33 @@ module modulo_lista_ventanilla
             actual => actual%siguiente
         end do
     end function ventanilla_disponible
+
+    subroutine insertar_imprimir_imagenes(self)
+        class(lista_ventanilla), intent(inout) :: self
+        type(nodo_lista_cliente), pointer :: actual
+        integer :: num_img_grandes, num_img_pequenas
+    
+        actual => self%cabeza
+        do while (associated(actual))
+            num_img_pequenas = actual%pequena
+            num_img_grandes = actual%grande
+
+            if (num_img_pequenas>0) then
+                call actual%pila%push_imagen("Pequena")
+                num_img_pequenas=num_img_pequenas-1
+                actual%pequena = num_img_pequenas
+            else if (num_img_grandes>0) then
+                call actual%pila%push_imagen("Grande")
+                num_img_grandes=num_img_grandes-1
+                actual%grande = num_img_grandes
+            end if
+            print *, "------------------------"
+            print *, actual%nombre
+            call actual%pila%print_imagen()
+
+            actual => actual%siguiente
+        end do
+    end subroutine insertar_imprimir_imagenes
+    
 end module modulo_lista_ventanilla
 

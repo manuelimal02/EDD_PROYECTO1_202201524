@@ -14,8 +14,9 @@ program PROYECTO_FASE_1
     character(len=20) :: info_cliente(numero_info)
     !VARIABLES - USO DEL PROGRAMA
     character(:), allocatable :: id, nombre, img_pequena, img_grande, nulo
+    character(:), allocatable :: ruta
     integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contado_4
-    integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla
+    integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla, pequena, grande
     !COLA DE CLIENTES
     type(cola_cliente) :: cola_cliente_recepcion
     !LISTA DE VENTANILLAS 
@@ -77,9 +78,8 @@ program PROYECTO_FASE_1
         print *, "---------------------------------------"
         print *, "EJECUTAR PASO"   
         print *, "---------------------------------------"
-
+        call lista_ventanilla_repecion%insertar_imprimir_imagenes()
         hay_ventanilla_disponible = lista_ventanilla_repecion%ventanilla_disponible()
-
         if (hay_ventanilla_disponible) then
             print *, "EXISTEN VENTANILLAS DISPONIBLES."
             call cola_cliente_recepcion%pop_cliente(info_cliente)
@@ -122,27 +122,20 @@ program PROYECTO_FASE_1
         call json%info('',n_children=cantidad_cliente_json)
         call json%get_core(jsonc)
         call json%get('', lista_puntero, encontrado)
-    
         do contado_2 = 1, cantidad_cliente_json
             call jsonc%get_child(lista_puntero, contado_2, puntero, encontrado)
-
             call jsonc%get_child(puntero, 'id', atributo_puntero, encontrado)
             call jsonc%get(atributo_puntero, id)
-    
             call jsonc%get_child(puntero, 'nombre', atributo_puntero, encontrado)
             call jsonc%get(atributo_puntero, nombre)
-    
             call jsonc%get_child(puntero, 'img_p', atributo_puntero, encontrado) 
             call jsonc%get(atributo_puntero, img_pequena)
-
             call jsonc%get_child(puntero, 'img_g', atributo_puntero, encontrado) 
             call jsonc%get(atributo_puntero, img_grande)
-
             call cola_cliente_recepcion%push_cliente(trim(id), trim(nombre), trim(img_grande), trim(img_pequena))
-
         end do
         call json%destroy()
-        print *, "Clientes ingresados correctamente a la cola se recepcion."
+        print *, "Clientes ingresados a la cola se recepcion."
         call cola_cliente_recepcion%print_cliente()
     end subroutine
 
