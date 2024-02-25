@@ -13,7 +13,7 @@ program PROYECTO_FASE_1
     integer, parameter :: numero_info = 4
     character(len=20) :: info_cliente(numero_info)
     !VARIABLES - USO DEL PROGRAMA
-    character(:), allocatable :: id, nombre, img_pequena, img_grande, nulo
+    character(:), allocatable :: id, nombre, img_pequena, img_grande
     character(:), allocatable :: ruta
     integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contado_4
     integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla, pequena, grande
@@ -78,20 +78,24 @@ program PROYECTO_FASE_1
         print *, "---------------------------------------"
         print *, "EJECUTAR PASO"   
         print *, "---------------------------------------"
-        call lista_ventanilla_repecion%insertar_imprimir_imagenes()
+        call lista_ventanilla_repecion%atender_cliente_ventanilla()
         hay_ventanilla_disponible = lista_ventanilla_repecion%ventanilla_disponible()
         if (hay_ventanilla_disponible) then
-            print *, "EXISTEN VENTANILLAS DISPONIBLES."
             call cola_cliente_recepcion%pop_cliente(info_cliente)
+            print*, "id ", info_cliente(1)
+            print*, "nm ",info_cliente(2)
+            print*, "PP ",info_cliente(3)
+            print*, "GG ",info_cliente(4)
             call lista_ventanilla_repecion%asignar_ventanilla(info_cliente(1), info_cliente(2), info_cliente(3), info_cliente(4))
-        else
-            print *, "TODAS LAS VENTANILLAS ESTAN OCUPADAS"
         end if
-
         print *, "****************************************"
         call cola_cliente_recepcion%print_cliente()
         print *, "****************************************"
         call lista_ventanilla_repecion%print_ventanilla()
+        print *, "****************************************"
+        call lista_ventanilla_repecion%cola_imagen_pequena%print_img_pequena()
+        print *, "****************************************"
+        call lista_ventanilla_repecion%cola_imagen_grande%print_img_grande()
     end subroutine
 
     subroutine OPCION_3()
@@ -148,7 +152,7 @@ program PROYECTO_FASE_1
         print *, "---------------------------------------"
         contador_ventanilla = 1
         do contado_3 = 1, cantidad_ventanilla
-            call  lista_ventanilla_repecion%agregar_ventanilla(contador_ventanilla, "NULL", "NULL", "NULL", "NULL")
+            call  lista_ventanilla_repecion%agregar_ventanilla(contador_ventanilla, "NULL", "NULL", "0", "0")
             contador_ventanilla=contador_ventanilla+1
         end do
         call  lista_ventanilla_repecion%print_ventanilla()
