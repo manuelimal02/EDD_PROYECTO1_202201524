@@ -88,9 +88,9 @@ program PROYECTO_FASE_1
             print *, "TODAS LAS VENTANILLAS ESTAN OCUPADAS"
         end if
 
-        print *, "---------------------------------------"
+        print *, "****************************************"
         call cola_cliente_recepcion%print_cliente()
-        print *, "--------------------!!!!!-------------------"
+        print *, "****************************************"
         call lista_ventanilla_repecion%print_ventanilla()
     end subroutine
 
@@ -135,7 +135,7 @@ program PROYECTO_FASE_1
             call cola_cliente_recepcion%push_cliente(trim(id), trim(nombre), trim(img_grande), trim(img_pequena))
         end do
         call json%destroy()
-        print *, "Clientes ingresados a la cola se recepcion."
+        print *, "Clientes En Cola."
         call cola_cliente_recepcion%print_cliente()
     end subroutine
 

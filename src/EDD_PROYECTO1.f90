@@ -1,3 +1,4 @@
+!COLA DE CLIENTE EN RECEPCION--------------------------------------------------
 module modulo_cola_cliente
     implicit none
     type :: cola_cliente
@@ -6,7 +7,6 @@ module modulo_cola_cliente
         procedure :: push_cliente
         procedure :: pop_cliente
         procedure :: print_cliente
-        !procedure :: ventanilla_disponible
     end type cola_cliente
 
     type :: nodo_cola_cliente
@@ -74,6 +74,128 @@ module modulo_cola_cliente
     end subroutine print_cliente
 end module modulo_cola_cliente
 
+!COLA DE IMAGENES PEQUEÑAS--------------------------------------------------
+module modulo_cola_impresora_pequena
+    implicit none
+    type :: cola_impresora_pequena
+    type(nodo_impresora_pequena), pointer :: cabeza => null()
+    contains
+        procedure :: push_img_pequena
+        procedure :: pop_img_pequena
+        procedure :: print_img_pequena
+    end type cola_impresora_pequena
+    type :: nodo_impresora_pequena
+        character(len=:), allocatable :: tipo_imagen
+        type(nodo_impresora_pequena), pointer :: siguiente
+    end type nodo_impresora_pequena
+
+    contains
+    subroutine push_img_pequena(self, tipo_imagen)
+        class(cola_impresora_pequena), intent(inout) :: self
+        character(len=*), intent(in) :: tipo_imagen
+        
+        type(nodo_impresora_pequena), pointer :: actual, nuevo_nodo
+        allocate(nuevo_nodo)
+        nuevo_nodo%tipo_imagen = tipo_imagen
+        nuevo_nodo%siguiente => null()
+    
+        if (.not. associated(self%cabeza)) then
+            self%cabeza => nuevo_nodo
+        else
+            actual => self%cabeza
+            do while (associated(actual%siguiente))
+                actual => actual%siguiente
+            end do
+            actual%siguiente => nuevo_nodo
+        end if
+    end subroutine push_img_pequena
+
+    subroutine pop_img_pequena(self, tipo_imagen)
+        class(cola_impresora_pequena), intent(inout) :: self
+        character(len=:), allocatable :: tipo_imagen
+        type(nodo_impresora_pequena), pointer :: temp
+        if (.not. associated(self%cabeza)) then
+            print *, "LA COLA ESTA VACIA"
+        else
+            temp => self%cabeza
+            tipo_imagen=self%cabeza%tipo_imagen
+            self%cabeza => self%cabeza%siguiente
+            deallocate(temp)
+        end if
+    end subroutine pop_img_pequena
+
+    subroutine print_img_pequena(self)
+        class(cola_impresora_pequena), intent(in) :: self
+        type(nodo_impresora_pequena), pointer :: actual
+        actual => self%cabeza
+        do while (associated(actual))
+            print *, "Imagen: ",actual%tipo_imagen
+            actual => actual%siguiente
+        end do
+    end subroutine print_img_pequena
+end module modulo_cola_impresora_pequena
+
+!COLA DE IMAGENES GRANDES--------------------------------------------------
+module modulo_cola_impresora_grande
+    implicit none
+    type :: cola_impresora_grande
+    type(nodo_impresora_grande), pointer :: cabeza => null()
+    contains
+        procedure :: push_img_grande
+        procedure :: pop_img_grande
+        procedure :: print_img_grande
+    end type cola_impresora_grande
+    type :: nodo_impresora_grande
+        character(len=:), allocatable :: tipo_imagen
+        type(nodo_impresora_grande), pointer :: siguiente
+    end type nodo_impresora_grande
+
+    contains
+    subroutine push_img_grande(self, tipo_imagen)
+        class(cola_impresora_grande), intent(inout) :: self
+        character(len=*), intent(in) :: tipo_imagen
+        type(nodo_impresora_grande), pointer :: actual, nuevo_nodo
+        allocate(nuevo_nodo)
+        nuevo_nodo%tipo_imagen = tipo_imagen
+        nuevo_nodo%siguiente => null()
+    
+        if (.not. associated(self%cabeza)) then
+            self%cabeza => nuevo_nodo
+        else
+            actual => self%cabeza
+            do while (associated(actual%siguiente))
+                actual => actual%siguiente
+            end do
+            actual%siguiente => nuevo_nodo
+        end if
+    end subroutine push_img_grande
+
+    subroutine pop_img_grande(self, tipo_imagen)
+        class(cola_impresora_grande), intent(inout) :: self
+        character(len=:), allocatable :: tipo_imagen
+        type(nodo_impresora_grande), pointer :: temp
+        if (.not. associated(self%cabeza)) then
+            print *, "LA COLA ESTA VACIA"
+        else
+            temp => self%cabeza
+            tipo_imagen=self%cabeza%tipo_imagen
+            self%cabeza => self%cabeza%siguiente
+            deallocate(temp)
+        end if
+    end subroutine pop_img_grande
+
+    subroutine print_img_grande(self)
+        class(cola_impresora_grande), intent(in) :: self
+        type(nodo_impresora_grande), pointer :: actual
+        actual => self%cabeza
+        do while (associated(actual))
+            print *, "Imagen: ",actual%tipo_imagen
+            actual => actual%siguiente
+        end do
+    end subroutine print_img_grande
+end module modulo_cola_impresora_grande
+
+!PILA DE IMAGENES------------------------------------------------------
 module modulo_pila_imagenes
     implicit none
     type :: pila_imagenes
@@ -82,6 +204,7 @@ module modulo_pila_imagenes
         procedure :: push_imagen
         procedure :: pop_imagen
         procedure :: print_imagen
+        procedure :: clean_imagen
     end type pila_imagenes
 
     type :: nodo_pila_imagen
@@ -125,10 +248,25 @@ module modulo_pila_imagenes
             actual => actual%siguiente
         end do
     end subroutine print_imagen
+
+    subroutine clean_imagen(self)
+        class(pila_imagenes), intent(inout) :: self
+        type(nodo_pila_imagen), pointer :: temp
+    
+        do while (associated(self%cabeza))
+            temp => self%cabeza
+            self%cabeza => self%cabeza%siguiente
+            deallocate(temp)
+        end do
+    end subroutine clean_imagen
+    
 end module modulo_pila_imagenes
 
+!LISTA VENTANILA-----------------------------------------------------------------------------
 module modulo_lista_ventanilla
     use modulo_pila_imagenes
+    use modulo_cola_impresora_pequena
+    use modulo_cola_impresora_grande
     implicit none
     type :: lista_ventanilla
         type(nodo_lista_cliente), pointer :: cabeza => null()
@@ -167,7 +305,6 @@ module modulo_lista_ventanilla
         nuevo_nodo%grande = 0
         nuevo_nodo%ocupada = .false.
         nuevo_nodo%siguiente => null()
-    
         if (.not. associated(self%cabeza)) then
             self%cabeza => nuevo_nodo
         else
@@ -238,12 +375,10 @@ module modulo_lista_ventanilla
         class(lista_ventanilla), intent(inout) :: self
         type(nodo_lista_cliente), pointer :: actual
         integer :: num_img_grandes, num_img_pequenas
-    
         actual => self%cabeza
         do while (associated(actual))
             num_img_pequenas = actual%pequena
             num_img_grandes = actual%grande
-
             if (num_img_pequenas>0) then
                 call actual%pila%push_imagen("Pequena")
                 num_img_pequenas=num_img_pequenas-1
@@ -253,13 +388,21 @@ module modulo_lista_ventanilla
                 num_img_grandes=num_img_grandes-1
                 actual%grande = num_img_grandes
             end if
-            print *, "------------------------"
+            print *, "-------"
             print *, actual%nombre
             call actual%pila%print_imagen()
-
+            if (actual%grande==0 .and. actual%pequena==0) then
+                actual%id_cliente = "NULL"
+                actual%nombre = "NULL"
+                actual%img_pequena = "NULL"
+                actual%img_grande = "NULL"
+                actual%pequena = 0
+                actual%grande = 0
+                actual%ocupada = .false.
+                call actual%pila%clean_imagen()
+            end if 
             actual => actual%siguiente
         end do
     end subroutine insertar_imprimir_imagenes
     
 end module modulo_lista_ventanilla
-
