@@ -82,10 +82,6 @@ program PROYECTO_FASE_1
         hay_ventanilla_disponible = lista_ventanilla_repecion%ventanilla_disponible()
         if (hay_ventanilla_disponible) then
             call cola_cliente_recepcion%pop_cliente(info_cliente)
-            print*, "id ", info_cliente(1)
-            print*, "nm ",info_cliente(2)
-            print*, "PP ",info_cliente(3)
-            print*, "GG ",info_cliente(4)
             call lista_ventanilla_repecion%asignar_ventanilla(info_cliente(1), info_cliente(2), info_cliente(3), info_cliente(4))
         end if
         print *, "****************************************"
@@ -96,6 +92,8 @@ program PROYECTO_FASE_1
         call lista_ventanilla_repecion%cola_imagen_pequena%print_img_pequena()
         print *, "****************************************"
         call lista_ventanilla_repecion%cola_imagen_grande%print_img_grande()
+        print *, "****************************************"
+        call lista_ventanilla_repecion%lista_clientes_esperando%print_lista()
     end subroutine
 
     subroutine OPCION_3()

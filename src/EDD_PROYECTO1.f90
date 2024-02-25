@@ -263,16 +263,107 @@ module modulo_cola_impresora_grande
     
 end module modulo_cola_impresora_grande
 
+!LISTA CLIENTES ESPERA-----------------------------------------------------------------------------
+module modulo_lista_cliente_espera
+    implicit none
+    type :: nodo_cliente_espera
+    integer :: numero_ventanilla, cantidad_paso
+    character(len=:), allocatable :: id_cliente
+    character(len=:), allocatable :: nombre
+    character(len=:), allocatable :: img_grande
+    character(len=:), allocatable :: img_pequena
+        type(nodo_cliente_espera), pointer :: anterior, siguiente
+    end type nodo_cliente_espera
+
+    type :: lista_cliente_espera
+        type(nodo_cliente_espera), pointer :: cabeza => null()
+    contains
+        procedure :: append_cliente
+        procedure :: delete_cliente
+        procedure :: print_lista
+    end type lista_cliente_espera
+
+    contains
+    subroutine append_cliente(self, id_cliente, nombre, img_pequena, img_grande, numero_ventanilla, cantidad_paso)
+        class(lista_cliente_espera), intent(inout) :: self
+        character(len=*), intent(in) :: id_cliente, nombre, img_pequena, img_grande
+        integer, intent(in) :: numero_ventanilla, cantidad_paso
+        type(nodo_cliente_espera), pointer :: nuevo_nodo
+        allocate(nuevo_nodo)
+        nuevo_nodo%id_cliente = id_cliente
+        nuevo_nodo%nombre = nombre
+        nuevo_nodo%img_pequena = img_pequena
+        nuevo_nodo%img_grande = img_grande
+        nuevo_nodo%numero_ventanilla = numero_ventanilla
+        nuevo_nodo%cantidad_paso = cantidad_paso
+        if (.not. associated(self%cabeza)) then
+            self%cabeza => nuevo_nodo
+            nuevo_nodo%anterior => nuevo_nodo
+            nuevo_nodo%siguiente => nuevo_nodo
+        else
+            nuevo_nodo%anterior => self%cabeza%anterior
+            nuevo_nodo%siguiente => self%cabeza
+            self%cabeza%anterior%siguiente => nuevo_nodo
+            self%cabeza%anterior => nuevo_nodo
+        end if
+    end subroutine append_cliente
+
+    subroutine delete_cliente(self, id_cliente)
+        class(lista_cliente_espera), intent(inout) :: self
+        character(len=*), intent(in) :: id_cliente
+        type(nodo_cliente_espera), pointer :: actual
+        actual => self%cabeza
+        do while (associated(actual) .and. actual%id_cliente /= id_cliente)
+            actual => actual%siguiente
+        end do
+        if (associated(actual)) then
+            actual%anterior%siguiente => actual%siguiente
+            actual%siguiente%anterior => actual%anterior
+            if (associated(self%cabeza, actual)) then
+                if (associated(actual, actual%siguiente)) then
+                    self%cabeza => null()
+                else
+                    self%cabeza => actual%siguiente
+                end if
+            end if
+            deallocate(actual)
+        end if
+    end subroutine delete_cliente
+
+    subroutine print_lista(self)
+        class(lista_cliente_espera), intent(in) :: self
+        type(nodo_cliente_espera), pointer :: actual
+        if (.not. associated(self%cabeza)) then
+            print *, "LISTA CLIENTE VACIA."
+        else
+            actual => self%cabeza
+            do
+                print *, "ID Cliente: ", actual%id_cliente
+                print *, "Nombre: ", actual%nombre
+                print *, "Imagen Pequena: ", actual%img_pequena
+                print *, "Imagen Grande: ", actual%img_grande
+                print *, "Ventanilla: ", actual%numero_ventanilla
+                print *, "Cantidad Paso: ", actual%cantidad_paso
+                print *, "------------------------"
+                actual => actual%siguiente
+                if (associated(actual, self%cabeza)) exit
+            end do
+        end if
+    end subroutine print_lista
+end module modulo_lista_cliente_espera
+
 !LISTA VENTANILA-----------------------------------------------------------------------------
 module modulo_lista_ventanilla
     use modulo_pila_imagenes
     use modulo_cola_impresora_pequena
     use modulo_cola_impresora_grande
+    use modulo_lista_cliente_espera
     implicit none
     type :: lista_ventanilla
         type(nodo_lista_cliente), pointer :: cabeza => null()
         type(cola_impresora_pequena) :: cola_imagen_pequena
         type(cola_impresora_grande) :: cola_imagen_grande
+        type(lista_cliente_espera) :: lista_clientes_esperando
     contains
         procedure :: agregar_ventanilla
         procedure :: print_ventanilla
@@ -291,6 +382,7 @@ module modulo_lista_ventanilla
         type(pila_imagenes) :: pila
         type(nodo_lista_cliente), pointer :: siguiente
     end type nodo_lista_cliente
+    integer :: cantidad_paso=1
 
     contains
     subroutine agregar_ventanilla(self, numero_ventanilla, id_cliente, nombre, img_pequena, img_grande)
@@ -394,10 +486,21 @@ module modulo_lista_ventanilla
                 call actual%pila%print_imagen()
                 call self%cola_imagen_pequena%push_img_pequena(actual%pila)
                 call self%cola_imagen_grande%push_img_grande(actual%pila)
+                if (actual%id_cliente=="NULL")then
+                    exit
+                else
+                    call self%lista_clientes_esperando%append_cliente(actual%id_cliente, &
+                                                actual%nombre, &
+                                                actual%img_pequena, &
+                                                actual%img_grande, &
+                                                actual%numero_ventanilla, &
+                                                cantidad_paso)
+
+                end if
                 actual%id_cliente = "NULL"
                 actual%nombre = "NULL"
-                actual%img_pequena = "NULL"
-                actual%img_grande = "NULL"
+                actual%img_pequena = "0"
+                actual%img_grande = "0"
                 actual%pequena = 0
                 actual%grande = 0
                 actual%ocupada = .false.
@@ -405,6 +508,7 @@ module modulo_lista_ventanilla
             end if 
             actual => actual%siguiente
         end do
+        cantidad_paso=cantidad_paso+1
     end subroutine atender_cliente_ventanilla
     
 end module modulo_lista_ventanilla
