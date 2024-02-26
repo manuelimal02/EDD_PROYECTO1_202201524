@@ -121,6 +121,7 @@ module modulo_pila_imagenes
         class(pila_imagenes), intent(in) :: self
         type(nodo_pila_imagen), pointer :: actual
         actual => self%cabeza
+        print *, "PILA DE IMAGENES"
         do while (associated(actual))
             print *, actual%tipo_imagen
             actual => actual%siguiente
@@ -182,15 +183,14 @@ module modulo_cola_impresora_pequena
         end do
     end subroutine push_img_pequena
 
-    subroutine pop_img_pequena(self, tipo_imagen)
+    subroutine pop_img_pequena(self)
         class(cola_impresora_pequena), intent(inout) :: self
-        character(len=:), allocatable :: tipo_imagen
         type(nodo_impresora_pequena), pointer :: temp
         if (.not. associated(self%cabeza)) then
-            print *, "LA COLA ESTA VACIA"
+            print *, "LA COLA IMAGEN PEQUENA ESTA VACIA"
+            return
         else
             temp => self%cabeza
-            tipo_imagen=self%cabeza%tipo_imagen
             self%cabeza => self%cabeza%siguiente
             deallocate(temp)
         end if
@@ -217,6 +217,7 @@ module modulo_cola_impresora_grande
     type(nodo_impresora_grande), pointer :: cabeza => null()
     contains
         procedure :: push_img_grande
+        procedure :: pop_img_grande
         procedure :: print_img_grande
     end type cola_impresora_grande
     type :: nodo_impresora_grande
@@ -250,6 +251,19 @@ module modulo_cola_impresora_grande
         end do
     end subroutine push_img_grande
 
+    subroutine pop_img_grande(self)
+        class(cola_impresora_grande), intent(inout) :: self
+        type(nodo_impresora_grande), pointer :: temp
+        if (.not. associated(self%cabeza)) then
+            print *, "LA COLA IMAGEN GRANDE ESTA VACIA"
+            return
+        else
+            temp => self%cabeza
+            self%cabeza => self%cabeza%siguiente
+            deallocate(temp)
+        end if
+    end subroutine pop_img_grande
+
     subroutine print_img_grande(self)
         class(cola_impresora_grande), intent(in) :: self
         type(nodo_impresora_grande), pointer :: actual
@@ -263,16 +277,56 @@ module modulo_cola_impresora_grande
     
 end module modulo_cola_impresora_grande
 
+!LISTA IMAGEN IMPRESA-----------------------------------------------------------------------------
+module modulo_lista_imagen_impresa
+    implicit none
+    type :: nodo_imagen_impresa
+        character(len=:), allocatable :: tipo_imagen
+        type(nodo_imagen_impresa), pointer :: siguiente
+    end type nodo_imagen_impresa
+    type :: lista_imagen_impresa
+        type(nodo_imagen_impresa), pointer :: cabeza => null()
+    contains
+        procedure :: insertar_imagen_impresa
+        procedure :: print_lista_imagen_impresa
+    end type lista_imagen_impresa
+    contains
+    subroutine insertar_imagen_impresa(self, tipo_imagen)
+        class(lista_imagen_impresa), intent(inout) :: self
+        character(len=*), intent(in) :: tipo_imagen
+        type(nodo_imagen_impresa), pointer :: nuevo_nodo
+        allocate(nuevo_nodo)
+        nuevo_nodo%tipo_imagen = tipo_imagen
+        nuevo_nodo%siguiente => self%cabeza
+        self%cabeza => nuevo_nodo
+    end subroutine insertar_imagen_impresa
+    subroutine print_lista_imagen_impresa(self)
+        class(lista_imagen_impresa), intent(in) :: self
+        type(nodo_imagen_impresa), pointer :: actual
+        actual => self%cabeza
+        if (.not. associated(actual)) then
+            print *, "LISTA IMAGENES IMPRESAS VACIA"
+            return
+        end if
+        do while (associated(actual))
+            print *, "Imagen: ", actual%tipo_imagen
+            actual => actual%siguiente
+        end do
+    end subroutine print_lista_imagen_impresa
+end module modulo_lista_imagen_impresa
+
 !LISTA CLIENTES ESPERA-----------------------------------------------------------------------------
 module modulo_lista_cliente_espera
+    use modulo_lista_imagen_impresa
     implicit none
     type :: nodo_cliente_espera
-    integer :: numero_ventanilla, cantidad_paso
+    integer :: numero_ventanilla, cantidad_paso, pequena, grande
     character(len=:), allocatable :: id_cliente
     character(len=:), allocatable :: nombre
     character(len=:), allocatable :: img_grande
     character(len=:), allocatable :: img_pequena
-        type(nodo_cliente_espera), pointer :: anterior, siguiente
+    type(lista_imagen_impresa) :: lista_imagen_cliente
+    type(nodo_cliente_espera), pointer :: anterior, siguiente
     end type nodo_cliente_espera
 
     type :: lista_cliente_espera
@@ -288,12 +342,17 @@ module modulo_lista_cliente_espera
         class(lista_cliente_espera), intent(inout) :: self
         character(len=*), intent(in) :: id_cliente, nombre, img_pequena, img_grande
         integer, intent(in) :: numero_ventanilla, cantidad_paso
+        integer :: pequena, grande
         type(nodo_cliente_espera), pointer :: nuevo_nodo
+        READ(img_pequena, *) pequena
+        READ(img_grande, *) grande
         allocate(nuevo_nodo)
         nuevo_nodo%id_cliente = id_cliente
         nuevo_nodo%nombre = nombre
         nuevo_nodo%img_pequena = img_pequena
         nuevo_nodo%img_grande = img_grande
+        nuevo_nodo%pequena = pequena
+        nuevo_nodo%grande = grande
         nuevo_nodo%numero_ventanilla = numero_ventanilla
         nuevo_nodo%cantidad_paso = cantidad_paso
         if (.not. associated(self%cabeza)) then
@@ -334,7 +393,7 @@ module modulo_lista_cliente_espera
         class(lista_cliente_espera), intent(in) :: self
         type(nodo_cliente_espera), pointer :: actual
         if (.not. associated(self%cabeza)) then
-            print *, "LISTA CLIENTE VACIA."
+            print *, "LISTA CLIENTE ESPERA VACIA."
         else
             actual => self%cabeza
             do
@@ -342,9 +401,12 @@ module modulo_lista_cliente_espera
                 print *, "Nombre: ", actual%nombre
                 print *, "Imagen Pequena: ", actual%img_pequena
                 print *, "Imagen Grande: ", actual%img_grande
+                print *, "Pequena: ", actual%pequena
+                print *, "Grande: ", actual%grande
                 print *, "Ventanilla: ", actual%numero_ventanilla
                 print *, "Cantidad Paso: ", actual%cantidad_paso
-                print *, "------------------------"
+                call actual%lista_imagen_cliente%print_lista_imagen_impresa()
+                print *, "----------"
                 actual => actual%siguiente
                 if (associated(actual, self%cabeza)) exit
             end do
@@ -352,24 +414,78 @@ module modulo_lista_cliente_espera
     end subroutine print_lista
 end module modulo_lista_cliente_espera
 
+!LISTA CLIENTES ATENDIDO-----------------------------------------------------------------------------
+module modulo_lista_cliente_atendido
+    implicit none
+    type :: nodo_cliente_atendido
+        character(len=:), allocatable :: id_cliente
+        character(len=:), allocatable :: nombre
+        character(len=:), allocatable :: img_pequena
+        character(len=:), allocatable :: img_grande
+        integer :: cantidad_pasos
+        type(nodo_cliente_atendido), pointer :: siguiente => null()
+    end type nodo_cliente_atendido
+
+    type :: lista_cliente_atendido
+        type(nodo_cliente_atendido), pointer :: cabeza => null()
+    contains
+        procedure :: insertar_cliente_atendido
+        procedure :: print_cliente_atendido
+    end type lista_cliente_atendido
+
+    contains
+    subroutine insertar_cliente_atendido(self, id_cliente, nombre, img_pequena, img_grande, cantidad_pasos)
+        class(lista_cliente_atendido), intent(inout) :: self
+        character(len=*), intent(in) :: id_cliente, nombre, img_pequena, img_grande
+        integer, intent(in) :: cantidad_pasos
+        type(nodo_cliente_atendido), pointer :: nuevo_nodo
+        allocate(nuevo_nodo)
+        nuevo_nodo%id_cliente = id_cliente
+        nuevo_nodo%nombre = nombre
+        nuevo_nodo%img_pequena = img_pequena
+        nuevo_nodo%img_grande = img_grande
+        nuevo_nodo%cantidad_pasos = cantidad_pasos
+        nuevo_nodo%siguiente => self%cabeza
+        self%cabeza => nuevo_nodo
+    end subroutine insertar_cliente_atendido
+
+    subroutine print_cliente_atendido(self)
+        class(lista_cliente_atendido), intent(in) :: self
+        type(nodo_cliente_atendido), pointer :: actual
+        actual => self%cabeza
+        do while (associated(actual))
+            print *, "ID Cliente: ", actual%id_cliente
+            print *, "Nombre: ", actual%nombre
+            print *, "Imagen Pequena: ", actual%img_pequena
+            print *, "Imagen Grande: ", actual%img_grande
+            print *, "Cantidad de Pasos: ", actual%cantidad_pasos
+            print *, "----------"
+            actual => actual%siguiente
+        end do
+    end subroutine print_cliente_atendido
+end module modulo_lista_cliente_atendido
+
 !LISTA VENTANILA-----------------------------------------------------------------------------
 module modulo_lista_ventanilla
     use modulo_pila_imagenes
     use modulo_cola_impresora_pequena
     use modulo_cola_impresora_grande
     use modulo_lista_cliente_espera
+    use modulo_lista_cliente_atendido
     implicit none
     type :: lista_ventanilla
         type(nodo_lista_cliente), pointer :: cabeza => null()
         type(cola_impresora_pequena) :: cola_imagen_pequena
         type(cola_impresora_grande) :: cola_imagen_grande
         type(lista_cliente_espera) :: lista_clientes_esperando
+        type(lista_cliente_atendido) :: lista_clientes_atendido
     contains
         procedure :: agregar_ventanilla
         procedure :: print_ventanilla
         procedure :: asignar_ventanilla
         procedure :: ventanilla_disponible
         procedure :: atender_cliente_ventanilla
+        procedure :: imprimir_imagenes_cliente
     end type lista_ventanilla
 
     type :: nodo_lista_cliente
@@ -483,19 +599,17 @@ module modulo_lista_ventanilla
                 num_img_grandes=num_img_grandes-1
                 actual%grande = num_img_grandes
             else if (actual%grande==0 .and. actual%pequena==0) then
-                call actual%pila%print_imagen()
                 call self%cola_imagen_pequena%push_img_pequena(actual%pila)
                 call self%cola_imagen_grande%push_img_grande(actual%pila)
                 if (actual%id_cliente=="NULL")then
                     exit
                 else
                     call self%lista_clientes_esperando%append_cliente(actual%id_cliente, &
-                                                actual%nombre, &
-                                                actual%img_pequena, &
-                                                actual%img_grande, &
-                                                actual%numero_ventanilla, &
-                                                cantidad_paso)
-
+                        actual%nombre, &
+                        actual%img_pequena, &
+                        actual%img_grande, &
+                        actual%numero_ventanilla, &
+                        cantidad_paso)
                 end if
                 actual%id_cliente = "NULL"
                 actual%nombre = "NULL"
@@ -510,5 +624,48 @@ module modulo_lista_ventanilla
         end do
         cantidad_paso=cantidad_paso+1
     end subroutine atender_cliente_ventanilla
+
+    subroutine imprimir_imagenes_cliente(self)
+        class(lista_ventanilla), intent(inout) :: self
+        type(nodo_cliente_espera), pointer :: actual, siguiente_nodo
+        integer :: num_img_grandes, num_img_pequenas
+        logical :: condicion_salida
+        actual => self%lista_clientes_esperando%cabeza
+        if (.not. associated(actual)) then
+            return
+        end if
+        do while (associated(actual))
+            num_img_pequenas = actual%pequena
+            num_img_grandes = actual%grande
+            if (num_img_pequenas>0) then
+                call self%cola_imagen_pequena%pop_img_pequena()
+                call actual%lista_imagen_cliente%insertar_imagen_impresa("Pequena")
+                num_img_pequenas=num_img_pequenas-1
+                actual%pequena = num_img_pequenas
+                actual%cantidad_paso=actual%cantidad_paso+1
+            end if
+            if (num_img_grandes>0) then
+                call self%cola_imagen_grande%pop_img_grande()
+                call actual%lista_imagen_cliente%insertar_imagen_impresa("Grande")
+                num_img_grandes=num_img_grandes-1
+                actual%grande = num_img_grandes
+                actual%cantidad_paso=actual%cantidad_paso+1
+            end if
+            siguiente_nodo => actual%siguiente
+            if (actual%grande==0 .and. actual%pequena==0) then
+                call self%lista_clientes_atendido%insertar_cliente_atendido( &
+                    actual%id_cliente, actual%nombre, actual%img_pequena, &
+                    actual%img_grande, actual%cantidad_paso)
+                call self%lista_clientes_esperando%delete_cliente(actual%id_cliente)
+            end if
+            condicion_salida = .not. associated(self%lista_clientes_esperando%cabeza) .or. &
+                            associated(actual, self%lista_clientes_esperando%cabeza)
+            actual => siguiente_nodo
+            if (condicion_salida) exit
+        end do
+    end subroutine imprimir_imagenes_cliente
+    
+    
+    
     
 end module modulo_lista_ventanilla

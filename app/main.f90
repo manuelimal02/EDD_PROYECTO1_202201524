@@ -79,21 +79,29 @@ program PROYECTO_FASE_1
         print *, "EJECUTAR PASO"   
         print *, "---------------------------------------"
         call lista_ventanilla_repecion%atender_cliente_ventanilla()
+        call lista_ventanilla_repecion%imprimir_imagenes_cliente()
         hay_ventanilla_disponible = lista_ventanilla_repecion%ventanilla_disponible()
         if (hay_ventanilla_disponible) then
             call cola_cliente_recepcion%pop_cliente(info_cliente)
             call lista_ventanilla_repecion%asignar_ventanilla(info_cliente(1), info_cliente(2), info_cliente(3), info_cliente(4))
         end if
-        print *, "****************************************"
-        call cola_cliente_recepcion%print_cliente()
-        print *, "****************************************"
+        !print *, "****************************************"
+        !call cola_cliente_recepcion%print_cliente()
+        !print *, "****************************************"
         call lista_ventanilla_repecion%print_ventanilla()
-        print *, "****************************************"
+        !print *, "****************************************"
+        !call lista_ventanilla_repecion%cola_imagen_pequena%print_img_pequena()
+        !print *, "****************************************"
+        !call lista_ventanilla_repecion%cola_imagen_grande%print_img_grande()
+        !print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
         call lista_ventanilla_repecion%cola_imagen_pequena%print_img_pequena()
-        print *, "****************************************"
+        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
         call lista_ventanilla_repecion%cola_imagen_grande%print_img_grande()
-        print *, "****************************************"
+        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
         call lista_ventanilla_repecion%lista_clientes_esperando%print_lista()
+        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+        call lista_ventanilla_repecion%lista_clientes_atendido%print_cliente_atendido()
     end subroutine
 
     subroutine OPCION_3()
