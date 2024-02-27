@@ -7,16 +7,16 @@ program PROYECTO_FASE_1
     type(json_file) :: json
     type(json_core) :: jsonc
     type(json_value), pointer :: lista_puntero, puntero, atributo_puntero
-    logical :: encontrado
-    logical :: hay_ventanilla_disponible
-    !VARIABLES LECTURA DESCOLAR
+    logical :: encontrado, disponible
+    !VARIABLES LECTURA DESENCOLAR
     integer, parameter :: numero_info = 4
     character(len=20) :: info_cliente(numero_info)
     !VARIABLES - USO DEL PROGRAMA
     character(:), allocatable :: id, nombre, img_pequena, img_grande
     character(:), allocatable :: ruta
-    integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contado_4
-    integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla, pequena, grande
+    character(len=32) :: str
+    integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contador_paso=1
+    integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla, opcion_menu_grafica
     !COLA DE CLIENTES
     type(cola_cliente) :: cola_cliente_recepcion
     !LISTA DE VENTANILLAS 
@@ -78,35 +78,34 @@ program PROYECTO_FASE_1
         print *, "---------------------------------------"
         print *, "EJECUTAR PASO"   
         print *, "---------------------------------------"
-        call lista_ventanilla_repecion%atender_cliente_ventanilla()
-        call lista_ventanilla_repecion%imprimir_imagenes_cliente()
-        hay_ventanilla_disponible = lista_ventanilla_repecion%ventanilla_disponible()
-        if (hay_ventanilla_disponible) then
+        write(str,'(I0)') contador_paso
+        print *, "------------------- PASO: ", trim(str), "--------------------------"
+        call lista_ventanilla_repecion%attend_ventanilla()
+        disponible = lista_ventanilla_repecion%available_ventanilla()
+        if (disponible) then
             call cola_cliente_recepcion%pop_cliente(info_cliente)
-            call lista_ventanilla_repecion%asignar_ventanilla(info_cliente(1), info_cliente(2), info_cliente(3), info_cliente(4))
+            call lista_ventanilla_repecion%assign_ventanilla(info_cliente(1), info_cliente(2), info_cliente(3), info_cliente(4))
         end if
-        !print *, "****************************************"
-        !call cola_cliente_recepcion%print_cliente()
-        !print *, "****************************************"
         call lista_ventanilla_repecion%print_ventanilla()
-        !print *, "****************************************"
-        !call lista_ventanilla_repecion%cola_imagen_pequena%print_img_pequena()
-        !print *, "****************************************"
-        !call lista_ventanilla_repecion%cola_imagen_grande%print_img_grande()
-        !print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
-        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        call lista_ventanilla_repecion%cola_imagen_pequena%print_img_pequena()
-        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        call lista_ventanilla_repecion%cola_imagen_grande%print_img_grande()
-        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        call lista_ventanilla_repecion%lista_clientes_esperando%print_lista()
-        print *, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-        call lista_ventanilla_repecion%lista_clientes_atendido%print_cliente_atendido()
+        call lista_ventanilla_repecion%printImages_ventanilla()
+        contador_paso=contador_paso+1
     end subroutine
 
     subroutine OPCION_3()
         print *, "---------------------------------------"
-        print *, "-- Estado En Memoria De Las Estructuras --"
+        print *, "ESTADO EN MEMORIA DE LAS ESTRUCTURAS"
+        print *, "1. Cola De Recepcion"
+        print *, "2. Lista De Ventanillas"
+        print *, "3. Lista De Clientes Espera"
+        print *, "4. Cola De Impresiones"
+        print *, "5.Lista De Clientes Atendidos"
+        read(*,*) opcion_menu_grafica
+        select case(opcion_menu_grafica)
+            case(1)
+                call cola_cliente_recepcion%graphic_cliente("Cola_Cliente")
+            case(2)
+                print*, "Hola"
+        end select
     end subroutine
 
     subroutine OPCION_4()
@@ -125,7 +124,7 @@ program PROYECTO_FASE_1
 
     subroutine Carga_Masiva_Clientes()
         print *, "---------------------------------------"
-        print *, "Carga Masiva Cliente"
+        print *, "CARGA MASIVA CLIENTE"
         print *, "---------------------------------------"
         call json%initialize()
         call json%load(filename='config.json')
@@ -145,8 +144,7 @@ program PROYECTO_FASE_1
             call cola_cliente_recepcion%push_cliente(trim(id), trim(nombre), trim(img_grande), trim(img_pequena))
         end do
         call json%destroy()
-        print *, "Clientes En Cola."
-        call cola_cliente_recepcion%print_cliente()
+        print *, "Clientes En Cola Correctamente."
     end subroutine
 
     subroutine Cantidad_Ventanillas()
@@ -158,10 +156,11 @@ program PROYECTO_FASE_1
         print *, "---------------------------------------"
         contador_ventanilla = 1
         do contado_3 = 1, cantidad_ventanilla
-            call  lista_ventanilla_repecion%agregar_ventanilla(contador_ventanilla, "NULL", "NULL", "0", "0")
+            call  lista_ventanilla_repecion%append_ventanilla(contador_ventanilla, "NULL", "NULL", "0", "0")
             contador_ventanilla=contador_ventanilla+1
         end do
         call  lista_ventanilla_repecion%print_ventanilla()
+        print*, "Ventanillas Creadas Correctamente."
     end subroutine
 
 end program PROYECTO_FASE_1
