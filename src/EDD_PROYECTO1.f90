@@ -7,6 +7,8 @@ module modulo_cola_cliente
         procedure :: push_cliente
         procedure :: pop_cliente
         procedure :: print_cliente
+        procedure :: top5_img_grandes
+        procedure :: top5_img_pequenas
         procedure :: graphic_cliente
     end type cola_cliente
 
@@ -15,19 +17,30 @@ module modulo_cola_cliente
         character(len=:), allocatable :: nombre
         character(len=:), allocatable :: img_grande
         character(len=:), allocatable :: img_pequena
+        integer :: pequena, grande
         type(nodo_cola_cliente), pointer :: siguiente
     end type nodo_cola_cliente
+
+    type :: cliente_conteo
+        character(len=:), allocatable :: nombre
+        integer :: grande, pequena
+    end type cliente_conteo
 
     contains
     subroutine push_cliente(self, id_cliente, nombre, img_grande, img_pequena)
         class(cola_cliente), intent(inout) :: self
         character(len=*), intent(in) :: id_cliente, nombre, img_grande, img_pequena
+        integer :: pequena, grande
         type(nodo_cola_cliente), pointer :: actual, nuevo_nodo
+        READ(img_pequena, *) pequena
+        READ(img_grande, *) grande
         allocate(nuevo_nodo)
         nuevo_nodo%id_cliente = id_cliente
         nuevo_nodo%nombre = nombre
         nuevo_nodo%img_grande = img_grande
         nuevo_nodo%img_pequena = img_pequena
+        nuevo_nodo%grande = grande
+        nuevo_nodo%pequena = pequena
         nuevo_nodo%siguiente => null()
         if (.not. associated(self%cabeza)) then
             self%cabeza => nuevo_nodo
@@ -107,7 +120,101 @@ module modulo_cola_cliente
         close(unit)
         call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
         print *, 'Grafica Cola Cliente Correctamente: ', trim(adjustl(filepath)) // '.pdf'
-    end subroutine graphic_cliente
+    end subroutine graphic_cliente  
+
+    subroutine top5_img_grandes(self)
+        class(cola_cliente), intent(in) :: self
+        type(nodo_cola_cliente), pointer :: actual
+        type(cliente_conteo), dimension(5) :: top5
+        type(cliente_conteo) :: temp
+        integer :: i, j, max_index, count
+        actual => self%cabeza
+        count = 0
+        do while (associated(actual) .and. count < 5)
+            if (actual%grande > 0) then
+                count = count + 1
+                top5(count)%nombre = actual%nombre
+                top5(count)%grande = actual%grande
+            end if
+            actual => actual%siguiente
+        end do
+        do while (associated(actual))
+            max_index = 1
+            do i = 2, count
+                if (top5(i)%grande > top5(max_index)%grande) then
+                    max_index = i
+                end if
+            end do
+            if (actual%grande > top5(max_index)%grande) then
+                top5(max_index)%nombre = actual%nombre
+                top5(max_index)%grande = actual%grande
+            end if
+            actual => actual%siguiente
+        end do
+        do i = 1, count-1
+            max_index = i
+            do j = i+1, count
+                if (top5(j)%grande > top5(max_index)%grande) then
+                    max_index = j
+                end if
+            end do
+            if (max_index /= i) then
+                temp = top5(i)
+                top5(i) = top5(max_index)
+                top5(max_index) = temp
+            end if
+        end do
+        do i = 1, count
+            print *, "Cliente: ", top5(i)%nombre, " Imagenes Grandes: ", top5(i)%grande
+        end do
+    end subroutine top5_img_grandes
+    
+    subroutine top5_img_pequenas(self)
+        class(cola_cliente), intent(in) :: self
+        type(nodo_cola_cliente), pointer :: actual
+        type(cliente_conteo), dimension(5) :: top5
+        type(cliente_conteo) :: temp
+        integer :: i, j, min_index, count
+        actual => self%cabeza
+        count = 0
+        do while (associated(actual) .and. count < 5)
+            if (actual%pequena > 0) then
+                count = count + 1
+                top5(count)%nombre = actual%nombre
+                top5(count)%pequena = actual%pequena
+            end if
+            actual => actual%siguiente
+        end do
+        do while (associated(actual))
+            min_index = 1
+            do i = 2, count
+                if (top5(i)%pequena < top5(min_index)%pequena) then
+                    min_index = i
+                end if
+            end do
+            if (actual%pequena < top5(min_index)%pequena) then
+                top5(min_index)%nombre = actual%nombre
+                top5(min_index)%pequena = actual%pequena
+            end if
+            actual => actual%siguiente
+        end do
+        do i = 1, count-1
+            min_index = i
+            do j = i+1, count
+                if (top5(j)%pequena < top5(min_index)%pequena) then
+                    min_index = j
+                end if
+            end do
+            if (min_index /= i) then
+                temp = top5(i)
+                top5(i) = top5(min_index)
+                top5(min_index) = temp
+            end if
+        end do
+        do i = 1, count
+            print *, "Cliente: ", top5(i)%nombre, " Imagenes Pequenas: ", top5(i)%pequena
+        end do
+    end subroutine top5_img_pequenas
     
 end module modulo_cola_cliente
 
@@ -120,7 +227,6 @@ module modulo_pila_imagenes
         procedure :: pop_imagen
         procedure :: print_imagen
         procedure :: clean_imagen
-        !procedure :: concatena_imagenes
     end type pila_imagenes
     type :: nodo_pila_imagen
         character(len=:), allocatable :: tipo_imagen
@@ -579,6 +685,7 @@ module modulo_lista_cliente_atendido
     contains
         procedure :: append_cliente_atendido
         procedure :: print_cliente_atendido
+        procedure :: cliente_mayor_pasos
         procedure :: graphic_clientes_atentido
     end type lista_cliente_atendido
 
@@ -614,6 +721,31 @@ module modulo_lista_cliente_atendido
             actual => actual%siguiente
         end do
     end subroutine print_cliente_atendido
+
+    subroutine cliente_mayor_pasos(self)
+        class(lista_cliente_atendido), intent(in) :: self
+        type(nodo_cliente_atendido), pointer :: actual
+        type(nodo_cliente_atendido), pointer :: max_pasos_nodo => null()
+        integer :: max_pasos = -1
+        actual => self%cabeza
+        do while (associated(actual))
+            if (actual%cantidad_pasos > max_pasos) then
+                max_pasos = actual%cantidad_pasos
+                max_pasos_nodo => actual
+            end if
+            actual => actual%siguiente
+        end do
+        if (associated(max_pasos_nodo)) then
+            print *, "Cliente Con Mayor Cantidad De Pasos:"
+            print *, "ID Cliente: ", max_pasos_nodo%id_cliente
+            print *, "Nombre: ", max_pasos_nodo%nombre
+            print *, "Imagen Pequena: ", max_pasos_nodo%img_pequena
+            print *, "Imagen Grande: ", max_pasos_nodo%img_grande
+            print *, "Cantidad de Pasos: ", max_pasos_nodo%cantidad_pasos
+        else
+            print *, "Lista Clientes Atendidos Vacia."
+        end if
+    end subroutine cliente_mayor_pasos
 
     subroutine graphic_clientes_atentido(self, filename)
         class(lista_cliente_atendido), intent(inout) :: self

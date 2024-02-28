@@ -15,7 +15,7 @@ program PROYECTO_FASE_1
     character(:), allocatable :: id, nombre, img_pequena, img_grande
     character(:), allocatable :: ruta
     character(len=32) :: str
-    integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contador_paso=1
+    integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contador_paso=1, opcion_menu_reporte
     integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla, opcion_menu_grafica
     !COLA DE CLIENTES
     type(cola_cliente) :: cola_cliente_recepcion
@@ -94,6 +94,7 @@ program PROYECTO_FASE_1
     subroutine OPCION_3()
         print *, "---------------------------------------"
         print *, "ESTADO EN MEMORIA DE LAS ESTRUCTURAS"
+        print *, "---------------------------------------"
         print *, "1. Cola De Recepcion"
         print *, "2. Lista De Ventanillas"
         print *, "3. Lista De Clientes Espera"
@@ -128,8 +129,23 @@ program PROYECTO_FASE_1
     end subroutine
 
     subroutine OPCION_4()
-      print *, "---------------------------------------"
-      print *, "-- Reportes --"
+        print *, "---------------------------------------"
+        print *, "REPORTE"
+        print *, "---------------------------------------"
+        print *, "1. Top 5 clientes con mayor cantidad de imagenes grandes."
+        print *, "2. Top 5 clientes con menor cantidad de imagenes pequenas."
+        print *, "3. Informacion cliente que mas pasos estuvo en el sistema."
+        print *, "4. Datos de un cliente en especifico, ingresar el nombre."
+        read(*,*) opcion_menu_reporte
+        select case(opcion_menu_reporte)
+            case(1)
+                call cola_cliente_recepcion%top5_img_grandes()
+                
+            case(2)
+                call cola_cliente_recepcion%top5_img_pequenas()
+            case(3)
+                call lista_ventanilla_repecion%lista_clientes_atendido%cliente_mayor_pasos()
+        end select
     end subroutine
 
     subroutine OPCION_5()
