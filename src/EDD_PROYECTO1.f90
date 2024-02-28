@@ -687,6 +687,7 @@ module modulo_lista_cliente_atendido
         procedure :: print_cliente_atendido
         procedure :: cliente_mayor_pasos
         procedure :: graphic_clientes_atentido
+        procedure :: print_cliente_por_nombre
     end type lista_cliente_atendido
 
     contains
@@ -746,6 +747,35 @@ module modulo_lista_cliente_atendido
             print *, "Lista Clientes Atendidos Vacia."
         end if
     end subroutine cliente_mayor_pasos
+
+    subroutine print_cliente_por_nombre(self, nombre_cliente)
+        class(lista_cliente_atendido), intent(in) :: self
+        character(len=*), intent(in) :: nombre_cliente
+        type(nodo_cliente_atendido), pointer :: actual
+        logical :: cliente_encontrado
+        cliente_encontrado = .false.
+        actual => self%cabeza
+        if (.not. associated(actual)) then
+            print *, "Lista De Clientes Atendidos Vacia."
+            return
+        end if
+        do while (associated(actual))
+            if (actual%nombre == nombre_cliente) then
+                print *, "ID Cliente: ", actual%id_cliente
+                print *, "Nombre: ", actual%nombre
+                print *, "Imagen Pequena: ", actual%img_pequena
+                print *, "Imagen Grande: ", actual%img_grande
+                print *, "Cantidad de Pasos: ", actual%cantidad_pasos
+                cliente_encontrado = .true.
+                exit
+            end if
+            actual => actual%siguiente
+        end do
+        if (.not. cliente_encontrado) then
+            print *, "No se encontro un cliente con el nombre: ", nombre_cliente
+        end if
+    end subroutine print_cliente_por_nombre
+    
 
     subroutine graphic_clientes_atentido(self, filename)
         class(lista_cliente_atendido), intent(inout) :: self

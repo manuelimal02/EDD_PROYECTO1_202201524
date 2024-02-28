@@ -17,6 +17,7 @@ program PROYECTO_FASE_1
     character(len=32) :: str
     integer :: cantidad_cliente_json, contado_1, contado_2, contado_3, contador_paso=1, opcion_menu_reporte
     integer :: opcion_menu, opcion_menu_parametros, cantidad_ventanilla, contador_ventanilla, opcion_menu_grafica
+    character(len=100) :: nombre_cliente
     !COLA DE CLIENTES
     type(cola_cliente) :: cola_cliente_recepcion
     !LISTA DE VENTANILLAS 
@@ -145,6 +146,10 @@ program PROYECTO_FASE_1
                 call cola_cliente_recepcion%top5_img_pequenas()
             case(3)
                 call lista_ventanilla_repecion%lista_clientes_atendido%cliente_mayor_pasos()
+            case(4)
+                print *, "Por favor, escribe el nombre del cliente:"
+                read(*, '(A)') nombre_cliente
+                call lista_ventanilla_repecion%lista_clientes_atendido%print_cliente_por_nombre(trim(nombre_cliente))
         end select
     end subroutine
 
