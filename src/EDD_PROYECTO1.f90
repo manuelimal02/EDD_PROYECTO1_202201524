@@ -81,11 +81,14 @@ module modulo_cola_cliente
         integer :: contador
         type(nodo_cola_cliente), pointer :: actual
         character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Cola De Clientes Vacia."
+            return
+        end if
         filepath = 'zgraph/' // trim(filename) 
         open(unit, file=filepath, status='replace')
         write(unit, *) 'digraph cola {node [fontname="Courier New"]'
         write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
-        ! Escribir nodos y conexiones
         actual => self%cabeza
         contador = 0
         write(unit, *) '"Node', contador, '" [shape=folder, color=black, fillcolor="#d43440" label="', "Cola De Clientes", '"];'
@@ -117,6 +120,7 @@ module modulo_pila_imagenes
         procedure :: pop_imagen
         procedure :: print_imagen
         procedure :: clean_imagen
+        !procedure :: concatena_imagenes
     end type pila_imagenes
     type :: nodo_pila_imagen
         character(len=:), allocatable :: tipo_imagen
@@ -168,6 +172,7 @@ module modulo_pila_imagenes
             deallocate(temp)
         end do
     end subroutine clean_imagen
+
 end module modulo_pila_imagenes
 
 !COLA DE IMAGENES PEQUEÑAS
@@ -180,6 +185,7 @@ module modulo_cola_impresora_pequena
         procedure :: push_img_pequena
         procedure :: pop_img_pequena
         procedure :: print_img_pequena
+        procedure :: graphic_cola_imgPequena
     end type cola_impresora_pequena
     type :: nodo_impresora_pequena
         character(len=:), allocatable :: tipo_imagen
@@ -237,6 +243,39 @@ module modulo_cola_impresora_pequena
             actual => actual%siguiente
         end do
     end subroutine print_img_pequena
+
+    subroutine graphic_cola_imgPequena(self, filename)
+        class(cola_impresora_pequena), intent(inout) :: self
+        character(len=*), intent(in) :: filename
+        integer :: unit, contador
+        type(nodo_impresora_pequena), pointer :: actual
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Cola De Impresion Img Pequenas Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename) 
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
+        actual => self%cabeza
+        contador = 0
+        write(unit, *) '"Node', contador, '" [shape=tab, color=black, fillcolor="#d43440" label="',&
+        "Cola De Impresion Imagenes Pequenas", '"];'
+        do while (associated(actual))
+            contador = contador + 1
+            write(unit, *) '    "Node', contador, '" [label="', &
+                                "Imagen: ", actual%tipo_imagen, "\n",'"];'
+            if (associated(actual%siguiente)) then
+                write(unit, *) '    "Node', contador, '" -> "Node', contador+1, '";'
+            end if
+            actual => actual%siguiente
+        end do 
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Cola Impresion Img Pequena Correctamente: ', trim(adjustl(filepath)) // '.pdf'
+    end subroutine graphic_cola_imgPequena
     
 end module modulo_cola_impresora_pequena
 
@@ -250,6 +289,7 @@ module modulo_cola_impresora_grande
         procedure :: push_img_grande
         procedure :: pop_img_grande
         procedure :: print_img_grande
+        procedure :: graphic_cola_imgGrande
     end type cola_impresora_grande
     type :: nodo_impresora_grande
         character(len=:), allocatable :: tipo_imagen
@@ -305,6 +345,39 @@ module modulo_cola_impresora_grande
             actual => actual%siguiente
         end do
     end subroutine print_img_grande
+
+    subroutine graphic_cola_imgGrande(self, filename)
+        class(cola_impresora_grande), intent(inout) :: self
+        character(len=*), intent(in) :: filename
+        integer :: unit, contador
+        type(nodo_impresora_grande), pointer :: actual
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Cola De Impresion Img Grandes Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename) 
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
+        actual => self%cabeza
+        contador = 0
+        write(unit, *) '"Node', contador, '" [shape=tab, color=black, fillcolor="#d43440" label="',&
+        "Cola De Impresion Imagenes Grandes", '"];'
+        do while (associated(actual))
+            contador = contador + 1
+            write(unit, *) '    "Node', contador, '" [label="', &
+                                "Imagen: ", actual%tipo_imagen, "\n",'"];'
+            if (associated(actual%siguiente)) then
+                write(unit, *) '    "Node', contador, '" -> "Node', contador+1, '";'
+            end if
+            actual => actual%siguiente
+        end do 
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Cola Impresion Img Grandes Correctamente: ', trim(adjustl(filepath)) // '.pdf'
+    end subroutine graphic_cola_imgGrande
     
 end module modulo_cola_impresora_grande
 
@@ -368,6 +441,7 @@ module modulo_lista_cliente_espera
         procedure :: append_cliente_espera
         procedure :: delete_cliente_espera
         procedure :: print_lista_cliente_espera
+        procedure :: graphic_cliente_espera
     end type lista_cliente_espera
 
     contains
@@ -445,12 +519,53 @@ module modulo_lista_cliente_espera
             end do
         end if
     end subroutine print_lista_cliente_espera
+
+    subroutine graphic_cliente_espera(self, filename)
+        class(lista_cliente_espera), intent(inout) :: self
+        character(len=*), intent(in) :: filename
+        integer :: unit, contador
+        type(nodo_cliente_espera), pointer :: actual
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Lista Clientes En Espera Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename) 
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
+        actual => self%cabeza
+        contador = 0
+        write(unit, *) '"Node', contador, '" [shape=box3d, color=black, fillcolor="#d43440" label="',&
+        "Lista Cliente En Espera", '"];'
+        do while (associated(actual))
+            contador = contador + 1
+            write(unit, *) '    "Node', contador, '" [label="', &
+                                "ID Cliente: ", actual%id_cliente, "\n", &
+                                "Nombre: ",actual%nombre, "\n", &
+                                "Imagenes Pequenas: ",actual%img_pequena,"\n", &
+                                "Imagenes Grandes: ",actual%img_grande,"\n", &
+                                "Ventanilla Atentido: ",actual%numero_ventanilla,"\n", &
+                                "Cantidad Pasos Preliminares: ",actual%cantidad_paso,'"];'
+            if (associated(actual%siguiente) .and. .not. associated(actual%siguiente, self%cabeza)) then
+                write(unit, *) '    "Node', contador, '" -> "Node', contador+1, '";'
+            end if
+            actual => actual%siguiente
+            if (associated(actual, self%cabeza)) exit
+        end do 
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Lista Clientes En Espera Correctamente: ', trim(adjustl(filepath)) // '.pdf'
+    end subroutine graphic_cliente_espera
+    
 end module modulo_lista_cliente_espera
 
 !LISTA CLIENTES ATENDIDO
 module modulo_lista_cliente_atendido
     implicit none
     type :: nodo_cliente_atendido
+        integer :: numero_ventanilla
         character(len=:), allocatable :: id_cliente
         character(len=:), allocatable :: nombre
         character(len=:), allocatable :: img_pequena
@@ -464,15 +579,18 @@ module modulo_lista_cliente_atendido
     contains
         procedure :: append_cliente_atendido
         procedure :: print_cliente_atendido
+        procedure :: graphic_clientes_atentido
     end type lista_cliente_atendido
 
     contains
-    subroutine append_cliente_atendido(self, id_cliente, nombre, img_pequena, img_grande, cantidad_pasos)
+    subroutine append_cliente_atendido(self, numero_ventanilla, id_cliente, nombre, img_pequena, img_grande, cantidad_pasos)
         class(lista_cliente_atendido), intent(inout) :: self
         character(len=*), intent(in) :: id_cliente, nombre, img_pequena, img_grande
         integer, intent(in) :: cantidad_pasos
+        integer, intent(in) :: numero_ventanilla
         type(nodo_cliente_atendido), pointer :: nuevo_nodo
         allocate(nuevo_nodo)
+        nuevo_nodo%numero_ventanilla = numero_ventanilla
         nuevo_nodo%id_cliente = id_cliente
         nuevo_nodo%nombre = nombre
         nuevo_nodo%img_pequena = img_pequena
@@ -496,6 +614,45 @@ module modulo_lista_cliente_atendido
             actual => actual%siguiente
         end do
     end subroutine print_cliente_atendido
+
+    subroutine graphic_clientes_atentido(self, filename)
+        class(lista_cliente_atendido), intent(inout) :: self
+        character(len=*), intent(in) :: filename
+        integer :: unit
+        integer :: contador
+        type(nodo_cliente_atendido), pointer :: actual
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Lista De Clientes Atendidos Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename) 
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
+        actual => self%cabeza
+        contador = 0
+        write(unit, *) '"Node', contador, '" [shape=folder, color=black, fillcolor="#d43440" label="', &
+                        "Lista Clientes Atendidos", '"];'
+        do while (associated(actual))
+            contador = contador + 1
+            write(unit, *) '    "Node', contador, '" [label="', &
+                                "Ventanilla Atentido: ", actual%numero_ventanilla, "\n", &
+                                "ID Cliente: ", actual%id_cliente, "\n", &
+                                "Nombre: ",actual%nombre, "\n", &
+                                "Imagenes Pequenas: ",actual%img_pequena,"\n", &
+                                "Imagenes Grandes: ",actual%img_grande,"\n", &
+                                "Cantidad Pasos: ",actual%cantidad_pasos,'"];'
+            if (associated(actual%siguiente)) then
+                write(unit, *) '    "Node', contador, '" -> "Node', contador+1, '";'
+            end if
+            actual => actual%siguiente
+        end do 
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Lista Clientes Atendidos Correctamente: ', trim(adjustl(filepath)) // '.pdf'
+    end subroutine graphic_clientes_atentido
 end module modulo_lista_cliente_atendido
 
 !LISTA VENTANILA
@@ -507,7 +664,7 @@ module modulo_lista_ventanilla
     use modulo_lista_cliente_atendido
     implicit none
     type :: lista_ventanilla
-        type(nodo_lista_cliente), pointer :: cabeza => null()
+        type(nodo_lista_ventanilla), pointer :: cabeza => null()
         type(cola_impresora_pequena) :: cola_imagen_pequena
         type(cola_impresora_grande) :: cola_imagen_grande
         type(lista_cliente_espera) :: lista_clientes_esperando
@@ -519,9 +676,10 @@ module modulo_lista_ventanilla
         procedure :: available_ventanilla
         procedure :: attend_ventanilla
         procedure :: printImages_ventanilla
+        procedure :: graphic_ventanilla
     end type lista_ventanilla
 
-    type :: nodo_lista_cliente
+    type :: nodo_lista_ventanilla
         integer :: numero_ventanilla, pequena, grande
         character(len=:), allocatable :: id_cliente
         character(len=:), allocatable :: nombre
@@ -529,8 +687,8 @@ module modulo_lista_ventanilla
         character(len=:), allocatable :: img_pequena
         logical :: ocupada = .false.
         type(pila_imagenes) :: pila
-        type(nodo_lista_cliente), pointer :: siguiente
-    end type nodo_lista_cliente
+        type(nodo_lista_ventanilla), pointer :: siguiente
+    end type nodo_lista_ventanilla
     integer :: cantidad_paso=1
 
     contains
@@ -545,7 +703,7 @@ module modulo_lista_ventanilla
         class(lista_ventanilla), intent(inout) :: self
         integer, intent(in) :: numero_ventanilla
         character(len=*), intent(in) :: id_cliente, nombre, img_grande, img_pequena
-        type(nodo_lista_cliente), pointer :: actual, nuevo_nodo
+        type(nodo_lista_ventanilla), pointer :: actual, nuevo_nodo
         allocate(nuevo_nodo)
         nuevo_nodo%numero_ventanilla = numero_ventanilla
         nuevo_nodo%id_cliente = id_cliente
@@ -569,7 +727,7 @@ module modulo_lista_ventanilla
 
     subroutine print_ventanilla(self)
         class(lista_ventanilla), intent(in) :: self
-        type(nodo_lista_cliente), pointer :: actual
+        type(nodo_lista_ventanilla), pointer :: actual
         actual => self%cabeza
         do while (associated(actual))
             if (actual%nombre /= "NULL") then
@@ -582,6 +740,8 @@ module modulo_lista_ventanilla
                 print *, "Proceso Img Pequena: ", int_to_str(actual%pequena)
                 print *, "Proceso Img Grande: ", int_to_str(actual%grande)
                 print *, "Ocupada: ", actual%ocupada
+                call actual%pila%print_imagen()
+                print*, "--"
             end if
             actual => actual%siguiente
         end do
@@ -590,7 +750,7 @@ module modulo_lista_ventanilla
 
     logical function available_ventanilla(self) result (hay_ventanilla_disponible)
         class(lista_ventanilla), intent(inout) :: self
-        type(nodo_lista_cliente), pointer :: actual
+        type(nodo_lista_ventanilla), pointer :: actual
         hay_ventanilla_disponible = .false.
         actual => self%cabeza
         do while (associated(actual))
@@ -606,7 +766,7 @@ module modulo_lista_ventanilla
         class(lista_ventanilla), intent(inout) :: self
         integer :: pequena, grande
         character(len=*), intent(in) :: id_cliente, nombre, img_pequena, img_grande
-        type(nodo_lista_cliente), pointer :: actual
+        type(nodo_lista_ventanilla), pointer :: actual
         READ(img_pequena, *) pequena
         READ(img_grande, *) grande
         actual => self%cabeza
@@ -629,7 +789,7 @@ module modulo_lista_ventanilla
 
     subroutine attend_ventanilla(self) 
         class(lista_ventanilla), intent(inout) :: self
-        type(nodo_lista_cliente), pointer :: actual
+        type(nodo_lista_ventanilla), pointer :: actual
         integer :: num_img_grandes, num_img_pequenas
         actual => self%cabeza
         do while (associated(actual))
@@ -707,7 +867,7 @@ module modulo_lista_ventanilla
                 print*, "Cliente: ", trim(actual%nombre), " atendido."
                 print*, "--"
                 call self%lista_clientes_atendido%append_cliente_atendido( &
-                    actual%id_cliente, actual%nombre, actual%img_pequena, &
+                    actual%numero_ventanilla, actual%id_cliente, actual%nombre, actual%img_pequena, &
                     actual%img_grande, actual%cantidad_paso)
                 call self%lista_clientes_esperando%delete_cliente_espera(actual%id_cliente)
             end if
@@ -717,5 +877,42 @@ module modulo_lista_ventanilla
             if (condicion_salida) exit
         end do
     end subroutine printImages_ventanilla
-    
+
+    subroutine graphic_ventanilla(self, filename)
+        class(lista_ventanilla), intent(inout) :: self
+        character(len=*), intent(in) :: filename
+        integer :: unit
+        integer :: contador
+        type(nodo_lista_ventanilla), pointer :: actual
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Lista De Ventanillas Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename) 
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
+        actual => self%cabeza
+        contador = 0
+        write(unit, *) '"Node', contador, '" [shape=folder, color=black, fillcolor="#d43440" label="', "Lista De Ventanillas", '"];'
+        do while (associated(actual))
+            contador = contador + 1
+            write(unit, *) '    "Node', contador, '" [label="', &
+                                "No. Ventanilla: ", actual%numero_ventanilla, "\n", &
+                                "ID Cliente: ", actual%id_cliente, "\n", &
+                                "Nombre: ",actual%nombre, "\n", &
+                                "Imagenes Pequenas: ",actual%img_pequena,"\n", &
+                                "Imagenes Grandes: ",actual%img_grande,'"];'
+            if (associated(actual%siguiente)) then
+                write(unit, *) '    "Node', contador, '" -> "Node', contador+1, '";'
+            end if
+            actual => actual%siguiente
+        end do 
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Lista Ventanilla Correctamente: ', trim(adjustl(filepath)) // '.pdf'
+    end subroutine graphic_ventanilla
+
 end module modulo_lista_ventanilla

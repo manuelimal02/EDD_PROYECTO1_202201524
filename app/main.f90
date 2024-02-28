@@ -98,13 +98,32 @@ program PROYECTO_FASE_1
         print *, "2. Lista De Ventanillas"
         print *, "3. Lista De Clientes Espera"
         print *, "4. Cola De Impresiones"
-        print *, "5.Lista De Clientes Atendidos"
+        print *, "5. Lista De Clientes Atendidos"
+        print *, "6. Todos Los Anteriores"
         read(*,*) opcion_menu_grafica
         select case(opcion_menu_grafica)
             case(1)
                 call cola_cliente_recepcion%graphic_cliente("Cola_Cliente")
             case(2)
-                print*, "Hola"
+                call lista_ventanilla_repecion%graphic_ventanilla("Lista_Ventanilla")
+            case(3)
+                call lista_ventanilla_repecion%lista_clientes_esperando%graphic_cliente_espera("Lista_Cliente_Espera")
+            case(4)
+                call lista_ventanilla_repecion%cola_imagen_pequena%graphic_cola_imgPequena("Cola_Imagen_Pequena")
+                call lista_ventanilla_repecion%cola_imagen_grande%graphic_cola_imgGrande("Cola_Imagen_Grande")
+            case(5)
+                call lista_ventanilla_repecion%lista_clientes_atendido%graphic_clientes_atentido("Lista_Cliente_Atendido")
+            case(6)
+                call cola_cliente_recepcion%graphic_cliente("Cola_Cliente")
+                print*, "--"
+                call lista_ventanilla_repecion%graphic_ventanilla("Lista_Ventanilla")
+                print*, "--"
+                call lista_ventanilla_repecion%lista_clientes_esperando%graphic_cliente_espera("Lista_Cliente_Espera")
+                print*, "--"
+                call lista_ventanilla_repecion%cola_imagen_pequena%graphic_cola_imgPequena("Cola_Imagen_Pequena")
+                call lista_ventanilla_repecion%cola_imagen_grande%graphic_cola_imgGrande("Cola_Imagen_Grande")
+                print*, "--"
+                call lista_ventanilla_repecion%lista_clientes_atendido%graphic_clientes_atentido("Lista_Cliente_Atendido")
         end select
     end subroutine
 
