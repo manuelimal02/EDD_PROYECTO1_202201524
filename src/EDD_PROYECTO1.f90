@@ -122,12 +122,28 @@ module modulo_cola_cliente
         print *, 'Grafica Cola Cliente Correctamente: ', trim(adjustl(filepath)) // '.pdf'
     end subroutine graphic_cliente  
 
-    subroutine top5_img_grandes(self)
+    subroutine top5_img_grandes(self, filename)
         class(cola_cliente), intent(in) :: self
         type(nodo_cola_cliente), pointer :: actual
         type(cliente_conteo), dimension(5) :: top5
         type(cliente_conteo) :: temp
         integer :: i, j, max_index, count
+
+        character(len=*), intent(in) :: filename
+        integer :: unit, contador
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Cola De Clientes Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename)
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
+        contador = 1
+        write(unit, *) '"Node', 0, '" [shape=folder, color=black, fillcolor="#d43440" label="', &
+                                    "Top 5 Clientes Con Mayor Cantidad De Imagenes Grandes", '"];' 
+
         actual => self%cabeza
         count = 0
         do while (associated(actual) .and. count < 5)
@@ -164,17 +180,47 @@ module modulo_cola_cliente
                 top5(max_index) = temp
             end if
         end do
+        contador = 1
         do i = 1, count
-            print *, "Cliente: ", top5(i)%nombre, " Imagenes Grandes: ", top5(i)%grande
+            write(unit, *) '    "Node', contador, '" [label="', &
+                                "Nombre: ",top5(i)%nombre, "\n", &
+                                "Imagenes Grandes: ",top5(i)%grande,'"];'
+            if (contador==5)then
+                exit
+            else
+                write(unit, *) '    "Node', contador, '" -> "Node', contador+1, '";'
+            end if 
+            contador = contador + 1
         end do
+
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Top Cliente Imagenes Grandes Correctamente: ', trim(adjustl(filepath)) // '.pdf'
     end subroutine top5_img_grandes
     
-    subroutine top5_img_pequenas(self)
+    subroutine top5_img_pequenas(self, filename)
         class(cola_cliente), intent(in) :: self
         type(nodo_cola_cliente), pointer :: actual
         type(cliente_conteo), dimension(5) :: top5
         type(cliente_conteo) :: temp
         integer :: i, j, min_index, count
+
+        character(len=*), intent(in) :: filename
+        integer :: unit, contador
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Cola De Clientes Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename)
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=component, style=filled, color=blue, fillcolor="#65babf"];'
+        contador = 1
+        write(unit, *) '"Node', 0, '" [shape=folder, color=black, fillcolor="#d43440" label="', &
+                                    "Top 5 Clientes Con Menor Cantidad De Imagenes Pequenas", '"];' 
+
         actual => self%cabeza
         count = 0
         do while (associated(actual) .and. count < 5)
@@ -212,8 +258,20 @@ module modulo_cola_cliente
             end if
         end do
         do i = 1, count
-            print *, "Cliente: ", top5(i)%nombre, " Imagenes Pequenas: ", top5(i)%pequena
+            write(unit, *) '    "Node', contador, '" [label="', &
+                                "Nombre: ",top5(i)%nombre, "\n", &
+                                "Imagenes Pequenas: ",top5(i)%pequena,'"];'
+            if (contador==5)then
+                exit
+            else
+                write(unit, *) '    "Node', contador, '" -> "Node', contador+1, '";'
+            end if 
+            contador = contador + 1
         end do
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Top Cliente Imagenes Pequenas Correctamente: ', trim(adjustl(filepath)) // '.pdf'
     end subroutine top5_img_pequenas
     
 end module modulo_cola_cliente
@@ -723,11 +781,23 @@ module modulo_lista_cliente_atendido
         end do
     end subroutine print_cliente_atendido
 
-    subroutine cliente_mayor_pasos(self)
+    subroutine cliente_mayor_pasos(self, filename)
         class(lista_cliente_atendido), intent(in) :: self
         type(nodo_cliente_atendido), pointer :: actual
         type(nodo_cliente_atendido), pointer :: max_pasos_nodo => null()
-        integer :: max_pasos = -1
+        integer :: max_pasos = -1, unit
+        character(len=*), intent(in) :: filename
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Lista De Clientes Atendidos Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename) 
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=box3d, style=filled, color=blue, fillcolor="#65babf"];'
+        write(unit, *) '"Node', 0, '" [shape=folder, color=black, fillcolor="#d43440" label="', &
+        "Cliente Con Mayor Cantidad De Pasos En El Sistemas", '"];'
         actual => self%cabeza
         do while (associated(actual))
             if (actual%cantidad_pasos > max_pasos) then
@@ -737,35 +807,56 @@ module modulo_lista_cliente_atendido
             actual => actual%siguiente
         end do
         if (associated(max_pasos_nodo)) then
-            print *, "Cliente Con Mayor Cantidad De Pasos:"
-            print *, "ID Cliente: ", max_pasos_nodo%id_cliente
-            print *, "Nombre: ", max_pasos_nodo%nombre
-            print *, "Imagen Pequena: ", max_pasos_nodo%img_pequena
-            print *, "Imagen Grande: ", max_pasos_nodo%img_grande
-            print *, "Cantidad de Pasos: ", max_pasos_nodo%cantidad_pasos
+            write(unit, *) '    "Node', 1, '" [label="', &
+                                "ID Cliente: ", max_pasos_nodo%id_cliente, "\n", &
+                                "Nombre: ",max_pasos_nodo%nombre, "\n", &
+                                "Imagenes Pequenas: ",max_pasos_nodo%img_pequena,"\n", &
+                                "Imagenes Grandes: ",max_pasos_nodo%img_grande,"\n", &
+                                "CANTIDAD DE PASOS: ",max_pasos_nodo%cantidad_pasos,'"];'
         else
             print *, "Lista Clientes Atendidos Vacia."
         end if
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Cliente Con Mayor Cantidad De Pasos Correctamente: ', trim(adjustl(filepath)) // '.pdf'
     end subroutine cliente_mayor_pasos
 
-    subroutine print_cliente_por_nombre(self, nombre_cliente)
+    subroutine print_cliente_por_nombre(self, nombre_cliente, filename)
         class(lista_cliente_atendido), intent(in) :: self
         character(len=*), intent(in) :: nombre_cliente
         type(nodo_cliente_atendido), pointer :: actual
         logical :: cliente_encontrado
+        integer :: unit
+        character(len=*), intent(in) :: filename
+        character(len=:), allocatable :: filepath
+        if (.not. associated(self%cabeza)) then
+            print*,"Lista De Clientes Atendidos Vacia."
+            return
+        end if
+        filepath = 'zgraph/' // trim(filename) 
+        open(unit, file=filepath, status='replace')
+        write(unit, *) 'digraph cola {node [fontname="Courier New"]'
+        write(unit, *) '    node [shape=box3d, style=filled, color=blue, fillcolor="#65babf"];'
+        write(unit, *) '"Node', 0, '" [shape=folder, color=black, fillcolor="#d43440" label="', &
+        "Cliente Encontrado Por Nombre", '"];'
+
         cliente_encontrado = .false.
         actual => self%cabeza
         if (.not. associated(actual)) then
             print *, "Lista De Clientes Atendidos Vacia."
             return
         end if
+
         do while (associated(actual))
             if (actual%nombre == nombre_cliente) then
-                print *, "ID Cliente: ", actual%id_cliente
-                print *, "Nombre: ", actual%nombre
-                print *, "Imagen Pequena: ", actual%img_pequena
-                print *, "Imagen Grande: ", actual%img_grande
-                print *, "Cantidad de Pasos: ", actual%cantidad_pasos
+                write(unit, *) '    "Node', 1, '" [label="', &
+                                "Ventanilla Atentido: ", actual%numero_ventanilla, "\n", &
+                                "ID Cliente: ", actual%id_cliente, "\n", &
+                                "Nombre: ",actual%nombre, "\n", &
+                                "Imagenes Pequenas: ",actual%img_pequena,"\n", &
+                                "Imagenes Grandes: ",actual%img_grande,"\n", &
+                                "Cantidad Pasos: ",actual%cantidad_pasos,'"];'
                 cliente_encontrado = .true.
                 exit
             end if
@@ -774,6 +865,10 @@ module modulo_lista_cliente_atendido
         if (.not. cliente_encontrado) then
             print *, "No se encontro un cliente con el nombre: ", nombre_cliente
         end if
+        write(unit, *) '}'
+        close(unit)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        print *, 'Grafica Cliente Encontrado Por Nombre Correctamente: ', trim(adjustl(filepath)) // '.pdf'
     end subroutine print_cliente_por_nombre
     
 

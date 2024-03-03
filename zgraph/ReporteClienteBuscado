@@ -1,0 +1,5 @@
+ digraph cola {node [fontname="Courier New"]
+     node [shape=box3d, style=filled, color=blue, fillcolor="#65babf"];
+ "Node           0 " [shape=folder, color=black, fillcolor="#d43440" label="Cliente Encontrado Por Nombre"];
+     "Node           1 " [label="Ventanilla Atentido:            2 \nID Cliente: 2                   \nNombre: Maria Lopez         \nImagenes Pequenas: 1                   \nImagenes Grandes: 3                   \nCantidad Pasos:           11 "];
+ }

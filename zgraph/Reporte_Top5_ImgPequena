@@ -1,0 +1,13 @@
+ digraph cola {node [fontname="Courier New"]
+     node [shape=component, style=filled, color=blue, fillcolor="#65babf"];
+ "Node           0 " [shape=folder, color=black, fillcolor="#d43440" label="Top 5 Clientes Con Menor Cantidad De Imagenes Pequenas"];
+     "Node           1 " [label="Nombre: Maria Lopez\nImagenes Pequenas:            1 "];
+     "Node           1 " -> "Node           2 ";
+     "Node           2 " [label="Nombre: Luis Garcia\nImagenes Pequenas:            1 "];
+     "Node           2 " -> "Node           3 ";
+     "Node           3 " [label="Nombre: Carlos Martinez\nImagenes Pequenas:            2 "];
+     "Node           3 " -> "Node           4 ";
+     "Node           4 " [label="Nombre: Ana Rodriguez\nImagenes Pequenas:            2 "];
+     "Node           4 " -> "Node           5 ";
+     "Node           5 " [label="Nombre: Juan Perez\nImagenes Pequenas:            3 "];
+ }

@@ -1,0 +1,5 @@
+ digraph cola {node [fontname="Courier New"]
+     node [shape=box3d, style=filled, color=blue, fillcolor="#65babf"];
+ "Node           0 " [shape=folder, color=black, fillcolor="#d43440" label="Cliente Con Mayor Cantidad De Pasos En El Sistemas"];
+     "Node           1 " [label="ID Cliente: 8                   \nNombre: Sofia Ramirez       \nImagenes Pequenas: 1                   \nImagenes Grandes: 2                   \nCANTIDAD DE PASOS:           20 "];
+ }

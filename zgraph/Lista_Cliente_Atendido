@@ -1,0 +1,19 @@
+ digraph cola {node [fontname="Courier New"]
+     node [shape=component, style=filled, color=blue, fillcolor="#65babf"];
+ "Node           0 " [shape=folder, color=black, fillcolor="#d43440" label="Lista Clientes Atendidos"];
+     "Node           1 " [label="Ventanilla Atentido:            1 \nID Cliente: 8                   \nNombre: Sofia Ramirez       \nImagenes Pequenas: 1                   \nImagenes Grandes: 2                   \nCantidad Pasos:           20 "];
+     "Node           1 " -> "Node           2 ";
+     "Node           2 " [label="Ventanilla Atentido:            2 \nID Cliente: 7                   \nNombre: Pedro Sanchez       \nImagenes Pequenas: 3                   \nImagenes Grandes: 1                   \nCantidad Pasos:           20 "];
+     "Node           2 " -> "Node           3 ";
+     "Node           3 " [label="Ventanilla Atentido:            3 \nID Cliente: 6                   \nNombre: Elena Gonzalez      \nImagenes Pequenas: 3                   \nImagenes Grandes: 1                   \nCantidad Pasos:           17 "];
+     "Node           3 " -> "Node           4 ";
+     "Node           4 " [label="Ventanilla Atentido:            1 \nID Cliente: 4                   \nNombre: Ana Rodriguez       \nImagenes Pequenas: 2                   \nImagenes Grandes: 4                   \nCantidad Pasos:           19 "];
+     "Node           4 " -> "Node           5 ";
+     "Node           5 " [label="Ventanilla Atentido:            2 \nID Cliente: 5                   \nNombre: Luis Garcia         \nImagenes Pequenas: 1                   \nImagenes Grandes: 2                   \nCantidad Pasos:           14 "];
+     "Node           5 " -> "Node           6 ";
+     "Node           6 " [label="Ventanilla Atentido:            3 \nID Cliente: 3                   \nNombre: Carlos Martinez     \nImagenes Pequenas: 2                   \nImagenes Grandes: 2                   \nCantidad Pasos:           12 "];
+     "Node           6 " -> "Node           7 ";
+     "Node           7 " [label="Ventanilla Atentido:            2 \nID Cliente: 2                   \nNombre: Maria Lopez         \nImagenes Pequenas: 1                   \nImagenes Grandes: 3                   \nCantidad Pasos:           11 "];
+     "Node           7 " -> "Node           8 ";
+     "Node           8 " [label="Ventanilla Atentido:            1 \nID Cliente: 1                   \nNombre: Juan Perez          \nImagenes Pequenas: 3                   \nImagenes Grandes: 1                   \nCantidad Pasos:           10 "];
+ }

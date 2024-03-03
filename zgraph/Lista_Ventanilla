@@ -1,0 +1,9 @@
+ digraph cola {node [fontname="Courier New"]
+     node [shape=component, style=filled, color=blue, fillcolor="#65babf"];
+ "Node           0 " [shape=folder, color=black, fillcolor="#d43440" label="Lista De Ventanillas"];
+     "Node           1 " [label="No. Ventanilla:            1 \nID Cliente: NULL                \nNombre: NULL                \nImagenes Pequenas: 0                   \nImagenes Grandes: 0                   "];
+     "Node           1 " -> "Node           2 ";
+     "Node           2 " [label="No. Ventanilla:            2 \nID Cliente: 10                  \nNombre: Laura Diaz          \nImagenes Pequenas: 1                   \nImagenes Grandes: 3                   "];
+     "Node           2 " -> "Node           3 ";
+     "Node           3 " [label="No. Ventanilla:            3 \nID Cliente: 9                   \nNombre: Diego Castro        \nImagenes Pequenas: 3                   \nImagenes Grandes: 1                   "];
+ }

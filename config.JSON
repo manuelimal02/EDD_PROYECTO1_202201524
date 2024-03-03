@@ -22,5 +22,17 @@
     "nombre": "Carlos Rodrigo",
     "img_p": "0",
     "img_g": "3"
+  },
+  {
+    "id": "5",
+    "nombre": "Mario Lopez",
+    "img_p": "2",
+    "img_g": "1"
+  },
+  {
+    "id": "6",
+    "nombre": "Nathan Javier",
+    "img_p": "1",
+    "img_g": "6"
   }
 ]

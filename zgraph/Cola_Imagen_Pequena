@@ -1,0 +1,7 @@
+ digraph cola {node [fontname="Courier New"]
+     node [shape=component, style=filled, color=blue, fillcolor="#65babf"];
+ "Node           0 " [shape=tab, color=black, fillcolor="#d43440" label="Cola De Impresion Imagenes Pequenas"];
+     "Node           1 " [label="Imagen: Pequena\n"];
+     "Node           1 " -> "Node           2 ";
+     "Node           2 " [label="Imagen: Pequena\n"];
+ }

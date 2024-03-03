@@ -20,6 +20,7 @@ program PROYECTO_FASE_1
     character(len=100) :: nombre_cliente
     !COLA DE CLIENTES
     type(cola_cliente) :: cola_cliente_recepcion
+    type(cola_cliente) :: cola_cliente1
     !LISTA DE VENTANILLAS 
     type(lista_ventanilla) :: lista_ventanilla_repecion
 
@@ -140,16 +141,17 @@ program PROYECTO_FASE_1
         read(*,*) opcion_menu_reporte
         select case(opcion_menu_reporte)
             case(1)
-                call cola_cliente_recepcion%top5_img_grandes()
+                call cola_cliente1%top5_img_grandes("Reporte_Top5_ImgGrande")
                 
             case(2)
-                call cola_cliente_recepcion%top5_img_pequenas()
+                call cola_cliente1%top5_img_pequenas("Reporte_Top5_ImgPequena")
             case(3)
-                call lista_ventanilla_repecion%lista_clientes_atendido%cliente_mayor_pasos()
+                call lista_ventanilla_repecion%lista_clientes_atendido%cliente_mayor_pasos("ReporteCientePasos")
             case(4)
                 print *, "Por favor, escribe el nombre del cliente:"
                 read(*, '(A)') nombre_cliente
-                call lista_ventanilla_repecion%lista_clientes_atendido%print_cliente_por_nombre(trim(nombre_cliente))
+                call lista_ventanilla_repecion%lista_clientes_atendido%print_cliente_por_nombre(&
+                trim(nombre_cliente), "ReporteClienteBuscado")
         end select
     end subroutine
 
@@ -167,7 +169,7 @@ program PROYECTO_FASE_1
         print *, "CARGA MASIVA CLIENTE"
         print *, "---------------------------------------"
         call json%initialize()
-        call json%load(filename='config.json')
+        call json%load(filename='users.json')
         call json%info('',n_children=cantidad_cliente_json)
         call json%get_core(jsonc)
         call json%get('', lista_puntero, encontrado)
@@ -182,6 +184,7 @@ program PROYECTO_FASE_1
             call jsonc%get_child(puntero, 'img_g', atributo_puntero, encontrado) 
             call jsonc%get(atributo_puntero, img_grande)
             call cola_cliente_recepcion%push_cliente(trim(id), trim(nombre), trim(img_grande), trim(img_pequena))
+            call cola_cliente1%push_cliente(trim(id), trim(nombre), trim(img_grande), trim(img_pequena))
         end do
         call json%destroy()
         print *, "Clientes En Cola Correctamente."
