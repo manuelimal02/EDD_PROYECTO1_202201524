@@ -1,19 +1,23 @@
  digraph cola {node [fontname="Courier New"]
      node [shape=component, style=filled, color=blue, fillcolor="#65babf"];
  "Node           0 " [shape=folder, color=black, fillcolor="#d43440" label="Cola De Clientes"];
-     "Node           1 " [label="ID Cliente: 3\nNombre: Carlos Martinez\nImagenes Pequenas: 2\nImagenes Grandes: 2"];
+     "Node           1 " [label="ID Cliente: 1\nNombre: Juan Perez\nImagenes Pequenas: 3\nImagenes Grandes: 1"];
      "Node           1 " -> "Node           2 ";
-     "Node           2 " [label="ID Cliente: 4\nNombre: Ana Rodriguez\nImagenes Pequenas: 2\nImagenes Grandes: 4"];
+     "Node           2 " [label="ID Cliente: 2\nNombre: Maria Lopez\nImagenes Pequenas: 1\nImagenes Grandes: 3"];
      "Node           2 " -> "Node           3 ";
-     "Node           3 " [label="ID Cliente: 5\nNombre: Luis Garcia\nImagenes Pequenas: 1\nImagenes Grandes: 2"];
+     "Node           3 " [label="ID Cliente: 3\nNombre: Carlos Martinez\nImagenes Pequenas: 2\nImagenes Grandes: 2"];
      "Node           3 " -> "Node           4 ";
-     "Node           4 " [label="ID Cliente: 6\nNombre: Elena Gonzalez\nImagenes Pequenas: 3\nImagenes Grandes: 1"];
+     "Node           4 " [label="ID Cliente: 4\nNombre: Ana Rodriguez\nImagenes Pequenas: 2\nImagenes Grandes: 4"];
      "Node           4 " -> "Node           5 ";
-     "Node           5 " [label="ID Cliente: 7\nNombre: Pedro Sanchez\nImagenes Pequenas: 3\nImagenes Grandes: 1"];
+     "Node           5 " [label="ID Cliente: 5\nNombre: Luis Garcia\nImagenes Pequenas: 1\nImagenes Grandes: 2"];
      "Node           5 " -> "Node           6 ";
-     "Node           6 " [label="ID Cliente: 8\nNombre: Sofia Ramirez\nImagenes Pequenas: 1\nImagenes Grandes: 2"];
+     "Node           6 " [label="ID Cliente: 6\nNombre: Elena Gonzalez\nImagenes Pequenas: 3\nImagenes Grandes: 1"];
      "Node           6 " -> "Node           7 ";
-     "Node           7 " [label="ID Cliente: 9\nNombre: Diego Castro\nImagenes Pequenas: 3\nImagenes Grandes: 1"];
+     "Node           7 " [label="ID Cliente: 7\nNombre: Pedro Sanchez\nImagenes Pequenas: 3\nImagenes Grandes: 1"];
      "Node           7 " -> "Node           8 ";
-     "Node           8 " [label="ID Cliente: 10\nNombre: Laura Diaz\nImagenes Pequenas: 1\nImagenes Grandes: 3"];
+     "Node           8 " [label="ID Cliente: 8\nNombre: Sofia Ramirez\nImagenes Pequenas: 1\nImagenes Grandes: 2"];
+     "Node           8 " -> "Node           9 ";
+     "Node           9 " [label="ID Cliente: 9\nNombre: Diego Castro\nImagenes Pequenas: 3\nImagenes Grandes: 1"];
+     "Node           9 " -> "Node          10 ";
+     "Node          10 " [label="ID Cliente: 10\nNombre: Laura Diaz\nImagenes Pequenas: 1\nImagenes Grandes: 3"];
  }
