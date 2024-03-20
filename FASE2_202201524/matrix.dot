@@ -1,0 +1,166 @@
+ digraph Matrix {
+ node[shape = "box"]
+ "Nodo0_0"[label = "CAMBIO", group="0"]                                                                                                                
+ "Nodo0_0"->"Nodo2_0"
+ "Nodo0_0"->"Nodo2_0"[dir = back]
+ "Nodo0_0"->"Nodo0_2"
+ "Nodo0_0"->"Nodo0_2"[dir = back]
+ "Nodo2_0"[label = "1", group="2"]                                                                                                                     
+ "Nodo2_0"->"Nodo3_0"
+ "Nodo2_0"->"Nodo3_0"[dir = back]
+ "Nodo2_0"->"Nodo2_2"
+ "Nodo2_0"->"Nodo2_2"[dir = back]
+ "Nodo3_0"[label = "2", group="3"]                                                                                                                     
+ "Nodo3_0"->"Nodo3_2"
+ "Nodo3_0"->"Nodo3_2"[dir = back]
+ {rank=same;"Nodo0_0";"Nodo2_0";"Nodo3_0"}
+ "Nodo0_2"[label = "1", group="0"]                                                                                                                     
+ "Nodo0_2"->"Nodo2_2"
+ "Nodo0_2"->"Nodo2_2"[dir = back]
+ "Nodo0_2"->"Nodo0_3"
+ "Nodo0_2"->"Nodo0_3"[dir = back]
+ "Nodo2_2"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_2"->"Nodo3_2"
+ "Nodo2_2"->"Nodo3_2"[dir = back]
+ "Nodo2_2"->"Nodo2_3"
+ "Nodo2_2"->"Nodo2_3"[dir = back]
+ "Nodo3_2"[label = "#FF5733",  style = filled, fillcolor = "#FF5733" group="3"]                                                                        
+ "Nodo3_2"->"Nodo3_3"
+ "Nodo3_2"->"Nodo3_3"[dir = back]
+ {rank=same;"Nodo0_2";"Nodo2_2";"Nodo3_2"}
+ "Nodo0_3"[label = "2", group="0"]                                                                                                                     
+ "Nodo0_3"->"Nodo2_3"
+ "Nodo0_3"->"Nodo2_3"[dir = back]
+ "Nodo0_3"->"Nodo0_4"
+ "Nodo0_3"->"Nodo0_4"[dir = back]
+ "Nodo2_3"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_3"->"Nodo3_3"
+ "Nodo2_3"->"Nodo3_3"[dir = back]
+ "Nodo2_3"->"Nodo2_4"
+ "Nodo2_3"->"Nodo2_4"[dir = back]
+ "Nodo3_3"[label = "#FF5733",  style = filled, fillcolor = "#FF5733" group="3"]                                                                        
+ "Nodo3_3"->"Nodo3_4"
+ "Nodo3_3"->"Nodo3_4"[dir = back]
+ {rank=same;"Nodo0_3";"Nodo2_3";"Nodo3_3"}
+ "Nodo0_4"[label = "3", group="0"]                                                                                                                     
+ "Nodo0_4"->"Nodo2_4"
+ "Nodo0_4"->"Nodo2_4"[dir = back]
+ "Nodo0_4"->"Nodo0_5"
+ "Nodo0_4"->"Nodo0_5"[dir = back]
+ "Nodo2_4"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_4"->"Nodo3_4"
+ "Nodo2_4"->"Nodo3_4"[dir = back]
+ "Nodo2_4"->"Nodo2_5"
+ "Nodo2_4"->"Nodo2_5"[dir = back]
+ "Nodo3_4"[label = "#FF5733",  style = filled, fillcolor = "#FF5733" group="3"]                                                                        
+ "Nodo3_4"->"Nodo3_5"
+ "Nodo3_4"->"Nodo3_5"[dir = back]
+ {rank=same;"Nodo0_4";"Nodo2_4";"Nodo3_4"}
+ "Nodo0_5"[label = "4", group="0"]                                                                                                                     
+ "Nodo0_5"->"Nodo2_5"
+ "Nodo0_5"->"Nodo2_5"[dir = back]
+ "Nodo0_5"->"Nodo0_6"
+ "Nodo0_5"->"Nodo0_6"[dir = back]
+ "Nodo2_5"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_5"->"Nodo3_5"
+ "Nodo2_5"->"Nodo3_5"[dir = back]
+ "Nodo2_5"->"Nodo2_6"
+ "Nodo2_5"->"Nodo2_6"[dir = back]
+ "Nodo3_5"[label = "#74FF33",  style = filled, fillcolor = "#74FF33" group="3"]                                                                        
+ {rank=same;"Nodo0_5";"Nodo2_5";"Nodo3_5"}
+ "Nodo0_6"[label = "5", group="0"]                                                                                                                     
+ "Nodo0_6"->"Nodo2_6"
+ "Nodo0_6"->"Nodo2_6"[dir = back]
+ "Nodo0_6"->"Nodo0_7"
+ "Nodo0_6"->"Nodo0_7"[dir = back]
+ "Nodo2_6"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_6"->"Nodo2_7"
+ "Nodo2_6"->"Nodo2_7"[dir = back]
+ {rank=same;"Nodo0_6";"Nodo2_6"}
+ "Nodo0_7"[label = "6", group="0"]                                                                                                                     
+ "Nodo0_7"->"Nodo2_7"
+ "Nodo0_7"->"Nodo2_7"[dir = back]
+ "Nodo0_7"->"Nodo0_8"
+ "Nodo0_7"->"Nodo0_8"[dir = back]
+ "Nodo2_7"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_7"->"Nodo2_8"
+ "Nodo2_7"->"Nodo2_8"[dir = back]
+ {rank=same;"Nodo0_7";"Nodo2_7"}
+ "Nodo0_8"[label = "7", group="0"]                                                                                                                     
+ "Nodo0_8"->"Nodo2_8"
+ "Nodo0_8"->"Nodo2_8"[dir = back]
+ "Nodo0_8"->"Nodo0_9"
+ "Nodo0_8"->"Nodo0_9"[dir = back]
+ "Nodo2_8"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_8"->"Nodo2_9"
+ "Nodo2_8"->"Nodo2_9"[dir = back]
+ {rank=same;"Nodo0_8";"Nodo2_8"}
+ "Nodo0_9"[label = "8", group="0"]                                                                                                                     
+ "Nodo0_9"->"Nodo2_9"
+ "Nodo0_9"->"Nodo2_9"[dir = back]
+ "Nodo0_9"->"Nodo0_10"
+ "Nodo0_9"->"Nodo0_10"[dir = back]
+ "Nodo2_9"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                        
+ "Nodo2_9"->"Nodo2_10"
+ "Nodo2_9"->"Nodo2_10"[dir = back]
+ {rank=same;"Nodo0_9";"Nodo2_9"}
+ "Nodo0_10"[label = "9", group="0"]                                                                                                                    
+ "Nodo0_10"->"Nodo2_10"
+ "Nodo0_10"->"Nodo2_10"[dir = back]
+ "Nodo0_10"->"Nodo0_11"
+ "Nodo0_10"->"Nodo0_11"[dir = back]
+ "Nodo2_10"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                       
+ "Nodo2_10"->"Nodo2_11"
+ "Nodo2_10"->"Nodo2_11"[dir = back]
+ {rank=same;"Nodo0_10";"Nodo2_10"}
+ "Nodo0_11"[label = "10", group="0"]                                                                                                                   
+ "Nodo0_11"->"Nodo2_11"
+ "Nodo0_11"->"Nodo2_11"[dir = back]
+ "Nodo0_11"->"Nodo0_12"
+ "Nodo0_11"->"Nodo0_12"[dir = back]
+ "Nodo2_11"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                       
+ "Nodo2_11"->"Nodo2_12"
+ "Nodo2_11"->"Nodo2_12"[dir = back]
+ {rank=same;"Nodo0_11";"Nodo2_11"}
+ "Nodo0_12"[label = "11", group="0"]                                                                                                                   
+ "Nodo0_12"->"Nodo2_12"
+ "Nodo0_12"->"Nodo2_12"[dir = back]
+ "Nodo0_12"->"Nodo0_13"
+ "Nodo0_12"->"Nodo0_13"[dir = back]
+ "Nodo2_12"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                       
+ "Nodo2_12"->"Nodo2_13"
+ "Nodo2_12"->"Nodo2_13"[dir = back]
+ {rank=same;"Nodo0_12";"Nodo2_12"}
+ "Nodo0_13"[label = "12", group="0"]                                                                                                                   
+ "Nodo0_13"->"Nodo2_13"
+ "Nodo0_13"->"Nodo2_13"[dir = back]
+ "Nodo0_13"->"Nodo0_14"
+ "Nodo0_13"->"Nodo0_14"[dir = back]
+ "Nodo2_13"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                       
+ "Nodo2_13"->"Nodo2_14"
+ "Nodo2_13"->"Nodo2_14"[dir = back]
+ {rank=same;"Nodo0_13";"Nodo2_13"}
+ "Nodo0_14"[label = "13", group="0"]                                                                                                                   
+ "Nodo0_14"->"Nodo2_14"
+ "Nodo0_14"->"Nodo2_14"[dir = back]
+ "Nodo0_14"->"Nodo0_15"
+ "Nodo0_14"->"Nodo0_15"[dir = back]
+ "Nodo2_14"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                       
+ "Nodo2_14"->"Nodo2_15"
+ "Nodo2_14"->"Nodo2_15"[dir = back]
+ {rank=same;"Nodo0_14";"Nodo2_14"}
+ "Nodo0_15"[label = "14", group="0"]                                                                                                                   
+ "Nodo0_15"->"Nodo2_15"
+ "Nodo0_15"->"Nodo2_15"[dir = back]
+ "Nodo0_15"->"Nodo0_16"
+ "Nodo0_15"->"Nodo0_16"[dir = back]
+ "Nodo2_15"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                       
+ "Nodo2_15"->"Nodo2_16"
+ "Nodo2_15"->"Nodo2_16"[dir = back]
+ {rank=same;"Nodo0_15";"Nodo2_15"}
+ "Nodo0_16"[label = "15", group="0"]                                                                                                                   
+ "Nodo0_16"->"Nodo2_16"
+ "Nodo0_16"->"Nodo2_16"[dir = back]
+ "Nodo2_16"[label = "#FFCC27",  style = filled, fillcolor = "#FFCC27" group="2"]                                                                       
+ {rank=same;"Nodo0_16";"Nodo2_16"}
+ }
