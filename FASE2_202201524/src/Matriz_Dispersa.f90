@@ -182,8 +182,9 @@ contains
     end function existeNodo
 
 
-    subroutine graficar(self)
+    subroutine graficar(self, filename)
         class(matriz_dispersa), intent(in) :: self
+        character(len=*), intent(in) :: filename
         integer :: io
         integer :: i
         character(len=10) :: str_i
@@ -201,8 +202,8 @@ contains
         type(nodo_matriz), pointer :: columna_aux
         io = 1
         fila_aux => self%raiz
-        comando = "dot -Tpng ./matrix.dot -o ./matrix.png"
-        open(newunit=io, file="./matrix.dot")
+        comando = "dot -Gnslimit=2 -Tpng ./"//trim(filename)//".dot -o ./"//trim(filename)//".png"
+        open(newunit=io, file="./"//trim(filename)//".dot")
         write(io, *) "digraph Matrix {"
         write(io, *) 'node[shape = "box"]'
         do while (associated(fila_aux))

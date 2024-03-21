@@ -1,0 +1,58 @@
+[
+    {
+        "id_capa": 89,
+        "pixeles":
+        [
+            {
+                "fila": 1,
+                "columna": 1,
+                "color": "#FFCC27"
+            }
+        ]
+    },
+    {
+        "id_capa": 9,
+        "pixeles": 
+        [
+            {
+                "fila": 2,
+                "columna": 1,
+                "color": "#FF5733"
+            }
+        ]
+    },
+    {
+        "id_capa": 183,
+        "pixeles": 
+        [
+            {
+                "fila": 3,
+                "columna": 1,
+                "color": "#3364FF"
+            }
+        ]
+    },
+    {
+        "id_capa": 5,
+        "pixeles": 
+        [
+            {
+                "fila": 3,
+                "columna": 1,
+                "color": "#3364FF"
+            }
+        ]
+    },
+    {
+        "id_capa": 500,
+        "pixeles": 
+        [
+            {
+                "fila": 3,
+                "columna": 1,
+                "color": "#3364FF"
+            }
+        ]
+    }
+
+]
