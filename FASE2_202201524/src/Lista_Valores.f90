@@ -1,7 +1,7 @@
 module modulo_pixel
     implicit none
     private
-    type :: nodo_pixel
+    type, public :: nodo_pixel
         integer :: fila
         integer :: columna
         character(len=7) :: color_hexadecimal
@@ -52,6 +52,7 @@ module modulo_capa
     contains
         procedure :: insertar
         procedure :: imprimir
+        procedure, public :: pixeles_capa
     end type capas
 contains
     subroutine insertar(self, id_capa, lista_pixeles)
@@ -77,4 +78,20 @@ contains
             actual => actual%siguiente
         end do
     end subroutine imprimir
+    !---
+    function pixeles_capa(self, id_capa) result(lista_pixeles)
+        class(capas), intent(in) :: self
+        integer, intent(in) :: id_capa
+        type(pixeles), pointer :: lista_pixeles
+        type(nodo_capa), pointer :: actual
+        actual => self%cabeza
+        lista_pixeles => null()
+        do while(associated(actual))
+            if (actual%id_capa == id_capa) then
+                lista_pixeles => actual%lista_pixeles
+                exit
+            end if
+            actual => actual%siguiente
+        end do
+    end function pixeles_capa
 end module modulo_capa

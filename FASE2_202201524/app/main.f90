@@ -135,6 +135,8 @@ contains
     end subroutine visualizar_estructura
 
     subroutine generador_imagen()
+        type(pixeles), pointer :: pixel_capa
+        type(nodo_pixel), pointer :: actual
         integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa
         character(len=:), allocatable :: recorrido
         character(len=20), dimension(:), allocatable :: nodo
@@ -168,6 +170,14 @@ contains
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
                             print *, trim(nodo(contador))
+                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(1)
+                            if (associated(pixel_capa)) then
+                                actual => pixel_capa%cabeza
+                                do while(associated(actual))
+                                    print*, "FILA"
+                                    actual => actual%siguiente
+                                end do
+                            end if
                         end do
                     else if (tipo_recorrido==2) then
                         call arbol_abb_capa%inorder(numero_nodo, recorrido)
@@ -188,6 +198,7 @@ contains
             end select
         end do
     end subroutine generador_imagen
+    
 
     subroutine carga_masiva()
         integer :: opcion_carga
