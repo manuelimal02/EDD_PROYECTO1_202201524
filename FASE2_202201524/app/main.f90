@@ -1,8 +1,10 @@
 program main
     use json_module
+    use modulo_split
     use modulo_pixel
     use modulo_arbol_abb
     use modulo_arbol_avl
+    use modulo_matriz_dispersa
     implicit none
     !LECTURA JSON
     type(json_file) :: json
@@ -133,8 +135,9 @@ contains
     end subroutine visualizar_estructura
 
     subroutine generador_imagen()
-        integer :: opcion_imagen, numero_nodo, tipo_recorrido
-        character(len=:), allocatable :: recorrido1, recorrido2, recorrido3
+        integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa
+        character(len=:), allocatable :: recorrido
+        character(len=20), dimension(:), allocatable :: nodo
         do
             print *, "---------------------------------------"
             print *, "Menu Generador Imagenes - Pixel Print Studio"
@@ -157,17 +160,22 @@ contains
                     print *,"1. Preorden"
                     print *,"2. Inorden" 
                     print *,"3. Postorden"
-                    !read(*,*) tipo_recorrido
-                    !if (tipo_recorrido==1) then
-                        call arbol_abb_capa%preorder(numero_nodo, recorrido1)
-                        print*, "Preorder: ", recorrido1
-                    !else if (tipo_recorrido==2) then
-                        call arbol_abb_capa%inorder(numero_nodo, recorrido2)
-                        print*, "Inorder: ", recorrido2
-                    !else if (tipo_recorrido==3) then
-                        call arbol_abb_capa%posorder(numero_nodo, recorrido3)
-                        print*, "Posorder: ", recorrido3
-                    !end if
+                    read(*,*) tipo_recorrido
+                    !PREORDER
+                    if (tipo_recorrido==1) then
+                        call arbol_abb_capa%preorder(numero_nodo, recorrido)
+                        print*, "Preorder: "
+                        call split(recorrido, '-', nodo)
+                        do contador = 1, size(nodo)
+                            print *, trim(nodo(contador))
+                        end do
+                    else if (tipo_recorrido==2) then
+                        call arbol_abb_capa%inorder(numero_nodo, recorrido)
+                        print*, "Inorder: ", recorrido
+                    else if (tipo_recorrido==3) then
+                        call arbol_abb_capa%posorder(numero_nodo, recorrido)
+                        print*, "Posorder: ", recorrido
+                    end if
                     print *, "---------------------------------------"
                 case(2)
                     print*,""
@@ -197,7 +205,7 @@ contains
             select case(opcion_carga)
                 case(1)
                     call carga_masiva_capa()
-                    call arbol_abb_capa%graph("Pruba_Capa")
+                    call arbol_abb_capa%graph("ARBOL_ABB_GRAFICA")
                     !call arbol_abb_capa%capas_cliente%imprimir()
                 case(2)
                     call carga_masiva_imagen()
@@ -216,7 +224,7 @@ contains
     subroutine carga_masiva_capa()
         type(pixeles), pointer :: pixel_capa
         call json%initialize()
-        call json%load(filename='2CAPAS.json')
+        call json%load(filename='2ImagenMa.json')
         call json%info('',n_children=size_capa)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCapa, capa_encontrada)
@@ -238,7 +246,7 @@ contains
                 call jsonc%get(atributoPixel, color)
                 read(fila, *) fila_int
                 read(columna, *) columna_int
-                call pixel_capa%insertar(columna_int, fila_int, color)
+                call pixel_capa%insertar(fila_int, columna_int, color)
             end do
             call arbol_abb_capa%insertar(id_capa_int)
             call arbol_abb_capa%capas_cliente%insertar(id_capa_int, pixel_capa)
