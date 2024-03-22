@@ -1,7 +1,6 @@
 program main
     use json_module
     use modulo_split
-    use modulo_pixel
     use modulo_arbol_abb
     use modulo_arbol_avl
     use modulo_matriz_dispersa
@@ -135,9 +134,7 @@ contains
     end subroutine visualizar_estructura
 
     subroutine generador_imagen()
-        type(pixeles), pointer :: pixel_capa
-        type(nodo_pixel), pointer :: actual_nodo
-        type(matriz_dispersa), pointer :: matriz_imagen
+        type(matriz_dispersa), pointer :: matriz_imagen, matriz_auxiliar
         integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa
         character(len=:), allocatable :: recorrido
         character(len=20), dimension(:), allocatable :: nodo
@@ -171,17 +168,12 @@ contains
                         print*, "Preorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
+                            allocate(matriz_auxiliar)
                             print *, trim(nodo(contador))
                             read(nodo(contador), *) id_capa
-                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(id_capa)
-                            if (associated(pixel_capa)) then
-                                actual_nodo => pixel_capa%cabeza
-                                do while(associated(actual_nodo))
-                                    call matriz_imagen%insertar_nodo(actual_nodo%columna, & 
-                                    actual_nodo%fila, actual_nodo%color_hexadecimal)
-                                    actual_nodo => actual_nodo%siguiente
-                                end do
-                            end if
+                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                            call matriz_imagen%insertar_matriz(matriz_auxiliar)
+                            deallocate(matriz_auxiliar)
                         end do
                         call matriz_imagen%graficar_matriz("I_Recorrido_Preorden")
                         deallocate(matriz_imagen)
@@ -192,17 +184,12 @@ contains
                         print*, "Inorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
+                            allocate(matriz_auxiliar)
                             print *, trim(nodo(contador))
                             read(nodo(contador), *) id_capa
-                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(id_capa)
-                            if (associated(pixel_capa)) then
-                                actual_nodo => pixel_capa%cabeza
-                                do while(associated(actual_nodo))
-                                    call matriz_imagen%insertar_nodo(actual_nodo%columna, & 
-                                    actual_nodo%fila, actual_nodo%color_hexadecimal)
-                                    actual_nodo => actual_nodo%siguiente
-                                end do
-                            end if
+                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                            call matriz_imagen%insertar_matriz(matriz_auxiliar)
+                            deallocate(matriz_auxiliar)
                         end do
                         call matriz_imagen%graficar_matriz("I_Recorrido_Inorden")
                         deallocate(matriz_imagen)
@@ -213,17 +200,12 @@ contains
                         print*, "Postorden: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
+                            allocate(matriz_auxiliar)
                             print *, trim(nodo(contador))
                             read(nodo(contador), *) id_capa
-                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(id_capa)
-                            if (associated(pixel_capa)) then
-                                actual_nodo => pixel_capa%cabeza
-                                do while(associated(actual_nodo))
-                                    call matriz_imagen%insertar_nodo(actual_nodo%columna, & 
-                                    actual_nodo%fila, actual_nodo%color_hexadecimal)
-                                    actual_nodo => actual_nodo%siguiente
-                                end do
-                            end if
+                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                            call matriz_imagen%insertar_matriz(matriz_auxiliar)
+                            deallocate(matriz_auxiliar)
                         end do
                         call matriz_imagen%graficar_matriz("I_Recorrido_Postorden")
                         deallocate(matriz_imagen)
@@ -274,14 +256,14 @@ contains
     !CARGA MASIVA CAPAS
     !------------------------------------------------------------------------
     subroutine carga_masiva_capa()
-        type(pixeles), pointer :: pixel_capa
+        type(matriz_dispersa), pointer :: matriz_dispersa_capa
         call json%initialize()
-        call json%load(filename='2CAPAS.json')
+        call json%load(filename='2ImagenMa.json')
         call json%info('',n_children=size_capa)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCapa, capa_encontrada)
         do contador_capa = 1, size_capa
-            allocate(pixel_capa)
+            allocate(matriz_dispersa_capa)
             call jsonc%get_child(listaPunteroCapa, contador_capa, punteroCapa, capa_encontrada)
             call jsonc%get_child(punteroCapa, 'id_capa', atributoPunteroCapa, capa_encontrada)
             call jsonc%get(atributoPunteroCapa, id_capa)
@@ -298,10 +280,10 @@ contains
                 call jsonc%get(atributoPixel, color)
                 read(fila, *) fila_int
                 read(columna, *) columna_int
-                call pixel_capa%insertar(fila_int, columna_int, color)
+                call matriz_dispersa_capa%insertar_nodo(columna_int, fila_int, color)
             end do
-            call arbol_abb_capa%insertar_nodo(id_capa_int)
-            call arbol_abb_capa%capas_cliente%insertar(id_capa_int, pixel_capa)
+            call arbol_abb_capa%insertar_nodo(id_capa_int, matriz_dispersa_capa)
+            deallocate(matriz_dispersa_capa)
         end do
         call json%destroy()
     end subroutine carga_masiva_capa

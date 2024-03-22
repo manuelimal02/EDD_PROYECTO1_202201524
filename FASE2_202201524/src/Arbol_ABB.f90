@@ -1,55 +1,88 @@
 module modulo_arbol_abb
-    use modulo_capa
+    use modulo_matriz_dispersa
     implicit none
     private
     type :: nodo_abb
         integer :: valor
         type(nodo_abb), pointer :: derecha => null()
         type(nodo_abb), pointer :: izquierda => null()
+        type(matriz_dispersa) :: matriz
     end type nodo_abb
+
     type, public :: arbol_abb
         type(nodo_abb), pointer :: raiz => null()
-        type(capas) :: capas_cliente
     contains
         procedure :: insertar_nodo
         procedure :: recorrido_preorden
         procedure :: recorrido_inorden
         procedure :: recorrido_postorden
         procedure :: graficar_arbol
+        procedure :: buscar_matriz
     end type arbol_abb
 
 contains    
     !-----------------------------------------------------------------
-    subroutine insertar_nodo(self, valor)
+    subroutine insertar_nodo(self, valor, matriz)
         class(arbol_abb), intent(inout) :: self
         integer, intent(in) :: valor
+        type(matriz_dispersa), intent(in) :: matriz
+        type(nodo_abb), pointer :: nuevo
+        allocate(nuevo)
+        nuevo = nodo_abb(valor=valor, matriz=matriz)
         if (.not. associated(self%raiz)) then
-            allocate(self%raiz)
-            self%raiz%valor = valor
+            self%raiz => nuevo
         else
-            call insertRec(self%raiz, valor)
+            call insertRec(self%raiz, nuevo)
         end if
     end subroutine insertar_nodo
     !---
-    recursive subroutine insertRec(raiz, valor)
+    recursive subroutine insertRec(raiz, nuevo)
         type(nodo_abb), pointer, intent(inout) :: raiz
-        integer, intent(in) :: valor
-        if (valor < raiz%valor) then
+        type(nodo_abb), pointer, intent(in) :: nuevo
+        if (nuevo%valor < raiz%valor) then
             if (.not. associated(raiz%izquierda)) then
-                allocate(raiz%izquierda)
-                raiz%izquierda%valor = valor
+                raiz%izquierda => nuevo
             else
-                call insertRec(raiz%izquierda, valor)
+                call insertRec(raiz%izquierda, nuevo)
             end if
-        else if (valor > raiz%valor) then
+        else if (nuevo%valor > raiz%valor) then
             if (.not. associated(raiz%derecha)) then
-                allocate(raiz%derecha)
-                raiz%derecha%valor = valor
+                raiz%derecha => nuevo
             else
-                call insertRec(raiz%derecha, valor)
+                call insertRec(raiz%derecha, nuevo)
             end if
         end if
     end subroutine insertRec
+
+    !-----------------------------------------------------------------
+    function buscar_matriz(self, valor) result(matriz)
+        class(arbol_abb), intent(in) :: self
+        integer, intent(in) :: valor
+        type(matriz_dispersa) :: matriz
+        type(nodo_abb), pointer :: nodo
+        nodo => buscar_nodo(self%raiz, valor)
+        if (associated(nodo)) then
+            matriz = nodo%matriz
+            print *, "SI HAY MATRIZ"
+        else
+            print *, "No Se encontro La Matriz."
+        end if
+    end function buscar_matriz
+    !---
+    recursive function buscar_nodo(raiz, valor) result(nodo)
+        type(nodo_abb), pointer, intent(in) :: raiz
+        integer, intent(in) :: valor
+        type(nodo_abb), pointer :: nodo
+        if (.not. associated(raiz)) then
+            nodo => null()
+        else if (valor == raiz%valor) then
+            nodo => raiz
+        else if (valor < raiz%valor) then
+            nodo => buscar_nodo(raiz%izquierda, valor)
+        else
+            nodo => buscar_nodo(raiz%derecha, valor)
+        end if
+    end function buscar_nodo    
 
     !-----------------------------------------------------------------
     subroutine recorrido_preorden(self, num_nodos, cadena)

@@ -22,6 +22,7 @@ module modulo_matriz_dispersa
         integer :: altura = 0
     contains
         procedure :: insertar_nodo
+        procedure :: insertar_matriz
         procedure :: insertar_cabecera_fila
         procedure :: insertar_cabecera_columna
         procedure :: buscar_fila
@@ -60,6 +61,24 @@ contains
             call insertarEnFila(nuevo, columna)
         end if
     end subroutine insertar_nodo
+
+    !--------------------------------------------------------------------
+    subroutine insertar_matriz(self, matriz)
+        class(matriz_dispersa), intent(inout) :: self
+        class(matriz_dispersa), intent(in) :: matriz
+        type(nodo_matriz), pointer :: fila_aux
+        type(nodo_matriz), pointer :: columna_aux
+        fila_aux => matriz%raiz%abajo
+        do while(associated(fila_aux))
+            columna_aux => fila_aux%derecha
+            do while(associated(columna_aux))
+                call self%insertar_nodo(columna_aux%i, columna_aux%j, columna_aux%valor)
+                columna_aux => columna_aux%derecha
+            end do
+            fila_aux => fila_aux%abajo
+        end do
+        print*, "MATRIZ INSERTADA, CAPA LISTA"
+    end subroutine insertar_matriz
 
     !--------------------------------------------------------------------
     function insertar_cabecera_columna(self, i) result(nuevaCabeceraColumna)
