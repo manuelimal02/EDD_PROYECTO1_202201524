@@ -149,7 +149,7 @@ contains
         end if
         dotStructure = dotStructure // trim(createNodes) // trim(linkNodes) // "}" // new_line('a')
         call write_dot(filename, dotStructure)
-        print *, "Archivo actualizado existosamente."
+        print *, "Grafica '"//trim(filename)//"' Generada Correctamente."
     end subroutine graph
     !---
     recursive subroutine RoamTree(current, createNodes, linkNodes)

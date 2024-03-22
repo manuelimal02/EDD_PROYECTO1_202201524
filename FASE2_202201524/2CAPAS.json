@@ -28,7 +28,7 @@
             {
                 "fila": 3,
                 "columna": 1,
-                "color": "#3364FF"
+                "color": "#FF33F3"
             }
         ]
     },
@@ -37,9 +37,9 @@
         "pixeles": 
         [
             {
-                "fila": 3,
+                "fila": 4,
                 "columna": 1,
-                "color": "#3364FF"
+                "color": "#ECFF33"
             }
         ]
     },
@@ -48,9 +48,9 @@
         "pixeles": 
         [
             {
-                "fila": 3,
+                "fila": 5,
                 "columna": 1,
-                "color": "#3364FF"
+                "color": "#BB33FF"
             }
         ]
     }

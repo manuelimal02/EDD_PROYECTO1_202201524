@@ -121,7 +121,7 @@ contains
                 case(1)
                     print*,""
                 case(2)
-                    print*,""
+                    call arbol_abb_capa%graph("Arbol_Capa_Abb")
                 case(3)
                     print*,""
                 case(4)
@@ -136,7 +136,8 @@ contains
 
     subroutine generador_imagen()
         type(pixeles), pointer :: pixel_capa
-        type(nodo_pixel), pointer :: actual
+        type(nodo_pixel), pointer :: actual_nodo
+        type(matriz_dispersa), pointer :: matriz_imagen
         integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa
         character(len=:), allocatable :: recorrido
         character(len=20), dimension(:), allocatable :: nodo
@@ -163,28 +164,69 @@ contains
                     print *,"2. Inorden" 
                     print *,"3. Postorden"
                     read(*,*) tipo_recorrido
-                    !PREORDER
+                    !PREORDER------------------------------------------------
                     if (tipo_recorrido==1) then
+                        allocate(matriz_imagen)
                         call arbol_abb_capa%preorder(numero_nodo, recorrido)
                         print*, "Preorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
                             print *, trim(nodo(contador))
-                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(1)
+                            read(nodo(contador), *) id_capa
+                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(id_capa)
                             if (associated(pixel_capa)) then
-                                actual => pixel_capa%cabeza
-                                do while(associated(actual))
-                                    print*, "FILA"
-                                    actual => actual%siguiente
+                                actual_nodo => pixel_capa%cabeza
+                                do while(associated(actual_nodo))
+                                    call matriz_imagen%insertar_nodo(actual_nodo%columna, & 
+                                    actual_nodo%fila, actual_nodo%color_hexadecimal)
+                                    actual_nodo => actual_nodo%siguiente
                                 end do
                             end if
                         end do
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Preorder")
+                        deallocate(matriz_imagen)
+                    !INORDER--------------------------------------------------
                     else if (tipo_recorrido==2) then
+                        allocate(matriz_imagen)
                         call arbol_abb_capa%inorder(numero_nodo, recorrido)
-                        print*, "Inorder: ", recorrido
+                        print*, "Inorder: "
+                        call split(recorrido, '-', nodo)
+                        do contador = 1, size(nodo)
+                            print *, trim(nodo(contador))
+                            read(nodo(contador), *) id_capa
+                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(id_capa)
+                            if (associated(pixel_capa)) then
+                                actual_nodo => pixel_capa%cabeza
+                                do while(associated(actual_nodo))
+                                    call matriz_imagen%insertar_nodo(actual_nodo%columna, & 
+                                    actual_nodo%fila, actual_nodo%color_hexadecimal)
+                                    actual_nodo => actual_nodo%siguiente
+                                end do
+                            end if
+                        end do
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Inorder")
+                        deallocate(matriz_imagen)
+                    !POSORDER--------------------------------------------------
                     else if (tipo_recorrido==3) then
+                        allocate(matriz_imagen)
                         call arbol_abb_capa%posorder(numero_nodo, recorrido)
-                        print*, "Posorder: ", recorrido
+                        print*, "Postorden: "
+                        call split(recorrido, '-', nodo)
+                        do contador = 1, size(nodo)
+                            print *, trim(nodo(contador))
+                            read(nodo(contador), *) id_capa
+                            pixel_capa => arbol_abb_capa%capas_cliente%pixeles_capa(id_capa)
+                            if (associated(pixel_capa)) then
+                                actual_nodo => pixel_capa%cabeza
+                                do while(associated(actual_nodo))
+                                    call matriz_imagen%insertar_nodo(actual_nodo%columna, & 
+                                    actual_nodo%fila, actual_nodo%color_hexadecimal)
+                                    actual_nodo => actual_nodo%siguiente
+                                end do
+                            end if
+                        end do
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Postorden")
+                        deallocate(matriz_imagen)
                     end if
                     print *, "---------------------------------------"
                 case(2)
@@ -216,8 +258,6 @@ contains
             select case(opcion_carga)
                 case(1)
                     call carga_masiva_capa()
-                    call arbol_abb_capa%graph("ARBOL_ABB_GRAFICA")
-                    !call arbol_abb_capa%capas_cliente%imprimir()
                 case(2)
                     call carga_masiva_imagen()
                 case(3)
@@ -235,7 +275,7 @@ contains
     subroutine carga_masiva_capa()
         type(pixeles), pointer :: pixel_capa
         call json%initialize()
-        call json%load(filename='2ImagenMa.json')
+        call json%load(filename='2CAPAS.json')
         call json%info('',n_children=size_capa)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCapa, capa_encontrada)
