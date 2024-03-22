@@ -11,16 +11,16 @@ module modulo_arbol_abb
         type(nodo_abb), pointer :: raiz => null()
         type(capas) :: capas_cliente
     contains
-        procedure :: insertar
-        procedure :: preorder
-        procedure :: inorder
-        procedure :: posorder
-        procedure :: graph
+        procedure :: insertar_nodo
+        procedure :: recorrido_preorden
+        procedure :: recorrido_inorden
+        procedure :: recorrido_postorden
+        procedure :: graficar_arbol
     end type arbol_abb
 
 contains    
     !-----------------------------------------------------------------
-    subroutine insertar(self, valor)
+    subroutine insertar_nodo(self, valor)
         class(arbol_abb), intent(inout) :: self
         integer, intent(in) :: valor
         if (.not. associated(self%raiz)) then
@@ -29,7 +29,7 @@ contains
         else
             call insertRec(self%raiz, valor)
         end if
-    end subroutine insertar
+    end subroutine insertar_nodo
     !---
     recursive subroutine insertRec(raiz, valor)
         type(nodo_abb), pointer, intent(inout) :: raiz
@@ -52,7 +52,7 @@ contains
     end subroutine insertRec
 
     !-----------------------------------------------------------------
-    subroutine preorder(self, num_nodos, cadena)
+    subroutine recorrido_preorden(self, num_nodos, cadena)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: num_nodos
         character(len=:), allocatable, intent(out) :: cadena
@@ -60,7 +60,7 @@ contains
         contador_nodos = 0
         cadena = ""
         call preorderRec(self%raiz, num_nodos, contador_nodos, cadena)
-    end subroutine preorder
+    end subroutine recorrido_preorden
     !---
     recursive subroutine preorderRec(raiz, num_nodos, contador_nodos, cadena)
         type(nodo_abb), pointer, intent(in) :: raiz
@@ -78,7 +78,7 @@ contains
     end subroutine preorderRec 
     
     !-----------------------------------------------------------------
-    subroutine inorder(self, num_nodos, cadena)
+    subroutine recorrido_inorden(self, num_nodos, cadena)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: num_nodos
         character(len=:), allocatable, intent(out) :: cadena
@@ -86,7 +86,7 @@ contains
         contador_nodos = 0
         cadena = ""
         call inordenRec(self%raiz, num_nodos, contador_nodos, cadena)
-    end subroutine inorder
+    end subroutine recorrido_inorden
     !---
     recursive subroutine inordenRec(raiz, num_nodos, contador_nodos, cadena)
         type(nodo_abb), pointer, intent(in) :: raiz
@@ -106,7 +106,7 @@ contains
     end subroutine inordenRec
     
     !-----------------------------------------------------------------
-    subroutine posorder(self, num_nodos, cadena)
+    subroutine recorrido_postorden(self, num_nodos, cadena)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: num_nodos
         character(len=:), allocatable, intent(out) :: cadena
@@ -114,7 +114,7 @@ contains
         contador_nodos = 0
         cadena = ""
         call posordenRec(self%raiz, num_nodos, contador_nodos, cadena)
-    end subroutine posorder
+    end subroutine recorrido_postorden
     !---
     recursive subroutine posordenRec(raiz, num_nodos, contador_nodos, cadena)
         type(nodo_abb), pointer, intent(in) :: raiz
@@ -134,7 +134,7 @@ contains
     end subroutine posordenRec
     
     !-----------------------------------------------------------------
-    subroutine graph(self, filename)
+    subroutine graficar_arbol(self, filename)
         class(arbol_abb), intent(in) :: self
         character(len=*), intent(in) :: filename
         character(len=:), allocatable :: dotStructure
@@ -143,14 +143,18 @@ contains
         createNodes = ''
         linkNodes = ''
         dotStructure = "digraph G{" // new_line('a')
-        dotStructure = dotStructure // "node [shape=circle];" // new_line('a')
+        dotStructure = dotStructure // "node [shape=doublecircle];" // new_line('a')
+        dotStructure = dotStructure //&
+        "Titulo [shape=component, label=""Arbol Binario De Busqueda Capas""];" &
+        // new_line('a')
+        dotStructure = dotStructure // "{rank=same; Titulo;}" // new_line('a')
         if (associated(self%raiz)) then
             call RoamTree(self%raiz, createNodes, linkNodes)
         end if
         dotStructure = dotStructure // trim(createNodes) // trim(linkNodes) // "}" // new_line('a')
         call write_dot(filename, dotStructure)
         print *, "Grafica '"//trim(filename)//"' Generada Correctamente."
-    end subroutine graph
+    end subroutine graficar_arbol
     !---
     recursive subroutine RoamTree(current, createNodes, linkNodes)
         type(nodo_abb), pointer :: current

@@ -210,7 +210,6 @@ contains
                 nombre = '"Nodo'//trim(adjustl(str_i))//'_'//trim(adjustl(str_j))//'"'
                 if (columna_aux%i == -1 .and. columna_aux%j == -1) then
                     node_dec = trim(adjustl(nombre))//'[label = "'//trim(filename)//'", group="'//trim(adjustl(str_i))//'"]'
-                    !node_dec = trim(adjustl(nombre))//'[label = "CAMBIO", group="'//trim(adjustl(str_i))//'"]'
                 else if(columna_aux%i == -1) then
                     write(str_j_aux, '(I10)') columna_aux%j
                     contenido = trim(adjustl(str_j_aux))

@@ -121,7 +121,7 @@ contains
                 case(1)
                     print*,""
                 case(2)
-                    call arbol_abb_capa%graph("Arbol_Capa_Abb")
+                    call arbol_abb_capa%graficar_arbol("Arbol_Capa_Abb")
                 case(3)
                     print*,""
                 case(4)
@@ -167,7 +167,7 @@ contains
                     !PREORDER------------------------------------------------
                     if (tipo_recorrido==1) then
                         allocate(matriz_imagen)
-                        call arbol_abb_capa%preorder(numero_nodo, recorrido)
+                        call arbol_abb_capa%recorrido_preorden(numero_nodo, recorrido)
                         print*, "Preorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
@@ -183,12 +183,12 @@ contains
                                 end do
                             end if
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Preorder")
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Preorden")
                         deallocate(matriz_imagen)
                     !INORDER--------------------------------------------------
                     else if (tipo_recorrido==2) then
                         allocate(matriz_imagen)
-                        call arbol_abb_capa%inorder(numero_nodo, recorrido)
+                        call arbol_abb_capa%recorrido_inorden(numero_nodo, recorrido)
                         print*, "Inorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
@@ -204,12 +204,12 @@ contains
                                 end do
                             end if
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Inorder")
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Inorden")
                         deallocate(matriz_imagen)
                     !POSORDER--------------------------------------------------
                     else if (tipo_recorrido==3) then
                         allocate(matriz_imagen)
-                        call arbol_abb_capa%posorder(numero_nodo, recorrido)
+                        call arbol_abb_capa%recorrido_postorden(numero_nodo, recorrido)
                         print*, "Postorden: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
@@ -258,6 +258,7 @@ contains
             select case(opcion_carga)
                 case(1)
                     call carga_masiva_capa()
+                    print*,"Carga De Capas Correctamente."
                 case(2)
                     call carga_masiva_imagen()
                 case(3)
@@ -299,7 +300,7 @@ contains
                 read(columna, *) columna_int
                 call pixel_capa%insertar(fila_int, columna_int, color)
             end do
-            call arbol_abb_capa%insertar(id_capa_int)
+            call arbol_abb_capa%insertar_nodo(id_capa_int)
             call arbol_abb_capa%capas_cliente%insertar(id_capa_int, pixel_capa)
         end do
         call json%destroy()
