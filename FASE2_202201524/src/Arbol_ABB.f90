@@ -16,6 +16,7 @@ module modulo_arbol_abb
         procedure :: recorrido_preorden
         procedure :: recorrido_inorden
         procedure :: recorrido_postorden
+        procedure :: recorrido_amplitud
         procedure :: graficar_arbol
         procedure :: buscar_matriz
     end type arbol_abb
@@ -63,7 +64,6 @@ contains
         nodo => buscar_nodo(self%raiz, valor)
         if (associated(nodo)) then
             matriz = nodo%matriz
-            print *, "SI HAY MATRIZ"
         else
             print *, "No Se encontro La Matriz."
         end if
@@ -165,6 +165,50 @@ contains
             end if
         end if
     end subroutine posordenRec
+    
+    !-----------------------------------------------------------------
+    subroutine recorrido_amplitud(self, cadena)
+        class(arbol_abb), intent(in) :: self
+        character(len=:), allocatable, intent(out) :: cadena
+        integer :: h, i
+        cadena = ""
+        h = altura(self%raiz)
+        do i = 1, h
+            call agregar_nivel_arbol(self%raiz, i, cadena)
+        end do
+    end subroutine recorrido_amplitud
+    !---
+    recursive subroutine agregar_nivel_arbol(raiz, nivel, cadena)
+        type(nodo_abb), pointer, intent(in) :: raiz
+        integer, intent(in) :: nivel
+        character(len=:), allocatable, intent(inout) :: cadena
+        character(len=20) :: valor_str
+        if (.not. associated(raiz)) then
+            return
+        else if (nivel == 1) then
+            write(valor_str, '(I0)') raiz%valor
+            cadena = trim(cadena) // trim(valor_str) // " - "
+        else if (nivel > 1) then
+            call agregar_nivel_arbol(raiz%izquierda, nivel-1, cadena)
+            call agregar_nivel_arbol(raiz%derecha, nivel-1, cadena)
+        end if
+    end subroutine agregar_nivel_arbol
+    !---
+    recursive function altura(raiz) result(altura_arbol)
+        type(nodo_abb), pointer, intent(in) :: raiz
+        integer :: altura_arbol, altura_aux_1, altura_aux_2
+        if (.not. associated(raiz)) then
+            altura_arbol = 0
+        else
+            altura_aux_1 = altura(raiz%izquierda)
+            altura_aux_2 = altura(raiz%derecha)
+            if (altura_aux_1 > altura_aux_2) then
+                altura_arbol = altura_aux_1 + 1
+            else
+                altura_arbol = altura_aux_2 + 1
+            end if
+        end if
+    end function altura
     
     !-----------------------------------------------------------------
     subroutine graficar_arbol(self, filename)

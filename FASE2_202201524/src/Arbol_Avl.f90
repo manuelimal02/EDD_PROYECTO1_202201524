@@ -1,280 +1,228 @@
 module modulo_arbol_avl
     implicit none
+    integer, parameter :: peso_izquierda = -1
+    integer, parameter :: equilibrio = 0
+    integer, parameter :: peso_derecha = +1
+    type nodo_avl
+        integer :: valor
+        integer :: factor
+        type(nodo_avl), pointer :: izquierda => null()
+        type(nodo_avl), pointer :: derecha => null()
+    end type nodo_avl
+    type arbol_avl
+        type(nodo_avl), pointer :: raiz => null()
+        contains
+        procedure :: nuevo_arbol
+        procedure :: insertar_nodo
+        procedure :: graficar_arbol
+    end type arbol_avl
 
-  ! Cons
-  integer, parameter :: LEFT_HEAVY = -1
-  integer, parameter :: BALANCED = 0
-  integer, parameter :: RIGHT_HEAVY = +1
+    contains
+    function nuevo_nodo(valor) result(nodePtr)
+        type(nodo_avl), pointer :: nodePtr
+        integer, intent(in) :: valor
+        allocate(nodePtr)
+        nodePtr%valor = valor
+        nodePtr%factor = 0
+        nodePtr%izquierda => null()
+        nodePtr%derecha => null()
+    end function nuevo_nodo
 
-    type Node_t
-        integer :: Value
-        integer :: Factor
-        integer, dimension(:), allocatable :: Array
-        type(Node_t), pointer :: Left => null()
-        type(Node_t), pointer :: Right => null()
-    end type Node_t
+    subroutine nuevo_arbol(self)
+        class(arbol_avl), intent(inout) :: self
+        self%raiz => null()
+    end subroutine nuevo_arbol
 
-  type Tree_t
-      type(Node_t), pointer :: root => null()
-      contains
-      procedure :: newTree
-      procedure :: insert
-      procedure :: generateGraph
-  end type Tree_t
-
-  contains
-
-function NewNode(value, array_values) result(nodePtr)
-    type(Node_t), pointer :: nodePtr
-    integer, intent(in) :: value
-    integer, dimension(:), intent(in) :: array_values
-    allocate(nodePtr)
-    nodePtr%Value = value
-    nodePtr%Factor = 0
-    nodePtr%Array = array_values
-    nodePtr%Left => null()
-    nodePtr%Right => null()
-end function NewNode
-
-  subroutine newTree(self)
-    class(Tree_t), intent(inout) :: self
-    self%root => null()
-  end subroutine newTree
-
-  function rotationII(n, n1) result(result_node)
-      type(Node_t), pointer :: n, n1, result_node
-      
-      n%Left => n1%Right
-      n1%Right => n
-      if (n1%Factor == -1) then
-          n%Factor = 0
-          n1%Factor = 0
-      else
-          n%Factor = -1
-          n1%Factor = 1
-      end if
-      result_node => n1
-  end function rotationII
-
-  function rotationDD(n, n1) result(result_node)
-      type(Node_t), pointer :: n, n1, result_node
-
-      n%Right => n1%Left
-      n1%Left => n
-      if (n1%Factor == 1) then
-          n%Factor = 0
-          n1%Factor = 0
-      else
-          n%Factor = 1
-          n1%Factor = -1
-      end if
-      result_node => n1
-  end function rotationDD
-
-  function rotationDI(n, n1) result(result_node)
-    type(Node_t), pointer :: n, n1, result_node, n2
-
-    n2 => n1%Left
-    n%Right => n2%Left
-    n2%Left => n
-    n1%Left => n2%Right
-    n2%Right => n1
-    if (n2%Factor == 1) then
-        n%Factor = -1
-    else
-        n%Factor = 0
-    end if
-    if (n2%Factor == -1) then
-        n1%Factor = 1
-    else
-        n1%Factor = 0
-    end if
-    n2%Factor = 0
-    result_node => n2
-  end function rotationDI
-
-  function rotationID(n, n1) result(result_node)
-      type(Node_t), pointer :: n, n1, result_node, n2
-      n2 => n1%Right
-      n%Left => n2%Right
-      n2%Right => n
-      n1%Right => n2%Left
-      n2%Left => n1
-      if (n2%Factor == 1) then
-          n1%Factor = -1
-      else
-          n1%Factor = 0
-      end if
-      if (n2%Factor == -1) then
-          n%Factor = 1
-      else
-          n%Factor = 0
-      end if
-      n2%Factor = 0
-      result_node => n2
-  end function rotationID
-
-recursive function insert2(root, value, array_values, increase) result(result_node)
-    type(Node_t), pointer :: root, result_node, n1
-    logical, intent(out) :: increase
-    integer, intent(in) :: value
-    integer, dimension(:), intent(in) :: array_values
-
-    if (.not. associated(root)) then
-        allocate(result_node)
-        root => NewNode(value, array_values)
-        increase = .true.
-    else if (value < root%Value) then
-        root%Left => insert2(root%Left, value, array_values, increase)
-        if (increase) then
-            select case (root%Factor)
-                case (RIGHT_HEAVY)
-                    root%Factor = 0
-                    increase = .false.
-                case (BALANCED)
-                    root%Factor = -1
-                case (LEFT_HEAVY)
-                    n1 => root%Left
-                    if (n1%Factor == -1) then
-                        root => rotationII(root, n1)
-                    else
-                        root => rotationID(root, n1)
-                    end if
-                    increase = .false.
-            end select
+    function rotacionII(n, n1) result(nodo_resultado)
+        type(nodo_avl), pointer :: n, n1, nodo_resultado
+        n%izquierda => n1%derecha
+        n1%derecha => n
+        if (n1%factor == -1) then
+            n%factor = 0
+            n1%factor = 0
+        else
+            n%factor = -1
+            n1%factor = 1
         end if
-    else if (value > root%Value) then
-        root%Right => insert2(root%Right, value, array_values, increase)
-        if (increase) then
-            select case (root%Factor)
-                case (RIGHT_HEAVY)
-                    n1 => root%Right
-                    if (n1%Factor == 1) then
-                        root => rotationDD(root, n1)
-                    else
-                        root => rotationDI(root, n1)
-                    end if
-                    increase = .false.
-                case (BALANCED)
-                    root%Factor = 1
-                case (LEFT_HEAVY)
-                    root%Factor = 0
-                    increase = .false.
-            end select
+        nodo_resultado => n1
+    end function rotacionII
+
+    function rotacionDD(n, n1) result(nodo_resultado)
+        type(nodo_avl), pointer :: n, n1, nodo_resultado
+        n%derecha => n1%izquierda
+        n1%izquierda => n
+        if (n1%factor == 1) then
+            n%factor = 0
+            n1%factor = 0
+        else
+            n%factor = 1
+            n1%factor = -1
         end if
-    end if
+        nodo_resultado => n1
+    end function rotacionDD
 
-    result_node => root
-end function insert2
+    function rotacionDI(n, n1) result(nodo_resultado)
+        type(nodo_avl), pointer :: n, n1, nodo_resultado, n2
+        n2 => n1%izquierda
+        n%derecha => n2%izquierda
+        n2%izquierda => n
+        n1%izquierda => n2%derecha
+        n2%derecha => n1
+        if (n2%factor == 1) then
+            n%factor = -1
+        else
+            n%factor = 0
+        end if
+        if (n2%factor == -1) then
+            n1%factor = 1
+        else
+            n1%factor = 0
+        end if
+        n2%factor = 0
+        nodo_resultado => n2
+    end function rotacionDI
 
-recursive subroutine printTree(node)
-    type(Node_t), pointer :: node
-    integer :: i
+    function rotationID(n, n1) result(nodo_resultado)
+        type(nodo_avl), pointer :: n, n1, nodo_resultado, n2
+        n2 => n1%derecha
+        n%izquierda => n2%derecha
+        n2%derecha => n
+        n1%derecha => n2%izquierda
+        n2%izquierda => n1
+        if (n2%factor == 1) then
+            n1%factor = -1
+        else
+            n1%factor = 0
+        end if
+        if (n2%factor == -1) then
+            n%factor = 1
+        else
+            n%factor = 0
+        end if
+        n2%factor = 0
+        nodo_resultado => n2
+    end function rotationID
 
-    if (associated(node)) then
-        ! Imprime el valor del nodo
-        print *, "Nodo: ", node%Value
+    recursive function insertar_nodo2(raiz, valor, incremento) result(nodo_resultado)
+        type(nodo_avl), pointer :: raiz, nodo_resultado, n1
+        logical, intent(out) :: incremento
+        integer, intent(in) :: valor
+        if (.not. associated(raiz)) then
+            allocate(nodo_resultado)
+            raiz => nuevo_nodo(valor)
+            incremento = .true.
+        else if (valor < raiz%valor) then
+            raiz%izquierda => insertar_nodo2(raiz%izquierda, valor, incremento)
+            if (incremento) then
+                select case (raiz%factor)
+                    case (peso_derecha)
+                        raiz%factor = 0
+                        incremento = .false.
+                    case (equilibrio)
+                        raiz%factor = -1
+                    case (peso_izquierda)
+                        n1 => raiz%izquierda
+                        if (n1%factor == -1) then
+                            raiz => rotacionII(raiz, n1)
+                        else
+                            raiz => rotationID(raiz, n1)
+                        end if
+                        incremento = .false.
+                end select
+            end if
+        else if (valor > raiz%valor) then
+            raiz%derecha => insertar_nodo2(raiz%derecha, valor, incremento)
+            if (incremento) then
+                select case (raiz%factor)
+                case (peso_derecha)
+                    n1 => raiz%derecha
+                    if (n1%factor == 1) then
+                        raiz => rotacionDD(raiz, n1)
+                    else
+                        raiz => rotacionDI(raiz, n1)
+                    end if
+                    incremento = .false.
+                case (equilibrio)
+                    raiz%factor = 1
+                case (peso_izquierda)
+                    raiz%factor = 0
+                    incremento = .false.
+                end select
+            end if
+        end if
+        nodo_resultado => raiz
+    end function insertar_nodo2
 
-        ! Imprime los elementos del arreglo del nodo
-        print *, "Arreglo: "
-        do i = 1, size(node%Array)
-            print *, node%Array(i)
-        end do
+    subroutine insertar_nodo(tree, valor)
+        class(arbol_avl), intent(inout) :: tree
+        integer, intent(in) :: valor
+        logical :: incremento
+        incremento = .false.
+        tree%raiz => insertar_nodo2(tree%raiz, valor, incremento)
+    end subroutine insertar_nodo
 
-        ! Recorre los nodos hijos
-        call printTree(node%Left)
-        call printTree(node%Right)
-    end if
-end subroutine printTree
+    subroutine graficar_arbol(this)
+        class(arbol_avl), intent(inout) :: this
+        character(len=:), allocatable :: dotStructure
+        character(len=:), allocatable :: createNodes
+        character(len=:), allocatable :: linkNodes
+        createNodes = ''
+        linkNodes = ''
+        dotStructure = "digraph G{" // new_line('a')
+        dotStructure = dotStructure // "node [shape=circle];" // new_line('a')
+        if (associated(this%raiz)) then
+            call RoamTree(this%raiz, createNodes, linkNodes)
+        end if
+        dotStructure = dotStructure // trim(createNodes) // trim(linkNodes) // "}" // new_line('a')
+        call write_dot(dotStructure)
+        print *, "Archivo actualizado existosamente."
+    end subroutine graficar_arbol
 
+    recursive subroutine RoamTree(actual, createNodes, linkNodes)
+        type(nodo_avl), pointer :: actual
+        character(len=:), allocatable, intent(inout) :: createNodes
+        character(len=:), allocatable, intent(inout) :: linkNodes
+        character(len=20) :: address
+        character(len=20) :: str_value
+        if (associated(actual)) then
+            address = get_address_memory(actual)
+            write(str_value, '(I0)') actual%valor
+            createNodes = createNodes // '"' // trim(address) // '"' // '[label="' // trim(str_value) // '"];' // new_line('a')
+            ! VIAJAMOS A LA SUBRAMA IZQ
+            if (associated(actual%izquierda)) then
+            linkNodes = linkNodes // '"' // trim(address) // '"' // " -> "
+            address = get_address_memory(actual%izquierda)
+            linkNodes = linkNodes // '"' // trim(address) // '" ' &
+                        // '[label = "L"];' // new_line('a')
+            end if
+            ! VIAJAMOS A LA SUBRAMA DER
+            if (associated(actual%derecha)) then
+            address = get_address_memory(actual)
+            linkNodes = linkNodes // '"' // trim(address) // '"' // " -> "
+            address = get_address_memory(actual%derecha)
+            linkNodes = linkNodes // '"' // trim(address) // '" ' &
+                        // '[label = "R"];' // new_line('a')
+            end if
+            call RoamTree(actual%izquierda, createNodes, linkNodes)
+            call RoamTree(actual%derecha, createNodes, linkNodes)
+        end if
+    end subroutine RoamTree
 
+    function get_address_memory(node) result(address)
+        type(nodo_avl), pointer :: node
+        character(len=20) :: address
+        integer*8 :: i
+        i = loc(node)
+        write(address, 10) i 
+        10 format(I0)
+    end function get_address_memory
 
+    subroutine write_dot(code)
+        character(len=*), intent(in) :: code
+        open(10, file='graph.dot', status='replace', action='write')
+        write(10, '(A)') trim(code)
+        close(10)
+        call system("dot -Tpng graph.dot -o grafo.png")
+    end subroutine write_dot
 
-subroutine insert(tree, value, array_values)
-    class(Tree_t), intent(inout) :: tree
-    integer, intent(in) :: value
-    integer, dimension(:), intent(in) :: array_values
-    logical :: increase
-    increase = .false.
-    tree%root => insert2(tree%root, value, array_values, increase)
-end subroutine insert
-
-
-subroutine GenerateGraph(this)
-    class(Tree_t), intent(inout) :: this
-    character(len=:), allocatable :: dotStructure
-    character(len=:), allocatable :: createNodes
-    character(len=:), allocatable :: linkNodes
-    createNodes = ''
-    linkNodes = ''
-
-
-    dotStructure = "digraph G{" // new_line('a')
-    dotStructure = dotStructure // "node [shape=circle];" // new_line('a')
-
-    if (associated(this%root)) then
-        call RoamTree(this%root, createNodes, linkNodes)
-    end if
-
-    dotStructure = dotStructure // trim(createNodes) // trim(linkNodes) // "}" // new_line('a')
-    call write_dot(dotStructure)
-    print *, "Archivo actualizado existosamente."
-end subroutine GenerateGraph
-
-recursive subroutine RoamTree(actual, createNodes, linkNodes)
-    type(Node_t), pointer :: actual
-    character(len=:), allocatable, intent(inout) :: createNodes
-    character(len=:), allocatable, intent(inout) :: linkNodes
-    character(len=20) :: address
-    character(len=20) :: str_value
-
-    if (associated(actual)) then
-        ! SE OBTIENE INFORMACION DEL NODO ACTUAL
-      address = get_address_memory(actual)
-      write(str_value, '(I0)') actual%Value
-      createNodes = createNodes // '"' // trim(address) // '"' // '[label="' // trim(str_value) // '"];' // new_line('a')
-      ! VIAJAMOS A LA SUBRAMA IZQ
-      if (associated(actual%Left)) then
-        linkNodes = linkNodes // '"' // trim(address) // '"' // " -> "
-        address = get_address_memory(actual%Left)
-        linkNodes = linkNodes // '"' // trim(address) // '" ' &
-                  // '[label = "L"];' // new_line('a')
-
-      end if
-      ! VIAJAMOS A LA SUBRAMA DER
-      if (associated(actual%Right)) then
-        address = get_address_memory(actual)
-        linkNodes = linkNodes // '"' // trim(address) // '"' // " -> "
-        address = get_address_memory(actual%Right)
-        linkNodes = linkNodes // '"' // trim(address) // '" ' &
-                  // '[label = "R"];' // new_line('a')
-      end if
-
-      call RoamTree(actual%Left, createNodes, linkNodes)
-      call RoamTree(actual%Right, createNodes, linkNodes)
-    end if
-end subroutine RoamTree
-
-  function get_address_memory(node) result(address)
-    !class(matrix_t), intent(in) :: self
-    type(Node_t), pointer :: node
-    character(len=20) :: address
-    ! integer 8
-    integer*8 :: i
-
-    i = loc(node) ! get the address of x
-    ! convert the address to string
-    write(address, 10) i 
-    10 format(I0)
-
-  end function get_address_memory
-
-  subroutine write_dot(code)
-    character(len=*), intent(in) :: code
-    open(10, file='graph.dot', status='replace', action='write')
-    write(10, '(A)') trim(code)
-    close(10)
-    ! Genera la imagen PNG
-    call system("dot -Tpng graph.dot -o grafo.png")
-  end subroutine write_dot
 end module modulo_arbol_avl

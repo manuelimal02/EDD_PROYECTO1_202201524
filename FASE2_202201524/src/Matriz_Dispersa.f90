@@ -77,7 +77,6 @@ contains
             end do
             fila_aux => fila_aux%abajo
         end do
-        print*, "MATRIZ INSERTADA, CAPA LISTA"
     end subroutine insertar_matriz
 
     !--------------------------------------------------------------------

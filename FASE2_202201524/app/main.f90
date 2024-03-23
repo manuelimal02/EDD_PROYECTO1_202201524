@@ -2,7 +2,6 @@ program main
     use json_module
     use modulo_split
     use modulo_arbol_abb
-    use modulo_arbol_avl
     use modulo_matriz_dispersa
     implicit none
     !LECTURA JSON
@@ -21,7 +20,6 @@ program main
     logical :: imagen_encontrada
     !ESTRUCTURAS
     type(arbol_abb) :: arbol_abb_capa
-    type(Tree_t) :: myTree
     !PROGRAMA
     integer :: opcion_principal
     character(len=100) :: usuario
@@ -209,6 +207,9 @@ contains
                         end do
                         call matriz_imagen%graficar_matriz("I_Recorrido_Postorden")
                         deallocate(matriz_imagen)
+                    else if(tipo_recorrido==4) then
+                        call arbol_abb_capa%recorrido_amplitud(recorrido)
+                        print*, "Amplitud: ", recorrido
                     end if
                     print *, "---------------------------------------"
                 case(2)
@@ -242,7 +243,7 @@ contains
                     call carga_masiva_capa()
                     print*,"Carga De Capas Correctamente."
                 case(2)
-                    call carga_masiva_imagen()
+                    !call carga_masiva_imagen()
                 case(3)
                     print*,""
                 case(4)
@@ -258,7 +259,7 @@ contains
     subroutine carga_masiva_capa()
         type(matriz_dispersa), pointer :: matriz_dispersa_capa
         call json%initialize()
-        call json%load(filename='2ImagenMa.json')
+        call json%load(filename='1CAPAS.json')
         call json%info('',n_children=size_capa)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCapa, capa_encontrada)
@@ -290,29 +291,29 @@ contains
     !------------------------------------------------------------------------
     !CARGA MASIVA IMAGENES
     !------------------------------------------------------------------------
-    subroutine carga_masiva_imagen()
-        integer, dimension(:), allocatable :: arreglo_capa
-        call json%initialize()
-        call json%load(filename='3IMAGEN.json')
-        call json%info('',n_children=size_imagen)
-        call json%get_core(jsonc)
-        call json%get('', listaPunteroImagen, imagen_encontrada)
-        do contador_imagen = 1, size_imagen
-            call jsonc%get_child(listaPunteroImagen, contador_imagen, punteroImagen, imagen_encontrada)
-            call jsonc%get_child(punteroImagen, 'id', atributoPunteroImagen, imagen_encontrada)
-            call jsonc%get(atributoPunteroImagen, id_imagen)
-            call jsonc%get_child(punteroImagen, 'id_capa', atributoPunteroImagen, imagen_encontrada)
-            call jsonc%info(atributoPunteroImagen,n_children=size_capa)
-            allocate(arreglo_capa(size_capa))
-            do contador_capa = 1, size_capa
-                call jsonc%get_child(atributoPunteroImagen, contador_capa, punteroCapa, imagen_encontrada)
-                call jsonc%get(punteroCapa, id_capas)
-                arreglo_capa(contador_capa) = id_capas
-            end do
-            call myTree%insert(id_imagen, arreglo_capa)
-            deallocate(arreglo_capa)
-        end do
-        call json%destroy()
-    end subroutine carga_masiva_imagen
+    !subroutine carga_masiva_imagen()
+    !    integer, dimension(:), allocatable :: arreglo_capa
+    !    call json%initialize()
+    !    call json%load(filename='3IMAGEN.json')
+    !    call json%info('',n_children=size_imagen)
+    !    call json%get_core(jsonc)
+    !    call json%get('', listaPunteroImagen, imagen_encontrada)
+    !    do contador_imagen = 1, size_imagen
+    !        call jsonc%get_child(listaPunteroImagen, contador_imagen, punteroImagen, imagen_encontrada)
+    !        call jsonc%get_child(punteroImagen, 'id', atributoPunteroImagen, imagen_encontrada)
+    !        call jsonc%get(atributoPunteroImagen, id_imagen)
+    !        call jsonc%get_child(punteroImagen, 'id_capa', atributoPunteroImagen, imagen_encontrada)
+    !        call jsonc%info(atributoPunteroImagen,n_children=size_capa)
+    !        allocate(arreglo_capa(size_capa))
+    !        do contador_capa = 1, size_capa
+    !            call jsonc%get_child(atributoPunteroImagen, contador_capa, punteroCapa, imagen_encontrada)
+    !            call jsonc%get(punteroCapa, id_capas)
+    !             arreglo_capa(contador_capa) = id_capas
+    !        end do
+    !        call myTree%insert(id_imagen, arreglo_capa)
+    !        deallocate(arreglo_capa)
+    !    end do
+    !    call json%destroy()
+    !end subroutine carga_masiva_imagen
 
 end program main
