@@ -1,6 +1,7 @@
 module modulo_split
     implicit none
 contains
+    !-------------------------------------------------------------------------
     subroutine split(cadena, delimitador, resultado)
         character(len=*), intent(in) :: cadena, delimitador
         character(len=20), dimension(:), allocatable, intent(out) :: resultado
@@ -22,6 +23,7 @@ contains
             call agregar(resultado, numero)
         end if
     end subroutine split
+    !-------------------------------------------------------------------------
     subroutine agregar(arreglo, elemento)
         character(len=20), dimension(:), allocatable, intent(inout) :: arreglo
         character(len=20), intent(in) :: elemento
@@ -36,4 +38,11 @@ contains
             arreglo(1) = elemento
         end if
     end subroutine agregar
+    !-------------------------------------------------------------------------
+    function int_to_str(valor)
+        integer, intent(in) :: valor
+        character(len=32) :: int_to_str
+        write(int_to_str,'(I0)') valor
+        int_to_str = trim(adjustl(int_to_str))
+    end function int_to_str
 end module modulo_split

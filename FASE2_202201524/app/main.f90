@@ -136,7 +136,9 @@ contains
 
     subroutine generador_imagen()
         type(matriz_dispersa), pointer :: matriz_imagen, matriz_auxiliar
-        integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa
+        type(arbol_abb_simple), pointer :: arbol_abb_simple
+        integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa, id_imagen, cantidad_capa,numero_capa
+        logical :: existe_imagen, existe_matriz
         character(len=:), allocatable :: recorrido
         character(len=20), dimension(:), allocatable :: nodo
         do
@@ -144,13 +146,14 @@ contains
             print *, "Menu Generador Imagenes - Pixel Print Studio"
             print *, "1. Por Recorrido Limitado"
             print *, "2. Por Arbol de Imagenes"
-            print *, "3. Por capa"
+            print *, "3. Por Capas"
             print *, "4. Regresar Al Menu Cliente"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
             read(*,*) opcion_imagen
             select case(opcion_imagen)
+                !---------------------------------------------------------------------------!
                 case(1)
                     print *, "---------------------------------------"
                     print *, "RECORRIDO LIMITADO"
@@ -162,10 +165,14 @@ contains
                     print *,"2. Inorden" 
                     print *,"3. Postorden"
                     read(*,*) tipo_recorrido
-                    !PREORDER------------------------------------------------
+                    !------------------------------------------!
                     if (tipo_recorrido==1) then
                         allocate(matriz_imagen)
                         call arbol_abb_capa%recorrido_preorden(numero_nodo, recorrido)
+                        if(recorrido=="")then
+                            print*, "No Existen Capas Cargadas."
+                            exit
+                        end if
                         print*, "Preorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
@@ -178,10 +185,14 @@ contains
                         end do
                         call matriz_imagen%graficar_matriz("I_Recorrido_Preorden")
                         deallocate(matriz_imagen)
-                    !INORDER--------------------------------------------------
+                    !------------------------------------------!
                     else if (tipo_recorrido==2) then
                         allocate(matriz_imagen)
                         call arbol_abb_capa%recorrido_inorden(numero_nodo, recorrido)
+                        if(recorrido=="")then
+                            print*, "No Existen Capas Cargadas."
+                            exit
+                        end if
                         print*, "Inorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
@@ -194,10 +205,14 @@ contains
                         end do
                         call matriz_imagen%graficar_matriz("I_Recorrido_Inorden")
                         deallocate(matriz_imagen)
-                    !POSORDER--------------------------------------------------
+                    !------------------------------------------!
                     else if (tipo_recorrido==3) then
                         allocate(matriz_imagen)
                         call arbol_abb_capa%recorrido_postorden(numero_nodo, recorrido)
+                        if(recorrido=="")then
+                            print*, "No Existen Capas Cargadas."
+                            exit
+                        end if
                         print*, "Postorden: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
@@ -212,10 +227,72 @@ contains
                         deallocate(matriz_imagen)
                     end if
                     print *, "---------------------------------------"
+                !---------------------------------------------------------------------------!
                 case(2)
-                    print*,""
+                    print *, "---------------------------------------"
+                    print *, "ARBOL DE IMAGENES"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el id de la imagen:"
+                    read(*,*) id_imagen
+                    allocate(arbol_abb_simple)
+                    existe_imagen = arbol_avl_imagen%valor_existe(id_imagen)
+                    if (existe_imagen) then
+                        arbol_abb_simple = arbol_avl_imagen%buscar_valor(id_imagen)
+                        call arbol_abb_simple%recorrido_amplitud(recorrido)
+                        allocate(matriz_imagen)
+                        print*, "Amplitud: "
+                        call split(recorrido, '-', nodo)
+                        do contador = 1, size(nodo)
+                            print *, trim(nodo(contador))
+                        end do
+                        print*,"----"
+                        do contador = 1, size(nodo)
+                            read(nodo(contador), *) id_capa
+                            existe_matriz = arbol_abb_capa%valor_existe(id_capa)
+                            if (existe_matriz) then
+                                allocate(matriz_auxiliar)
+                                matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                                call matriz_imagen%insertar_matriz(matriz_auxiliar)
+                                deallocate(matriz_auxiliar)
+                                print*, "Capa: ",  trim(nodo(contador)), " Apilada."
+                            else
+                                print*, "Capa: ",  trim(nodo(contador)), " No Existe."
+                            end if
+                        end do
+                        print*,"----"
+                        call matriz_imagen%graficar_matriz("Imagen_Recorrido_Amplitud")
+                        deallocate(matriz_imagen)
+                    else
+                        print *, "Imagen: ", id_imagen," No Existe."
+                    end if
+                    deallocate(arbol_abb_simple)
+                    
+                !---------------------------------------------------------------------------!
                 case(3)
-                    print*,""
+                    print *, "---------------------------------------"
+                    print *, "POR CAPAS"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el numero de capas a utilizar:"
+                    read(*,*) cantidad_capa
+                    allocate(matriz_imagen)
+                    do contador = 1, cantidad_capa
+                        print*,"----"
+                        print *, "Ingrese La Capa Numero ", int_to_str(contador)
+                        read(*,*) numero_capa
+                        existe_matriz = arbol_abb_capa%valor_existe(numero_capa)
+                        if (existe_matriz) then
+                            allocate(matriz_auxiliar)
+                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(numero_capa)
+                            call matriz_imagen%insertar_matriz(matriz_auxiliar)
+                            deallocate(matriz_auxiliar)
+                            print*, "Capa Apilada: ", int_to_str(numero_capa)
+                        else
+                            print*, "Capa No Existe: ", int_to_str(numero_capa)
+                        end if
+                    end do
+                    print*,"--------"
+                    call matriz_imagen%graficar_matriz("Imagen_Por_Capa")
+                    deallocate(matriz_imagen)
                 case(4)
                     exit
                 case default

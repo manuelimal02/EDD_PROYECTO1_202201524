@@ -11,7 +11,7 @@ module modulo_abb
     contains
         procedure :: insertar
         procedure :: recorrido_amplitud
-        procedure :: generar_cadenas_grafica
+        procedure :: generar_grafica
     end type arbol_abb_simple
 
 contains
@@ -90,56 +90,56 @@ contains
         end if
     end function altura
     !-----------------------------------------------------------------
-    subroutine generar_cadenas_grafica(self, createNodes, linkNodes, address_avl)
+    subroutine generar_grafica(self, crear_nodo, enlace_nodo, direccion_nodo_avl)
         class(arbol_abb_simple), intent(in) :: self
-        character(len=:), allocatable, intent(inout) :: createNodes, linkNodes
-        character(len=20), intent(in) :: address_avl
-        character(len=20) :: address_abb, str_valor
+        character(len=:), allocatable, intent(inout) :: crear_nodo, enlace_nodo
+        character(len=20), intent(in) :: direccion_nodo_avl
+        character(len=20) :: direccion_abb, str_valor
         if (associated(self%raiz)) then
-            address_abb = get_address_memory(self%raiz)
+            direccion_abb = obtener_direccion_memoria(self%raiz)
             write(str_valor, '(I0)') self%raiz%valor
-            createNodes = createNodes // '"' // trim(address_abb) // '"' // '[label="' // trim(str_valor) &
+            crear_nodo = crear_nodo // '"' // trim(direccion_abb) // '"' // '[label="' // trim(str_valor) &
             // '", color=red];' // new_line('a')
-            linkNodes = linkNodes // '"' // trim(address_avl) // '"' // " -> " // '"' // trim(address_abb) &
+            enlace_nodo = enlace_nodo // '"' // trim(direccion_nodo_avl) // '"' // " -> " // '"' // trim(direccion_abb) &
             // '" ' // new_line('a')
-            call RoamTree(self%raiz, createNodes, linkNodes)
+            call recorrer_arbol(self%raiz, crear_nodo, enlace_nodo)
         end if
-    end subroutine generar_cadenas_grafica
+    end subroutine generar_grafica
     !-----------------------------------------------------------------
-    recursive subroutine RoamTree(current, createNodes, linkNodes)
-        type(nodo_abb_simple), pointer :: current
-        character(len=:), allocatable, intent(inout) :: createNodes, linkNodes
-        character(len=20) :: address, str_valor
-        if (associated(current)) then
-            address = get_address_memory(current)
-            write(str_valor, '(I0)') current%valor
-            createNodes = createNodes // '"' // trim(address) // '"' // '[label="' // & 
+    recursive subroutine recorrer_arbol(actual, crear_nodo, enlace_nodo)
+        type(nodo_abb_simple), pointer :: actual
+        character(len=:), allocatable, intent(inout) :: crear_nodo, enlace_nodo
+        character(len=20) :: direccion, str_valor
+        if (associated(actual)) then
+            direccion = obtener_direccion_memoria(actual)
+            write(str_valor, '(I0)') actual%valor
+            crear_nodo = crear_nodo // '"' // trim(direccion) // '"' // '[label="' // & 
             trim(str_valor) // '", color=red];' // new_line('a')
-            if (associated(current%izquierda)) then
-                linkNodes = linkNodes // '"' // trim(address) // '"' // " -> "
-                address = get_address_memory(current%izquierda)
-                linkNodes = linkNodes // '"' // trim(address) // '" ' &
+            if (associated(actual%izquierda)) then
+                enlace_nodo = enlace_nodo // '"' // trim(direccion) // '"' // " -> "
+                direccion = obtener_direccion_memoria(actual%izquierda)
+                enlace_nodo = enlace_nodo // '"' // trim(direccion) // '" ' &
                       // '[label = "L"];' // new_line('a')
             end if
-            if (associated(current%derecha)) then
-                address = get_address_memory(current)
-                linkNodes = linkNodes // '"' // trim(address) // '"' // " -> "
-                address = get_address_memory(current%derecha)
-                linkNodes = linkNodes // '"' // trim(address) // '" ' &
+            if (associated(actual%derecha)) then
+                direccion = obtener_direccion_memoria(actual)
+                enlace_nodo = enlace_nodo // '"' // trim(direccion) // '"' // " -> "
+                direccion = obtener_direccion_memoria(actual%derecha)
+                enlace_nodo = enlace_nodo // '"' // trim(direccion) // '" ' &
                       // '[label = "R"];' // new_line('a')
             end if
-            call RoamTree(current%izquierda, createNodes, linkNodes)
-            call RoamTree(current%derecha, createNodes, linkNodes)
+            call recorrer_arbol(actual%izquierda, crear_nodo, enlace_nodo)
+            call recorrer_arbol(actual%derecha, crear_nodo, enlace_nodo)
         end if
-    end subroutine RoamTree    
+    end subroutine recorrer_arbol    
     !-----------------------------------------------------------------
-    function get_address_memory(node) result(address)
-        type(nodo_abb_simple), pointer :: node
-        character(len=20) :: address
+    function obtener_direccion_memoria(nodo_arbol) result(direccion)
+        type(nodo_abb_simple), pointer :: nodo_arbol
+        character(len=20) :: direccion
         integer*8 :: i
-        i = loc(node)
-        write(address, 10) i 
+        i = loc(nodo_arbol)
+        write(direccion, 10) i 
         10 format(I0)
-    end function get_address_memory
+    end function obtener_direccion_memoria
 
 end module modulo_abb
