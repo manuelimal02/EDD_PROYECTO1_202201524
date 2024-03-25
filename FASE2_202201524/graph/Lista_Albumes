@@ -1,0 +1,23 @@
+ digraph cola {node [fontname="Courier New"]
+ node [shape=component, style=filled, color=blue, fillcolor="#65babf"];
+ "Node           0 " [shape=box3d, color=black, fillcolor="#d43440" label="Lista Albumes"];
+ "Node           1 " [label="Album 1"];
+ "Node           1 " -> "Node           2 ";
+ "Node           2 " -> "Node           1 ";
+ "Node           1 Imagen           1 " [shape=box, color=black, fillcolor="#FFCA33" label="5"];
+ "Node           1 " -> "Node           1 Imagen           1 ";
+ "Node           1 Imagen           2 " [shape=box, color=black, fillcolor="#FFCA33" label="3"];
+ "Node           1 Imagen           1 " -> "Node           1 Imagen           2 ";
+ "Node           1 Imagen           3 " [shape=box, color=black, fillcolor="#FFCA33" label="1"];
+ "Node           1 Imagen           2 " -> "Node           1 Imagen           3 ";
+ "Node           2 " [label="Album 2"];
+ "Node           2 " -> "Node           3 ";
+ "Node           3 " -> "Node           2 ";
+ "Node           2 Imagen           1 " [shape=box, color=black, fillcolor="#FFCA33" label="2"];
+ "Node           2 " -> "Node           2 Imagen           1 ";
+ "Node           3 " [label="Album 3"];
+ "Node           3 Imagen           1 " [shape=box, color=black, fillcolor="#FFCA33" label="18"];
+ "Node           3 " -> "Node           3 Imagen           1 ";
+ "Node           3 Imagen           2 " [shape=box, color=black, fillcolor="#FFCA33" label="94"];
+ "Node           3 Imagen           1 " -> "Node           3 Imagen           2 ";
+ }

@@ -24,9 +24,9 @@ program main
     logical :: imagen_encontrada
     !JSON ALBUMES
     type(json_value), pointer :: listaPunteroAlbum, punteroAlbum, atributoPunteroAlbum
-    character(:), allocatable :: nombre_album
+    character(:), allocatable :: nombre_album,imgs
     integer :: size_album, contador_album
-    integer :: imgs_size, contador_a, imgs
+    integer :: imgs_size, contador_a
     logical :: album_encontrado
     !ESTRUCTURAS
     type(arbol_abb) :: arbol_abb_capa
@@ -132,7 +132,7 @@ contains
                 case(2)
                     call arbol_abb_capa%graficar_arbol("Arbol_Capa_Abb")
                 case(3)
-                    print*,""
+                    call lista_doble_album%graficar_album("Lista_Albumes")
                 case(4)
                     print*,""
                 case(5)
@@ -333,7 +333,6 @@ contains
                     print*,"Carga De Imagenes Correctamente."
                 case(3)
                     call carga_masiva_album()
-                    call lista_doble_album%imprimir_lista_album()
                     print*,"Carga De Albumes Correctamente."
                 case(4)
                     exit
@@ -422,12 +421,11 @@ contains
             call jsonc%get(atributoPunteroAlbum, nombre_album)
             call jsonc%get_child(punteroAlbum, 'imgs', atributoPunteroAlbum, album_encontrado)
             call jsonc%info(atributoPunteroAlbum,n_children=imgs_size)
-            print*,"Album: ", nombre_album
             allocate(lista_imagen_album)
             do contador_a = 1, imgs_size
                 call jsonc%get_child(atributoPunteroAlbum, contador_a, punteroAlbum, album_encontrado)
                 call jsonc%get(punteroAlbum, imgs)
-                call lista_imagen_album%insertar_imagen(imgs)
+                call lista_imagen_album%insertar_imagen(trim(imgs))
             end do
             call lista_doble_album%insertar_album(nombre_album, lista_imagen_album)
             deallocate(lista_imagen_album)
