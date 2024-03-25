@@ -168,7 +168,6 @@ module modulo_arbol_avl
         n2%factor = 0
         nodo_resultado => n2
     end function rotationID
-
     !----------------------------------------
     function valor_existe(self, valor) result(existe)
         class(arbol_avl), intent(inout) :: self
@@ -178,7 +177,6 @@ module modulo_arbol_avl
         nodo_encontrado => buscar_recursivo(self%raiz, valor)
         existe = associated(nodo_encontrado)
     end function valor_existe
-    
     !----------------------------------------
     function buscar_valor(self, valor) result(arbol)
         class(arbol_avl), intent(inout) :: self
@@ -190,7 +188,6 @@ module modulo_arbol_avl
             arbol => nodo_encontrado%arbol_interno
         end if
     end function buscar_valor
-    
     !----------------------------------------
     recursive function buscar_recursivo(raiz, valor) result(nodo_resultado)
         type(nodo_avl), pointer :: raiz, nodo_resultado
@@ -205,7 +202,6 @@ module modulo_arbol_avl
             nodo_resultado => raiz
         end if
     end function buscar_recursivo
-
     !----------------------------------------
     subroutine graficar_arbol(this, nombre_grafica)
         class(arbol_avl), intent(in) :: this

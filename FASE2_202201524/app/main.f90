@@ -2,9 +2,11 @@ program main
     use json_module
     use modulo_split
     use modulo_abb
+    use modulo_lista_imagen
+    use modulo_lista_album
     use modulo_arbol_abb
     use modulo_arbol_avl
-    use modulo_matriz_dispersa
+    use modulo_matrix_dispersa
     implicit none
     !LECTURA JSON
     type(json_file) :: json
@@ -20,9 +22,16 @@ program main
     integer :: size_imagen, contador_imagen
     integer :: id_imagen, id_capas
     logical :: imagen_encontrada
+    !JSON ALBUMES
+    type(json_value), pointer :: listaPunteroAlbum, punteroAlbum, atributoPunteroAlbum
+    character(:), allocatable :: nombre_album
+    integer :: size_album, contador_album
+    integer :: imgs_size, contador_a, imgs
+    logical :: album_encontrado
     !ESTRUCTURAS
     type(arbol_abb) :: arbol_abb_capa
     type(arbol_avl) :: arbol_avl_imagen
+    type(lista_album) :: lista_doble_album
     !PROGRAMA
     integer :: opcion_principal
     character(len=100) :: usuario
@@ -104,7 +113,7 @@ contains
     end subroutine menu_cliente
 
     subroutine visualizar_estructura()
-        integer :: opcion_estructura
+        integer :: opcion_estructura, i
         do
             print *, "---------------------------------------"
             print *, "Menu Visualizar Estructuras - Pixel Print Studio"
@@ -135,7 +144,7 @@ contains
     end subroutine visualizar_estructura
 
     subroutine generador_imagen()
-        type(matriz_dispersa), pointer :: matriz_imagen, matriz_auxiliar
+        type(matriz), pointer :: matriz_imagen, matriz_auxiliar
         type(arbol_abb_simple), pointer :: arbol_abb_simple
         integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa, id_imagen, cantidad_capa,numero_capa
         logical :: existe_imagen, existe_matriz
@@ -263,7 +272,7 @@ contains
                         call matriz_imagen%graficar_matriz("Imagen_Recorrido_Amplitud")
                         deallocate(matriz_imagen)
                     else
-                        print *, "Imagen: ", id_imagen," No Existe."
+                        print *, "Imagen No Existe: ", int_to_str(id_imagen)
                     end if
                     deallocate(arbol_abb_simple)
                     
@@ -323,7 +332,9 @@ contains
                     call carga_masiva_imagen()
                     print*,"Carga De Imagenes Correctamente."
                 case(3)
-                    print*,""
+                    call carga_masiva_album()
+                    call lista_doble_album%imprimir_lista_album()
+                    print*,"Carga De Albumes Correctamente."
                 case(4)
                     exit
                 case default
@@ -335,7 +346,8 @@ contains
     !CARGA MASIVA CAPAS
     !------------------------------------------------------------------------
     subroutine carga_masiva_capa()
-        type(matriz_dispersa), pointer :: matriz_dispersa_capa
+        character(len=30) :: colorD
+        type(matriz), pointer :: matriz_dispersa_capa
         call json%initialize()
         call json%load(filename='2ImagenMa.json')
         call json%info('',n_children=size_capa)
@@ -359,7 +371,8 @@ contains
                 call jsonc%get(atributoPixel, color)
                 read(fila, *) fila_int
                 read(columna, *) columna_int
-                call matriz_dispersa_capa%insertar_nodo(columna_int, fila_int, color)
+                colorD=color
+                call matriz_dispersa_capa%insertar_nodo(columna_int, fila_int, colorD)
             end do
             call arbol_abb_capa%insertar_nodo(id_capa_int, matriz_dispersa_capa)
             deallocate(matriz_dispersa_capa)
@@ -380,7 +393,7 @@ contains
             call jsonc%get_child(listaPunteroImagen, contador_imagen, punteroImagen, imagen_encontrada)
             call jsonc%get_child(punteroImagen, 'id', atributoPunteroImagen, imagen_encontrada)
             call jsonc%get(atributoPunteroImagen, id_imagen)
-            call jsonc%get_child(punteroImagen, 'id_capa', atributoPunteroImagen, imagen_encontrada)
+            call jsonc%get_child(punteroImagen, 'capas', atributoPunteroImagen, imagen_encontrada)
             call jsonc%info(atributoPunteroImagen,n_children=size_capa)
             allocate(arbol_abb_capa_simple)
             do contador_capa = 1, size_capa
@@ -393,5 +406,32 @@ contains
         end do
         call json%destroy()
     end subroutine carga_masiva_imagen
-
+    !------------------------------------------------------------------------
+    !CARGA MASIVA IMAGENES
+    !------------------------------------------------------------------------
+    subroutine carga_masiva_album()
+        type(lista_imagen), pointer :: lista_imagen_album
+        call json%initialize()
+        call json%load(filename='4ALBUMES.json')
+        call json%info('',n_children=size_album)
+        call json%get_core(jsonc)
+        call json%get('', listaPunteroAlbum, album_encontrado)
+        do contador_album = 1, size_album
+            call jsonc%get_child(listaPunteroAlbum, contador_Album, punteroAlbum, album_encontrado)
+            call jsonc%get_child(punteroAlbum, 'nombre_album', atributoPunteroAlbum, album_encontrado)
+            call jsonc%get(atributoPunteroAlbum, nombre_album)
+            call jsonc%get_child(punteroAlbum, 'imgs', atributoPunteroAlbum, album_encontrado)
+            call jsonc%info(atributoPunteroAlbum,n_children=imgs_size)
+            print*,"Album: ", nombre_album
+            allocate(lista_imagen_album)
+            do contador_a = 1, imgs_size
+                call jsonc%get_child(atributoPunteroAlbum, contador_a, punteroAlbum, album_encontrado)
+                call jsonc%get(punteroAlbum, imgs)
+                call lista_imagen_album%insertar_imagen(imgs)
+            end do
+            call lista_doble_album%insertar_album(nombre_album, lista_imagen_album)
+            deallocate(lista_imagen_album)
+        end do
+        call json%destroy()
+    end subroutine carga_masiva_album
 end program main

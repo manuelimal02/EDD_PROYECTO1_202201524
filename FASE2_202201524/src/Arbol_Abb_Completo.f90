@@ -1,12 +1,12 @@
 module modulo_arbol_abb
-    use modulo_matriz_dispersa
+    use modulo_matrix_dispersa
     implicit none
     private
     type :: nodo_abb
         integer :: valor
         type(nodo_abb), pointer :: derecha => null()
         type(nodo_abb), pointer :: izquierda => null()
-        type(matriz_dispersa) :: matriz
+        type(matriz) :: matriz
     end type nodo_abb
     type, public :: arbol_abb
         type(nodo_abb), pointer :: raiz => null()
@@ -23,13 +23,13 @@ module modulo_arbol_abb
 
 contains    
     !-----------------------------------------------------------------
-    subroutine insertar_nodo(self, valor, matriz)
+    subroutine insertar_nodo(self, valor, ma)
         class(arbol_abb), intent(inout) :: self
         integer, intent(in) :: valor
-        type(matriz_dispersa), intent(in) :: matriz
+        type(matriz), intent(in) :: ma
         type(nodo_abb), pointer :: nuevo
         allocate(nuevo)
-        nuevo = nodo_abb(valor=valor, matriz=matriz)
+        nuevo = nodo_abb(valor=valor, matriz=ma)
         if (.not. associated(self%raiz)) then
             self%raiz => nuevo
         else
@@ -54,7 +54,7 @@ contains
             end if
         end if
     end subroutine insertar_recursivo
-    !-----------------------------------------------------------------
+
     function valor_existe(self, valor) result(existe)
         class(arbol_abb), intent(inout) :: self
         integer, intent(in) :: valor
@@ -63,15 +63,16 @@ contains
         nodo_encontrado => buscar_nodo(self%raiz, valor)
         existe = associated(nodo_encontrado)
     end function valor_existe
+    
     !-----------------------------------------------------------------
-    function buscar_matriz(self, valor) result(matriz)
+    function buscar_matriz(self, valor) result(ma)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: valor
-        type(matriz_dispersa) :: matriz
+        type(matriz) :: ma
         type(nodo_abb), pointer :: nodo
         nodo => buscar_nodo(self%raiz, valor)
         if (associated(nodo)) then
-            matriz = nodo%matriz
+            ma = nodo%matriz
         end if
     end function buscar_matriz
     !---
