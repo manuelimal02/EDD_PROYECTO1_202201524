@@ -22,7 +22,7 @@ module modulo_lista_imagen
     end subroutine insertar_imagen
 
 end module modulo_lista_imagen
-!---------------------------------------------------------------------
+
 module modulo_lista_album
     use modulo_lista_imagen
     implicit none

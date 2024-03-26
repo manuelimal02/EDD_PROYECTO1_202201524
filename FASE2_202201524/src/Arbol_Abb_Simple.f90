@@ -12,10 +12,11 @@ module modulo_abb
         procedure :: insertar
         procedure :: recorrido_amplitud
         procedure :: generar_grafica
+        procedure :: numero_nodos
     end type arbol_abb_simple
 
 contains
-    !-----------------------------------------------------------------
+
     subroutine insertar(self, valor)
         class(arbol_abb_simple), intent(inout) :: self
         integer, intent(in) :: valor
@@ -26,7 +27,7 @@ contains
             call insertar_recursivo(self%raiz, valor)
         end if
     end subroutine insertar
-    !-----------------------------------------------------------------
+
     recursive subroutine insertar_recursivo(raiz, valor)
         type(nodo_abb_simple), pointer, intent(inout) :: raiz
         integer, intent(in) :: valor
@@ -46,7 +47,7 @@ contains
             end if
         end if
     end subroutine insertar_recursivo
-    !-----------------------------------------------------------------
+    
     subroutine recorrido_amplitud(self, cadena)
         class(arbol_abb_simple), intent(in) :: self
         character(len=:), allocatable, intent(out) :: cadena
@@ -57,7 +58,7 @@ contains
             call agregar_nivel_arbol(self%raiz, i, cadena)
         end do
     end subroutine recorrido_amplitud
-    !-----------------------------------------------------------------
+    
     recursive subroutine agregar_nivel_arbol(raiz, nivel, cadena)
         type(nodo_abb_simple), pointer, intent(in) :: raiz
         integer, intent(in) :: nivel
@@ -73,7 +74,7 @@ contains
             call agregar_nivel_arbol(raiz%derecha, nivel-1, cadena)
         end if
     end subroutine agregar_nivel_arbol
-    !------------------------------------------------------------------
+    
     recursive function altura(raiz) result(altura_arbol)
         type(nodo_abb_simple), pointer, intent(in) :: raiz
         integer :: altura_arbol, altura_aux_1, altura_aux_2
@@ -89,7 +90,23 @@ contains
             end if
         end if
     end function altura
-    !-----------------------------------------------------------------
+
+    function numero_nodos(self) result(num_nodos)
+        class(arbol_abb_simple), intent(in) :: self
+        integer :: num_nodos
+        num_nodos = contar_nodos(self%raiz)
+    end function numero_nodos
+    
+    recursive function contar_nodos(raiz) result(num_nodos)
+        type(nodo_abb_simple), pointer, intent(in) :: raiz
+        integer :: num_nodos
+        if (.not. associated(raiz)) then
+            num_nodos = 0
+        else
+            num_nodos = 1 + contar_nodos(raiz%izquierda) + contar_nodos(raiz%derecha)
+        end if
+    end function contar_nodos
+    
     subroutine generar_grafica(self, crear_nodo, enlace_nodo, direccion_nodo_avl)
         class(arbol_abb_simple), intent(in) :: self
         character(len=:), allocatable, intent(inout) :: crear_nodo, enlace_nodo
@@ -105,7 +122,7 @@ contains
             call recorrer_arbol(self%raiz, crear_nodo, enlace_nodo)
         end if
     end subroutine generar_grafica
-    !-----------------------------------------------------------------
+
     recursive subroutine recorrer_arbol(actual, crear_nodo, enlace_nodo)
         type(nodo_abb_simple), pointer :: actual
         character(len=:), allocatable, intent(inout) :: crear_nodo, enlace_nodo
@@ -132,7 +149,7 @@ contains
             call recorrer_arbol(actual%derecha, crear_nodo, enlace_nodo)
         end if
     end subroutine recorrer_arbol    
-    !-----------------------------------------------------------------
+    
     function obtener_direccion_memoria(nodo_arbol) result(direccion)
         type(nodo_abb_simple), pointer :: nodo_arbol
         character(len=20) :: direccion

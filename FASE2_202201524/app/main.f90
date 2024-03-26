@@ -92,7 +92,8 @@ contains
             print *, "1. Visualizar Estructuras"
             print *, "2. Navegacion Y Gestion Imagenes"
             print *, "3. Carga Masiva Informacion"
-            print *, "4. Regresar Al Login"
+            print *, "4. Reportes"
+            print *, "5. Regresar Al Login"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
@@ -105,6 +106,8 @@ contains
                 case(3)
                     call carga_masiva()
                 case(4)
+                    call reportes_usuario()
+                case(5)
                     exit
                 case default
                     print *, "OPCION INVALIDA"
@@ -337,7 +340,6 @@ contains
             end select
         end do
     end subroutine generador_imagen
-    
 
     subroutine carga_masiva()
         integer :: opcion_carga
@@ -369,6 +371,70 @@ contains
             end select
         end do
     end subroutine carga_masiva
+
+    subroutine reportes_usuario()
+        integer :: opcion_reporte, numero_nodo, contador
+        character(len=:), allocatable :: recorrido
+        character(len=20), dimension(:), allocatable :: nodo
+        do
+            print *, "---------------------------------------"
+            print *, "Menu de Carga Masiva - Pixel Print Studio"
+            print *, "1. Top 5 Imagenes Con Mas Numero De Capas"
+            print *, "2. Todas Las Capas Que Son Hojas"
+            print *, "3. Profundidad De Arbol De Capas"
+            print *, "4. Listar Las Capas: Preorden, Inorden, Postorden"
+            print *, "5. Regresar Al Menu Cliente"
+            print *, "---------------------------------------"
+            print *, "Seleccione El Numero De Opcion:"
+            print *, "---------------------------------------"
+            read(*,*) opcion_reporte
+            select case(opcion_reporte)
+                case(1)
+                    print *, "---------------------------------------"
+                    print *, "TOP5 IMAGENES CON MAYOR NO. DE CAPAS"
+                    print *, "---------------------------------------"
+                    call arbol_avl_imagen%top_5_imagenes()
+                case(2)
+                    print *, "---------------------------------------"
+                    print *, "CAPAS QUE SON HOJAS"
+                    print *, "---------------------------------------"
+                    call arbol_abb_capa%imprimir_hoja()
+                case(3)
+                    print *, "---------------------------------------"
+                    print *, "PROFUNDIDAD DEL ARBOL"
+                    print *, "---------------------------------------"
+                    call arbol_abb_capa%profundidad_arbol()
+                case(4)
+                    print *, "---------------------------------------"
+                    print *, "LISTAR LAS CAPAS"
+                    print *, "---------------------------------------"
+                    call arbol_abb_capa%recorrido_preorden(numero_nodo, recorrido)
+                    print*, "Recorrido Preorden:"
+                    call split(recorrido, '-', nodo)
+                    do contador = 1, size(nodo)
+                        print *, trim(nodo(contador))
+                    end do
+                    print *, "---------------------------"
+                    call arbol_abb_capa%recorrido_inorden(numero_nodo, recorrido)
+                    print*, "Recorrido Inorder:"
+                    call split(recorrido, '-', nodo)
+                    do contador = 1, size(nodo)
+                        print *, trim(nodo(contador))
+                    end do
+                    print *, "---------------------------"
+                    call arbol_abb_capa%recorrido_postorden(numero_nodo, recorrido)
+                    print*, "Recorrido Postorden:"
+                    call split(recorrido, '-', nodo)
+                    do contador = 1, size(nodo)
+                        print *, trim(nodo(contador))
+                    end do
+                case(5)
+                    exit
+                case default
+                    print *, "OPCION INVALIDA"
+            end select
+        end do
+    end subroutine reportes_usuario
     !------------------------------------------------------------------------
     !CARGA MASIVA CAPAS
     !------------------------------------------------------------------------
@@ -376,7 +442,7 @@ contains
         character(len=30) :: colorD
         type(matriz), pointer :: matriz_dispersa_capa
         call json%initialize()
-        call json%load(filename='2ImagenMa.json')
+        call json%load(filename='1CAPAS.json')
         call json%info('',n_children=size_capa)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCapa, capa_encontrada)
@@ -434,7 +500,7 @@ contains
         call json%destroy()
     end subroutine carga_masiva_imagen
     !------------------------------------------------------------------------
-    !CARGA MASIVA IMAGENES
+    !CARGA MASIVA ALBUMES
     !------------------------------------------------------------------------
     subroutine carga_masiva_album()
         type(lista_imagen), pointer :: lista_imagen_album

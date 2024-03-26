@@ -15,14 +15,15 @@ module modulo_arbol_abb
         procedure :: recorrido_preorden
         procedure :: recorrido_inorden
         procedure :: recorrido_postorden
-        procedure :: recorrido_amplitud
         procedure :: graficar_arbol
         procedure :: buscar_matriz
         procedure :: valor_existe
+        procedure :: imprimir_hoja
+        procedure :: profundidad_arbol
     end type arbol_abb
 
 contains    
-    !-----------------------------------------------------------------
+    
     subroutine insertar_nodo(self, valor, ma)
         class(arbol_abb), intent(inout) :: self
         integer, intent(in) :: valor
@@ -36,7 +37,7 @@ contains
             call insertar_recursivo(self%raiz, nuevo)
         end if
     end subroutine insertar_nodo
-    !---
+    
     recursive subroutine insertar_recursivo(raiz, nuevo)
         type(nodo_abb), pointer, intent(inout) :: raiz
         type(nodo_abb), pointer, intent(in) :: nuevo
@@ -64,7 +65,6 @@ contains
         existe = associated(nodo_encontrado)
     end function valor_existe
     
-    !-----------------------------------------------------------------
     function buscar_matriz(self, valor) result(ma)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: valor
@@ -75,7 +75,7 @@ contains
             ma = nodo%matriz
         end if
     end function buscar_matriz
-    !---
+    
     recursive function buscar_nodo(raiz, valor) result(nodo)
         type(nodo_abb), pointer, intent(in) :: raiz
         integer, intent(in) :: valor
@@ -90,7 +90,7 @@ contains
             nodo => buscar_nodo(raiz%derecha, valor)
         end if
     end function buscar_nodo    
-    !-----------------------------------------------------------------
+    
     subroutine recorrido_preorden(self, num_nodos, cadena)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: num_nodos
@@ -100,7 +100,7 @@ contains
         cadena = ""
         call preorder_recursivo(self%raiz, num_nodos, contador_nodos, cadena)
     end subroutine recorrido_preorden
-    !---
+    
     recursive subroutine preorder_recursivo(raiz, num_nodos, contador_nodos, cadena)
         type(nodo_abb), pointer, intent(in) :: raiz
         integer, intent(in) :: num_nodos
@@ -115,7 +115,7 @@ contains
             call preorder_recursivo(raiz%derecha, num_nodos, contador_nodos, cadena)
         end if
     end subroutine preorder_recursivo 
-    !-----------------------------------------------------------------
+    
     subroutine recorrido_inorden(self, num_nodos, cadena)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: num_nodos
@@ -125,7 +125,7 @@ contains
         cadena = ""
         call inorden_recursivo(self%raiz, num_nodos, contador_nodos, cadena)
     end subroutine recorrido_inorden
-    !---
+    
     recursive subroutine inorden_recursivo(raiz, num_nodos, contador_nodos, cadena)
         type(nodo_abb), pointer, intent(in) :: raiz
         integer, intent(in) :: num_nodos
@@ -142,7 +142,7 @@ contains
             call inorden_recursivo(raiz%derecha, num_nodos, contador_nodos, cadena)
         end if
     end subroutine inorden_recursivo
-    !-----------------------------------------------------------------
+    
     subroutine recorrido_postorden(self, num_nodos, cadena)
         class(arbol_abb), intent(in) :: self
         integer, intent(in) :: num_nodos
@@ -152,7 +152,7 @@ contains
         cadena = ""
         call posorden_recursivo(self%raiz, num_nodos, contador_nodos, cadena)
     end subroutine recorrido_postorden
-    !---
+    
     recursive subroutine posorden_recursivo(raiz, num_nodos, contador_nodos, cadena)
         type(nodo_abb), pointer, intent(in) :: raiz
         integer, intent(in) :: num_nodos
@@ -169,51 +169,45 @@ contains
             end if
         end if
     end subroutine posorden_recursivo
-    
-    !-----------------------------------------------------------------
-    subroutine recorrido_amplitud(self, cadena)
+
+    subroutine imprimir_hoja(self)
         class(arbol_abb), intent(in) :: self
-        character(len=:), allocatable, intent(out) :: cadena
-        integer :: h, i
-        cadena = ""
-        h = altura(self%raiz)
-        do i = 1, h
-            call agregar_nivel_arbol(self%raiz, i, cadena)
-        end do
-    end subroutine recorrido_amplitud
-    !---
-    recursive subroutine agregar_nivel_arbol(raiz, nivel, cadena)
+        print *, "Capas Que Son Hojas"
+        call imprimir_hoja_recursivo(self%raiz)
+    end subroutine imprimir_hoja
+    
+    recursive subroutine imprimir_hoja_recursivo(raiz)
         type(nodo_abb), pointer, intent(in) :: raiz
-        integer, intent(in) :: nivel
-        character(len=:), allocatable, intent(inout) :: cadena
-        character(len=20) :: valor_str
-        if (.not. associated(raiz)) then
-            return
-        else if (nivel == 1) then
-            write(valor_str, '(I0)') raiz%valor
-            cadena = trim(cadena) // trim(valor_str) // " - "
-        else if (nivel > 1) then
-            call agregar_nivel_arbol(raiz%izquierda, nivel-1, cadena)
-            call agregar_nivel_arbol(raiz%derecha, nivel-1, cadena)
-        end if
-    end subroutine agregar_nivel_arbol
-    !---
-    recursive function altura(raiz) result(altura_arbol)
-        type(nodo_abb), pointer, intent(in) :: raiz
-        integer :: altura_arbol, altura_aux_1, altura_aux_2
-        if (.not. associated(raiz)) then
-            altura_arbol = 0
-        else
-            altura_aux_1 = altura(raiz%izquierda)
-            altura_aux_2 = altura(raiz%derecha)
-            if (altura_aux_1 > altura_aux_2) then
-                altura_arbol = altura_aux_1 + 1
+        if (associated(raiz)) then
+            if (.not. associated(raiz%izquierda) .and. .not. associated(raiz%derecha)) then
+                print*,"Capa: ",raiz%valor
             else
-                altura_arbol = altura_aux_2 + 1
+                call imprimir_hoja_recursivo(raiz%izquierda)
+                call imprimir_hoja_recursivo(raiz%derecha)
             end if
         end if
-    end function altura
-    !-----------------------------------------------------------------
+    end subroutine imprimir_hoja_recursivo
+    
+    subroutine profundidad_arbol(self)
+        class(arbol_abb), intent(in) :: self
+        integer :: profundidad
+        profundidad = profundidad_recursivo(self%raiz)
+        print *, "Profundidad del Arbol:", profundidad
+    end subroutine profundidad_arbol
+    
+    recursive function profundidad_recursivo(raiz) result(profundidad)
+        type(nodo_abb), pointer, intent(in) :: raiz
+        integer :: profundidad
+        integer :: profundidad_izquierda, profundidad_derecha
+        if (.not. associated(raiz)) then
+            profundidad = 0
+        else
+            profundidad_izquierda = profundidad_recursivo(raiz%izquierda)
+            profundidad_derecha = profundidad_recursivo(raiz%derecha)
+            profundidad = max(profundidad_izquierda, profundidad_derecha) + 1
+        end if
+    end function profundidad_recursivo
+    
     subroutine graficar_arbol(self, nombre_archivo)
         class(arbol_abb), intent(in) :: self
         character(len=*), intent(in) :: nombre_archivo
@@ -235,7 +229,7 @@ contains
         call generar_grafica(nombre_archivo, codigo_dot)
         print *, "Grafica '"//trim(nombre_archivo)//"' Generada Correctamente."
     end subroutine graficar_arbol
-    !---
+    
     recursive subroutine recorrer_arbol_abb(actual, crear_nodo, enlace_nodo)
         type(nodo_abb), pointer :: actual
         character(len=:), allocatable, intent(inout) :: crear_nodo, enlace_nodo
@@ -262,7 +256,7 @@ contains
             call recorrer_arbol_abb(actual%derecha, crear_nodo, enlace_nodo)
         end if
     end subroutine recorrer_arbol_abb
-    !---
+    
     subroutine generar_grafica(nombre_archivo, codigo)
         character(len=*), intent(in) :: codigo, nombre_archivo
         character(len=:), allocatable :: dot_nombre_archivo, png_nombre_archivo
@@ -276,7 +270,7 @@ contains
         call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
         call system('start ' // trim(adjustl(filepath)) // '.pdf')
     end subroutine generar_grafica
-    !--
+
     function obtener_direccion_memoria(nodo) result(direccion)
         type(nodo_abb), pointer :: nodo
         character(len=20) :: direccion
