@@ -113,29 +113,57 @@ contains
     end subroutine menu_cliente
 
     subroutine visualizar_estructura()
-        integer :: opcion_estructura, i
+        integer :: opcion_estructura, numero_capa, numero_imagen
+        logical :: existe_matriz, existe_imagen
+        type(matriz), pointer :: matriz_auxiliar
         do
             print *, "---------------------------------------"
             print *, "Menu Visualizar Estructuras - Pixel Print Studio"
-            print *, "1. Ver Arbol De Imagenes"
-            print *, "2. Ver Arbol De Capas"
+            print *, "1. Ver Arbol De Capas"
+            print *, "2. Ver Arbol De Imagenes"
             print *, "3. Ver Listado De Albumes"
             print *, "4. Ver Capa"
-            print *, "5. Regresar Al Menu Cliente"
+            print *, "5. Ver Imagen y Arbol De Capas"
+            print *, "6. Regresar Al Menu Cliente"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
             read(*,*) opcion_estructura
             select case(opcion_estructura)
                 case(1)
-                    call arbol_avl_imagen%graficar_arbol("Arbol_Imagen_Avl")
-                case(2)
                     call arbol_abb_capa%graficar_arbol("Arbol_Capa_Abb")
+                case(2)
+                    call arbol_avl_imagen%graficar_arbol("Arbol_Imagen_Avl")
                 case(3)
                     call lista_doble_album%graficar_album("Lista_Albumes")
                 case(4)
-                    print*,""
+                    print *, "---------------------------------------"
+                    print *, "Ver Capa"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el numero de capas a vizualizar:"
+                    read(*,*) numero_capa
+                    existe_matriz = arbol_abb_capa%valor_existe(numero_capa)
+                    if (existe_matriz) then
+                        allocate(matriz_auxiliar)
+                        matriz_auxiliar = arbol_abb_capa%buscar_matriz(numero_capa)
+                        call matriz_auxiliar%graficar_matriz("Ver_Capa")
+                        deallocate(matriz_auxiliar)
+                    else
+                        print*, "Capa No Existe: ", int_to_str(numero_capa)
+                    end if
                 case(5)
+                    print *, "---------------------------------------"
+                    print *, "Ver Imagen y Arbol De Capas"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el numero de imagen a vizualizar:"
+                    read(*,*) numero_imagen
+                    existe_imagen = arbol_avl_imagen%valor_existe(numero_imagen)
+                    if(existe_imagen)then
+                        call arbol_avl_imagen%graficar_arbol_imagen("Arbol_Imagen",numero_imagen)
+                    else
+                        print*, "Imagen No Existe: ", int_to_str(numero_imagen)
+                    end if
+                case(6)
                     exit
                 case default
                     print *, "OPCION INVALIDA"

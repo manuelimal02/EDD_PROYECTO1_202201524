@@ -98,8 +98,8 @@ contains
         if (associated(self%raiz)) then
             direccion_abb = obtener_direccion_memoria(self%raiz)
             write(str_valor, '(I0)') self%raiz%valor
-            crear_nodo = crear_nodo // '"' // trim(direccion_abb) // '"' // '[label="' // trim(str_valor) &
-            // '", color=red];' // new_line('a')
+            crear_nodo = crear_nodo // '"' // trim(direccion_abb) // '"' // '[fontname="Courier New" label="' &
+            // trim(str_valor) // '", color=blue];' // new_line('a')
             enlace_nodo = enlace_nodo // '"' // trim(direccion_nodo_avl) // '"' // " -> " // '"' // trim(direccion_abb) &
             // '" ' // new_line('a')
             call recorrer_arbol(self%raiz, crear_nodo, enlace_nodo)
@@ -113,8 +113,8 @@ contains
         if (associated(actual)) then
             direccion = obtener_direccion_memoria(actual)
             write(str_valor, '(I0)') actual%valor
-            crear_nodo = crear_nodo // '"' // trim(direccion) // '"' // '[label="' // & 
-            trim(str_valor) // '", color=red];' // new_line('a')
+            crear_nodo = crear_nodo // '"' // trim(direccion) // '"' // '[fontname="Courier New" label="' &
+            // trim(str_valor) // '", color=blue];' // new_line('a')
             if (associated(actual%izquierda)) then
                 enlace_nodo = enlace_nodo // '"' // trim(direccion) // '"' // " -> "
                 direccion = obtener_direccion_memoria(actual%izquierda)

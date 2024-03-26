@@ -225,7 +225,7 @@ contains
         codigo_dot = "digraph G{" // new_line('a')
         codigo_dot = codigo_dot // "node [shape=doublecircle];" // new_line('a')
         codigo_dot = codigo_dot //&
-        "Titulo [shape=component, label=""Arbol Binario De Busqueda Capas""];" &
+        'Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Binario De Busqueda Capas"]' &
         // new_line('a')
         codigo_dot = codigo_dot // "{rank=same; Titulo;}" // new_line('a')
         if (associated(self%raiz)) then
@@ -243,7 +243,8 @@ contains
         if (associated(actual)) then
             direccion = obtener_direccion_memoria(actual)
             write(str_valor, '(I0)') actual%valor
-            crear_nodo = crear_nodo // '"' // trim(direccion) // '"' // '[label="' // trim(str_valor) // '"];' // new_line('a')
+            crear_nodo = crear_nodo // '"' // trim(direccion) // '"' // '[fontname="Courier New" label="' &
+            // trim(str_valor) // '"];' // new_line('a')
             if (associated(actual%izquierda)) then
                 enlace_nodo = enlace_nodo // '"' // trim(direccion) // '"' // " -> "
                 direccion = obtener_direccion_memoria(actual%izquierda)
@@ -265,12 +266,15 @@ contains
     subroutine generar_grafica(nombre_archivo, codigo)
         character(len=*), intent(in) :: codigo, nombre_archivo
         character(len=:), allocatable :: dot_nombre_archivo, png_nombre_archivo
-        dot_nombre_archivo = trim(nombre_archivo) // ".dot"
-        png_nombre_archivo = trim(nombre_archivo) // ".png"
-        open(10, file="graph/"//dot_nombre_archivo, status='replace', action='write')
+        character(len=:), allocatable :: filepath
+        dot_nombre_archivo = "graph/" // trim(nombre_archivo) // ".dot"
+        png_nombre_archivo = "graph/" // trim(nombre_archivo) // ".png"
+        filepath = 'graph/' // trim(nombre_archivo) 
+        open(10, file=filepath, status='replace', action='write')
         write(10, '(A)') trim(codigo)
         close(10)
-        call system("dot -Tpng graph/"// dot_nombre_archivo //" -o graph/" // png_nombre_archivo)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        call system('start ' // trim(adjustl(filepath)) // '.pdf')
     end subroutine generar_grafica
     !--
     function obtener_direccion_memoria(nodo) result(direccion)

@@ -199,7 +199,7 @@ contains
         character(len=10) :: str_j_aux
         character(len=150) :: node_dec
         character(len=20) :: nombre
-        character(len=100) :: comando
+        character(len=100) :: comando, comando_abrir
         character(len=50) :: contenido
         character(:), allocatable :: rank
         character(:), allocatable :: conexion
@@ -270,6 +270,8 @@ contains
             print *, "Error Al Generar Imagen: '"//trim(filename)//"' ."
         else
             print *, "Imagen '"//trim(filename)//"' Generada Correctamente."
+            comando_abrir = "start ./graph/"//trim(filename)//".png"
+            call execute_command_line(comando_abrir, exitstat=i)
         end if
     end subroutine graficar_matriz
     
