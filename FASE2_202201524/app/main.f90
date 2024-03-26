@@ -85,7 +85,8 @@ contains
     end subroutine registrarse
 
     subroutine menu_cliente()
-        integer :: opcion_cliente
+        integer :: opcion_cliente, numero_imagen
+        logical :: existe_imagen
         do
             print *, "---------------------------------------"
             print *, "Menu Cliente - Pixel Print Studio"
@@ -93,7 +94,8 @@ contains
             print *, "2. Navegacion Y Gestion Imagenes"
             print *, "3. Carga Masiva Informacion"
             print *, "4. Reportes"
-            print *, "5. Regresar Al Login"
+            print *, "5. Manejo De Imagenes"
+            print *, "6. Regresar Al Login"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
@@ -108,6 +110,19 @@ contains
                 case(4)
                     call reportes_usuario()
                 case(5)
+                    print *, "---------------------------------------"
+                    print *, "ELIMINAR UNA IMAGEN"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el numero de imagen a eliminar:"
+                    read(*,*) numero_imagen
+                    existe_imagen = arbol_avl_imagen%valor_existe(numero_imagen)
+                    if(existe_imagen)then
+                        call arbol_avl_imagen%eliminar_nodo(numero_imagen)
+                        call arbol_avl_imagen%graficar_arbol("Arbol_Imagen_Avl")
+                    else
+                        print*, "Imagen No Existe: ", int_to_str(numero_imagen)
+                    end if
+                case(6)
                     exit
                 case default
                     print *, "OPCION INVALIDA"

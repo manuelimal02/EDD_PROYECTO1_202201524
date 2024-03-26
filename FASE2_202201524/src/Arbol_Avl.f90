@@ -17,6 +17,7 @@ module modulo_arbol_avl
         contains
         procedure :: nuevo_arbol
         procedure :: insertar_nodo
+        procedure :: eliminar_nodo
         procedure :: graficar_arbol
         procedure :: buscar_valor
         procedure :: valor_existe
@@ -56,7 +57,7 @@ module modulo_arbol_avl
                         if (n1%factor == -1) then
                             raiz => rotacionII(raiz, n1)
                         else
-                            raiz => rotationID(raiz, n1)
+                            raiz => rotacionID(raiz, n1)
                         end if
                         incremento = .false.
                 end select
@@ -150,7 +151,7 @@ module modulo_arbol_avl
         nodo_resultado => n2
     end function rotacionDI
 
-    function rotationID(n, n1) result(nodo_resultado)
+    function rotacionID(n, n1) result(nodo_resultado)
         type(nodo_avl), pointer :: n, n1, nodo_resultado, n2
         n2 => n1%derecha
         n%izquierda => n2%derecha
@@ -169,8 +170,92 @@ module modulo_arbol_avl
         end if
         n2%factor = 0
         nodo_resultado => n2
-    end function rotationID
-    
+    end function rotacionID
+
+    subroutine eliminar_nodo(tree, valor)
+        class(arbol_avl), intent(inout) :: tree
+        integer, intent(in) :: valor
+        tree%raiz => deleteRec(tree%raiz, valor)
+    end subroutine eliminar_nodo
+
+    recursive function deleteRec(raiz, valor) result(res)
+        type(nodo_avl), pointer :: raiz
+        integer, intent(in) :: valor
+        type(nodo_avl), pointer :: res, temp
+        if (.not. associated(raiz)) then
+            res => raiz
+            return
+        end if
+        if (valor < raiz%valor) then
+            raiz%izquierda => deleteRec(raiz%izquierda, valor)
+        else if (valor > raiz%valor) then
+            raiz%derecha => deleteRec(raiz%derecha, valor)
+        else
+            if (.not. associated(raiz%izquierda)) then
+                temp => raiz%derecha
+                deallocate(raiz)
+                res => temp
+            else if (.not. associated(raiz%derecha)) then
+                temp => raiz%izquierda
+                deallocate(raiz)
+                res => temp
+            else
+                call obtenerMayorDeMenores(raiz%izquierda, temp)
+                raiz%valor = temp%valor
+                raiz%izquierda => deleteRec(raiz%izquierda, temp%valor)
+            end if
+        end if
+        res => raiz
+        if (.not. associated(raiz)) return
+        raiz%factor = obtenerBalance(raiz)
+        if (raiz%factor > 1) then
+            if (obtenerBalance(raiz%derecha) < 0) then
+                raiz%derecha => rotacionDD(raiz, raiz%derecha)
+                raiz => rotacionII(raiz, raiz%derecha)
+            else
+                raiz => rotacionII(raiz, raiz%derecha)
+            end if
+        end if
+        if (obtenerBalance(raiz) < -1) then
+            if (obtenerBalance(raiz%izquierda) > 0) then
+                raiz%izquierda => rotacionII(raiz, raiz%izquierda)
+                raiz => rotacionDD(raiz, raiz%izquierda)
+            else
+                raiz => rotacionDD(raiz, raiz%izquierda)
+            end if
+        end if
+        res => raiz
+    end function deleteRec
+
+    recursive subroutine obtenerMayorDeMenores(raiz, mayor)
+        type(nodo_avl), pointer :: raiz, mayor
+        if (associated(raiz%derecha)) then
+            call obtenerMayorDeMenores(raiz%derecha, mayor)
+        else
+            mayor => raiz
+        end if
+    end subroutine obtenerMayorDeMenores
+
+    recursive function obtenerAltura(n) result(altura)
+        type(nodo_avl), pointer :: n
+        integer :: altura
+        if (.not. associated(n)) then
+            altura = 0
+        else
+            altura = max(obtenerAltura(n%izquierda), obtenerAltura(n%derecha)) + 1
+        end if
+    end function obtenerAltura
+
+    function obtenerBalance(n) result(balance)
+        type(nodo_avl), pointer :: n
+        integer :: balance
+        if (.not. associated(n)) then
+            balance = 0
+        else
+            balance = obtenerAltura(n%derecha) - obtenerAltura(n%izquierda)
+        end if
+    end function obtenerBalance
+
     function valor_existe(self, valor) result(existe)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
@@ -280,7 +365,7 @@ module modulo_arbol_avl
         call buscar_top_5(raiz%izquierda, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
         call buscar_top_5(raiz%derecha, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
     end subroutine buscar_top_5
-    
+    !-----------------------------------------------------------------------------------------
     subroutine graficar_arbol_imagen(this, nombre_grafica, valor_destacado)
         class(arbol_avl), intent(in) :: this
         character(len=*), intent(in) :: nombre_grafica
@@ -334,7 +419,6 @@ module modulo_arbol_avl
             call recorrer_arbol_avl(actual%derecha, crear_nodo, direccion_nodo, valor_destacado)
         end if
     end subroutine recorrer_arbol_avl
-
     !----------------------------------------------------------------------------------
     subroutine graficar_arbol(this,nombre_grafica)
         class(arbol_avl), intent(inout) :: this
@@ -386,7 +470,6 @@ module modulo_arbol_avl
             call RoamTree(actual%derecha, crear_nodo, direccion_nodo)
             end if
     end subroutine RoamTree
-
     !-----------------------------------------------------------------------------------------
     function obtener_direccion_memoria_avl(node) result(direccion)
         type(nodo_avl), pointer :: node
