@@ -1,11 +1,11 @@
 program main
     use json_module
     use modulo_split
-    use modulo_abb
     use modulo_lista_imagen
     use modulo_lista_album
-    use modulo_arbol_abb
-    use avl_m
+    use modulo_arbol_abb_c
+    use modulo_arbol_abb_s
+    use modulo_arbol_avl_c
     use modulo_matrix_dispersa
     implicit none
     !LECTURA JSON

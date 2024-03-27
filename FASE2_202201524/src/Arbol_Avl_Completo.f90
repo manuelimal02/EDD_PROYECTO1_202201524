@@ -1,5 +1,5 @@
-module avl_m
-    use modulo_abb
+module modulo_arbol_avl_c
+    use modulo_arbol_abb_s
     implicit none
     private
     type :: nodo_avl
@@ -412,4 +412,4 @@ contains
         call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
         call system('start ' // trim(adjustl(filepath)) // '.pdf')
     end subroutine generar_grafica
-end module avl_m
+end module modulo_arbol_avl_c

@@ -2,23 +2,21 @@ digraph G{
 node [shape=doublecircle];
 Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Binario AVL Imagen"]
 {rank=same; Titulo;}
-"1614068874944"[fontname="Courier New" label="42"];
-"1614068875200"[fontname="Courier New" label="2"];
-"1614081047200"[fontname="Courier New" label="849", color=blue];
-"1614081047200"[fontname="Courier New" label="849", color=blue];
-"1614081045328"[fontname="Courier New" label="448", color=blue];
-"1614081046240"[fontname="Courier New" label="9193", color=blue];
-"1614068903824"[fontname="Courier New" label="1"];
-"1614068875072"[fontname="Courier New" label="30"];
-"1614068875008"[fontname="Courier New" label="93"];
-"1614068875136"[fontname="Courier New" label="56"];
-"1614068874944" -> "1614068875200" [label = "L"];
-"1614068874944" -> "1614068875008" [label = "R"];
-"1614068875200" -> "1614081047200" 
-"1614081047200" -> "1614081045328" [label = "L"];
-"1614081047200" -> "1614081046240" [label = "R"];
-"1614068875200" -> "1614068903824" [label = "L"];
-"1614068875200" -> "1614068875072" [label = "R"];
-"1614068875008" -> "1614068875136" [label = "L"];
+"2114807955136"[fontname="Courier New" label="42"];
+"2114807955392"[fontname="Courier New" label="2"];
+"2114807984016"[fontname="Courier New" label="1"];
+"2114807955264"[fontname="Courier New" label="30"];
+"2114807955200"[fontname="Courier New" label="93"];
+"2114821176400"[fontname="Courier New" label="32", color=blue];
+"2114821176400"[fontname="Courier New" label="32", color=blue];
+"2114821173568"[fontname="Courier New" label="21", color=blue];
+"2114807955328"[fontname="Courier New" label="56"];
+"2114807955136" -> "2114807955392" [label = "L"];
+"2114807955136" -> "2114807955200" [label = "R"];
+"2114807955392" -> "2114807984016" [label = "L"];
+"2114807955392" -> "2114807955264" [label = "R"];
+"2114807955200" -> "2114821176400" 
+"2114821176400" -> "2114821173568" [label = "L"];
+"2114807955200" -> "2114807955328" [label = "L"];
 }
 

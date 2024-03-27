@@ -1,4 +1,4 @@
-module modulo_arbol_abb
+module modulo_arbol_abb_c
     use modulo_matrix_dispersa
     implicit none
     private
@@ -280,4 +280,4 @@ contains
         10 format(I0)
     end function obtener_direccion_memoria
 
-end module modulo_arbol_abb
+end module modulo_arbol_abb_c

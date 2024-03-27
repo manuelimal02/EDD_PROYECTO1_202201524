@@ -1,4 +1,4 @@
-module modulo_abb
+module modulo_arbol_abb_s
     implicit none
     private
     type :: nodo_abb_simple
@@ -159,4 +159,4 @@ contains
         10 format(I0)
     end function obtener_direccion_memoria
 
-end module modulo_abb
+end module modulo_arbol_abb_s

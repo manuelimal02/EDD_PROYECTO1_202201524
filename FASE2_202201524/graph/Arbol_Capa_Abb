@@ -2,30 +2,30 @@ digraph G{
 node [shape=doublecircle];
 Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Binario De Busqueda Capas"]
 {rank=same; Titulo;}
-"1614068875488"[fontname="Courier New" label="0"];
-"1614068871728"[fontname="Courier New" label="1"];
-"1614071000224"[fontname="Courier New" label="2"];
-"1614071000304"[fontname="Courier New" label="3"];
-"1614071000384"[fontname="Courier New" label="4"];
-"1614071000464"[fontname="Courier New" label="5"];
-"1614071000544"[fontname="Courier New" label="6"];
-"1614071000624"[fontname="Courier New" label="7"];
-"1614071000704"[fontname="Courier New" label="8"];
-"1614071000784"[fontname="Courier New" label="9"];
-"1614071000864"[fontname="Courier New" label="10"];
-"1614071000944"[fontname="Courier New" label="11"];
-"1614068182128"[fontname="Courier New" label="12"];
-"1614068875488" -> "1614068871728" [label = "R"];
-"1614068871728" -> "1614071000224" [label = "R"];
-"1614071000224" -> "1614071000304" [label = "R"];
-"1614071000304" -> "1614071000384" [label = "R"];
-"1614071000384" -> "1614071000464" [label = "R"];
-"1614071000464" -> "1614071000544" [label = "R"];
-"1614071000544" -> "1614071000624" [label = "R"];
-"1614071000624" -> "1614071000704" [label = "R"];
-"1614071000704" -> "1614071000784" [label = "R"];
-"1614071000784" -> "1614071000864" [label = "R"];
-"1614071000864" -> "1614071000944" [label = "R"];
-"1614071000944" -> "1614068182128" [label = "R"];
+"2114807955680"[fontname="Courier New" label="0"];
+"2114807951920"[fontname="Courier New" label="1"];
+"2114811128992"[fontname="Courier New" label="2"];
+"2114811129072"[fontname="Courier New" label="3"];
+"2114811129152"[fontname="Courier New" label="4"];
+"2114811129232"[fontname="Courier New" label="5"];
+"2114811129312"[fontname="Courier New" label="6"];
+"2114811129392"[fontname="Courier New" label="7"];
+"2114811129472"[fontname="Courier New" label="8"];
+"2114811129552"[fontname="Courier New" label="9"];
+"2114811129632"[fontname="Courier New" label="10"];
+"2114811129712"[fontname="Courier New" label="11"];
+"2114809031792"[fontname="Courier New" label="12"];
+"2114807955680" -> "2114807951920" [label = "R"];
+"2114807951920" -> "2114811128992" [label = "R"];
+"2114811128992" -> "2114811129072" [label = "R"];
+"2114811129072" -> "2114811129152" [label = "R"];
+"2114811129152" -> "2114811129232" [label = "R"];
+"2114811129232" -> "2114811129312" [label = "R"];
+"2114811129312" -> "2114811129392" [label = "R"];
+"2114811129392" -> "2114811129472" [label = "R"];
+"2114811129472" -> "2114811129552" [label = "R"];
+"2114811129552" -> "2114811129632" [label = "R"];
+"2114811129632" -> "2114811129712" [label = "R"];
+"2114811129712" -> "2114809031792" [label = "R"];
 }
 
