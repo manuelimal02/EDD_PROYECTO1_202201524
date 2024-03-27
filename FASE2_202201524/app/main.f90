@@ -5,7 +5,7 @@ program main
     use modulo_lista_imagen
     use modulo_lista_album
     use modulo_arbol_abb
-    use modulo_arbol_avl
+    use avl_m
     use modulo_matrix_dispersa
     implicit none
     !LECTURA JSON
@@ -87,6 +87,7 @@ contains
     subroutine menu_cliente()
         integer :: opcion_cliente, numero_imagen
         logical :: existe_imagen
+        character(len=20) :: imagen
         do
             print *, "---------------------------------------"
             print *, "Menu Cliente - Pixel Print Studio"
@@ -117,8 +118,11 @@ contains
                     read(*,*) numero_imagen
                     existe_imagen = arbol_avl_imagen%valor_existe(numero_imagen)
                     if(existe_imagen)then
+                        write(imagen, '(I0)') numero_imagen
                         call arbol_avl_imagen%eliminar_nodo(numero_imagen)
+                        call lista_doble_album%eliminar_imagen(imagen)
                         call arbol_avl_imagen%graficar_arbol("Arbol_Imagen_Avl")
+                        call lista_doble_album%graficar_album("Lista_Albumes")
                     else
                         print*, "Imagen No Existe: ", int_to_str(numero_imagen)
                     end if
@@ -457,7 +461,7 @@ contains
         character(len=30) :: colorD
         type(matriz), pointer :: matriz_dispersa_capa
         call json%initialize()
-        call json%load(filename='1CAPAS.json')
+        call json%load(filename='2ImagenMa.json')
         call json%info('',n_children=size_capa)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCapa, capa_encontrada)

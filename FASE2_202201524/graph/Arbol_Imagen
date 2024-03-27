@@ -1,0 +1,24 @@
+digraph G{
+node [shape=doublecircle];
+Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Binario AVL Imagen"]
+{rank=same; Titulo;}
+"1614068874944"[fontname="Courier New" label="42"];
+"1614068875200"[fontname="Courier New" label="2"];
+"1614081047200"[fontname="Courier New" label="849", color=blue];
+"1614081047200"[fontname="Courier New" label="849", color=blue];
+"1614081045328"[fontname="Courier New" label="448", color=blue];
+"1614081046240"[fontname="Courier New" label="9193", color=blue];
+"1614068903824"[fontname="Courier New" label="1"];
+"1614068875072"[fontname="Courier New" label="30"];
+"1614068875008"[fontname="Courier New" label="93"];
+"1614068875136"[fontname="Courier New" label="56"];
+"1614068874944" -> "1614068875200" [label = "L"];
+"1614068874944" -> "1614068875008" [label = "R"];
+"1614068875200" -> "1614081047200" 
+"1614081047200" -> "1614081045328" [label = "L"];
+"1614081047200" -> "1614081046240" [label = "R"];
+"1614068875200" -> "1614068903824" [label = "L"];
+"1614068875200" -> "1614068875072" [label = "R"];
+"1614068875008" -> "1614068875136" [label = "L"];
+}
+

@@ -36,6 +36,7 @@ module modulo_lista_album
         contains
         procedure :: insertar_album
         procedure :: graficar_album
+        procedure :: eliminar_imagen
     end type lista_album
 
     contains
@@ -58,6 +59,38 @@ module modulo_lista_album
             self%cabeza%anterior => nuevo_nodo
         end if
     end subroutine insertar_album
+
+    subroutine eliminar_imagen(self, imagen)
+        class(lista_album), intent(inout) :: self
+        character(len=*), intent(in) :: imagen
+        type(nodo_album), pointer :: actual_album
+        type(nodo_imagen), pointer :: actual_imagen, prev_imagen
+        if (.not. associated(self%cabeza)) then
+            print*,"Lista Albumes Vacia."
+            return
+        end if
+        actual_album => self%cabeza
+        do while (associated(actual_album))
+            actual_imagen => actual_album%lista_imagenes%cabeza
+            prev_imagen => null()
+            do while (associated(actual_imagen))
+                if (actual_imagen%imagen == imagen) then
+                    if (associated(prev_imagen)) then
+                        prev_imagen%siguiente => actual_imagen%siguiente
+                    else
+                        actual_album%lista_imagenes%cabeza => actual_imagen%siguiente
+                    end if
+                    deallocate(actual_imagen)
+                    exit
+                end if
+                prev_imagen => actual_imagen
+                actual_imagen => actual_imagen%siguiente
+            end do
+            actual_album => actual_album%siguiente
+            if (associated(actual_album, self%cabeza)) exit
+        end do
+    end subroutine eliminar_imagen
+    
 
     subroutine graficar_album(self, filename)
         class(lista_album), intent(inout) :: self

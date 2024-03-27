@@ -1,0 +1,11 @@
+digraph G{
+node [shape=doublecircle];
+Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Binario AVL"]
+{rank=same; Titulo;}
+"1614068875136"[fontname="Courier New" label="56"];
+"1614068874944"[fontname="Courier New" label="2"];
+"1614068875008"[fontname="Courier New" label="93"];
+"1614068875136" -> "1614068874944" [label = "L"];
+"1614068875136" -> "1614068875008" [label = "R"];
+}
+

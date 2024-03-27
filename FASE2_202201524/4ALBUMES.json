@@ -5,10 +5,10 @@
     },
     {
         "nombre_album": "Album 2",
-        "imgs": [2]
+        "imgs": [2, 9323]
     },
     {
         "nombre_album": "Album 3",
-        "imgs": [94,18]
+        "imgs": [30,18,76,9,6]
     }
 ]

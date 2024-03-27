@@ -365,7 +365,7 @@ module modulo_arbol_avl
         call buscar_top_5(raiz%izquierda, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
         call buscar_top_5(raiz%derecha, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
     end subroutine buscar_top_5
-    !-----------------------------------------------------------------------------------------
+    
     subroutine graficar_arbol_imagen(this, nombre_grafica, valor_destacado)
         class(arbol_avl), intent(in) :: this
         character(len=*), intent(in) :: nombre_grafica
@@ -419,6 +419,7 @@ module modulo_arbol_avl
             call recorrer_arbol_avl(actual%derecha, crear_nodo, direccion_nodo, valor_destacado)
         end if
     end subroutine recorrer_arbol_avl
+
     !----------------------------------------------------------------------------------
     subroutine graficar_arbol(this,nombre_grafica)
         class(arbol_avl), intent(inout) :: this
@@ -470,6 +471,7 @@ module modulo_arbol_avl
             call RoamTree(actual%derecha, crear_nodo, direccion_nodo)
             end if
     end subroutine RoamTree
+
     !-----------------------------------------------------------------------------------------
     function obtener_direccion_memoria_avl(node) result(direccion)
         type(nodo_avl), pointer :: node
