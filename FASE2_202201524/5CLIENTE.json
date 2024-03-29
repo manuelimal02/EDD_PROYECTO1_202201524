@@ -1,0 +1,17 @@
+[
+    {
+        "dpi": "1234567890123",
+        "nombre_cliente": "Mario Lopez",
+        "password":"ml123"
+    },
+    {
+        "dpi": "3009368850101",
+        "nombre_cliente": "Carlos Lima",
+        "password":"cm123."
+    },
+    {
+        "dpi": "8976543212345",
+        "nombre_cliente": "Samuel Rodriguez",
+        "password":"sami1"
+    }
+]

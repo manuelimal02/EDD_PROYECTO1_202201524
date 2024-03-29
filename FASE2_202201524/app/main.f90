@@ -1,6 +1,7 @@
 program main
     use json_module
     use modulo_split
+    use modulo_lista_cliente
     use modulo_lista_imagen
     use modulo_lista_album
     use modulo_arbol_abb_c
@@ -28,14 +29,21 @@ program main
     integer :: size_album, contador_album
     integer :: imgs_size, contador_a
     logical :: album_encontrado
+    !JSON CLIENTE
+    type(json_value), pointer :: listaPunteroCliente, punteroCiente, atributoPunteroCliente
+    integer :: size_cliente, contador_cliente
+    character(:), allocatable :: dpi_cliente, nombre_cliente, contrasena_cliente
+    logical :: cliente_encontrado
     !ESTRUCTURAS
     type(arbol_abb) :: arbol_abb_capa
     type(arbol_avl) :: arbol_avl_imagen
     type(lista_album) :: lista_doble_album
+    type(lista_cliente) :: lista_simple_cliente  
     !PROGRAMA
     integer :: opcion_principal
     character(len=100) :: usuario
     character(len=100) :: contrasena
+    character(len=100) :: dpi_cliente1, nombre_cliente1, contrasena_cliente1
     do
         call mostrar_menu()
         read(*,*) opcion_principal
@@ -72,7 +80,9 @@ contains
         print *, "Ingrese su contrasenia:"
         read(*,*) contrasena
         if (usuario == "admin" .and. contrasena == "EDD2024") then
-            print *, "ADMINISTRADOR"
+            print *, "---------------------------------------"
+            print*,"Bienvenido Admin"
+            call menu_administrador()
         else if(usuario == "carlos" .and. contrasena == "1234")then
             call menu_cliente()
         else
@@ -81,8 +91,111 @@ contains
     end subroutine iniciar_sesion
 
     subroutine registrarse()
-        print *, "REGISTRARSE"
+        character(len=100) :: linea
+        print *, "---------------------------------------"
+        print *, "REGISTRARSE"  
+        print *, "---------------------------------------"
+        print*,"Ingrese el numero de DPI: "
+        read(*,'(a)') linea
+        dpi_cliente1 = trim(linea)
+        print*,"Ingrese su nombre y apellido: "
+        read(*,'(a)') linea
+        nombre_cliente1 = trim(linea)
+        print*,"Ingrese su contrasena: "
+        read(*,'(a)') linea
+        contrasena_cliente1 = trim(linea)
+        call lista_simple_cliente%insertar_cliente(dpi_cliente1, nombre_cliente1, contrasena_cliente1)
     end subroutine registrarse
+    
+
+    subroutine menu_administrador()
+        integer :: opcion_admin
+        do
+            print *, "---------------------------------------"
+            print *, "Menu Admin - Pixel Print Studio"
+            print *, "1. Visualizar Arbol Cliente"
+            print *, "2. Manejo De Clientes"
+            print *, "3. Carga Masiva Cliente"
+            print *, "4. Reportes"
+            print *, "5. Regresar Al Login"
+            print *, "---------------------------------------"
+            print *, "Seleccione El Numero De Opcion:"
+            print *, "---------------------------------------"
+            read(*,*) opcion_admin
+            select case(opcion_admin)
+                case(1)
+                    call lista_simple_cliente%grafica_cliente("Lista_Cliente")
+                case(2)
+                    call menu_manejo_cliente()
+                case(3)
+                    call carga_masiva_cliente()
+                case(4)
+                    print*,""
+                case(5)
+                    exit
+                case default
+                    print *, "OPCION INVALIDA"
+            end select
+        end do
+    end subroutine menu_administrador
+
+    subroutine menu_manejo_cliente()
+        integer :: opcion_cliente
+        character(len=100) :: linea
+        do
+            print *, "---------------------------------------"
+            print *, "Menu Manejo Cliente - Pixel Print Studio"
+            print *, "1. Nuevo Cliente"
+            print *, "2. Eliminar Cliente"
+            print *, "3. Modificar Cliente"
+            print *, "4. Regresar Al Menu Administrador"
+            print *, "---------------------------------------"
+            print *, "Seleccione El Numero De Opcion:"
+            print *, "---------------------------------------"
+            read(*,*) opcion_cliente
+            select case(opcion_cliente)
+                case(1)
+                    print *, "---------------------------------------"
+                    print *, "NUEVO CLIENTE"  
+                    print *, "---------------------------------------"
+                    print*,"Ingrese el numero de DPI: "
+                    read(*,'(a)') linea
+                    dpi_cliente1 = trim(linea)
+                    print*,"Ingrese El Nombre y Apellido: "
+                    read(*,'(a)') linea
+                    nombre_cliente1 = trim(linea)
+                    print*,"Ingrese La Contrasena: "
+                    read(*,'(a)') linea
+                    contrasena_cliente1 = trim(linea)
+                    call lista_simple_cliente%insertar_cliente(dpi_cliente1, nombre_cliente1, contrasena_cliente1)
+                case(2)
+                    print *, "---------------------------------------"
+                    print *, "ELIMINAR CLIENTE"  
+                    print *, "---------------------------------------"
+                    print*,"Ingrese el numero de DPI: "
+                    read(*,*) dpi_cliente1
+                    call lista_simple_cliente%eliminar_cliente(dpi_cliente1)
+                case(3)
+                    print *, "---------------------------------------"
+                    print *, "MODIFICAR CLIENTE"  
+                    print *, "---------------------------------------"
+                    print*,"Ingrese El Numero De DPI: "
+                    read(*,'(a)') linea
+                    dpi_cliente1 = trim(linea)
+                    print*,"Ingrese El Nuevo Nombre Y Apellido: "
+                    read(*,'(a)') linea
+                    nombre_cliente1 = trim(linea)
+                    print*,"Ingrese La Nueva Contrasena: "
+                    read(*,'(a)') linea
+                    contrasena_cliente1 = trim(linea)
+                    call lista_simple_cliente%modificar_cliente(dpi_cliente1, nombre_cliente1, contrasena_cliente1)
+                case(4)
+                    exit
+                case default
+                    print *, "OPCION INVALIDA"
+            end select
+        end do
+    end subroutine menu_manejo_cliente
 
     subroutine menu_cliente()
         integer :: opcion_cliente, numero_imagen
@@ -121,8 +234,6 @@ contains
                         write(imagen, '(I0)') numero_imagen
                         call arbol_avl_imagen%eliminar_nodo(numero_imagen)
                         call lista_doble_album%eliminar_imagen(imagen)
-                        call arbol_avl_imagen%graficar_arbol("Arbol_Imagen_Avl")
-                        call lista_doble_album%graficar_album("Lista_Albumes")
                     else
                         print*, "Imagen No Existe: ", int_to_str(numero_imagen)
                     end if
@@ -545,4 +656,25 @@ contains
         end do
         call json%destroy()
     end subroutine carga_masiva_album
+    !------------------------------------------------------------------------
+    !CARGA MASIVA CLIENTE
+    !------------------------------------------------------------------------
+    subroutine carga_masiva_cliente()
+        call json%initialize()
+        call json%load(filename='5CLIENTE.json')
+        call json%info('',n_children=size_cliente)
+        call json%get_core(jsonc)
+        call json%get('', listaPunteroCliente, cliente_encontrado)
+        do contador_cliente = 1, size_cliente
+            call jsonc%get_child(listaPunteroCliente, contador_cliente, punteroCiente, cliente_encontrado)
+            call jsonc%get_child(punteroCiente, 'dpi', atributoPunteroCliente, cliente_encontrado)
+            call jsonc%get(atributoPunteroCliente, dpi_cliente)
+            call jsonc%get_child(punteroCiente, 'nombre_cliente', atributoPunteroCliente, cliente_encontrado)
+            call jsonc%get(atributoPunteroCliente, nombre_cliente)
+            call jsonc%get_child(punteroCiente, 'password', atributoPunteroCliente, cliente_encontrado)
+            call jsonc%get(atributoPunteroCliente, contrasena_cliente)
+            call lista_simple_cliente%insertar_cliente(dpi_cliente, nombre_cliente, contrasena_cliente)
+        end do
+        call json%destroy()
+    end subroutine carga_masiva_cliente
 end program main
