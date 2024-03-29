@@ -22,6 +22,7 @@ module modulo_lista_cliente
         procedure :: grafica_cliente
         procedure :: cliente_existe
         procedure :: iniciar_sesion_c
+        procedure :: obtener_cliente
     end type lista_cliente
 
 contains
@@ -130,7 +131,22 @@ contains
             actual => actual%siguiente
         end do
     end function iniciar_sesion_c
-    
+
+    function obtener_cliente(self, dpi) result(nodo)
+        class(lista_cliente), intent(inout) :: self
+        character(len=*), intent(in) :: dpi
+        type(nodo_cliente), pointer :: nodo
+        type(nodo_cliente), pointer :: actual
+        nodo => null()
+        actual => self%cabeza
+        do while (associated(actual))
+            if (trim(actual%dpi) == trim(dpi)) then
+                nodo => actual
+                exit
+            end if
+            actual => actual%siguiente
+        end do
+    end function obtener_cliente
 
     subroutine grafica_cliente(self, filename)
         class(lista_cliente), intent(inout) :: self

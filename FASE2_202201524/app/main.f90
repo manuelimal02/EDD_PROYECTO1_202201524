@@ -36,15 +36,13 @@ program main
     character(:), allocatable :: dpi_cliente, nombre_cliente, contrasena_cliente
     logical :: cliente_encontrado
     !ESTRUCTURAS
-    type(arbol_abb) :: arbol_abb_capa
-    type(arbol_avl) :: arbol_avl_imagen
-    type(lista_album) :: lista_doble_album
     type(lista_cliente) :: lista_simple_cliente  
     !PROGRAMA
     integer :: opcion_principal
     character(len=100) :: usuario
     character(len=100) :: contrasena
     character(len=100) :: dpi_cliente1, nombre_cliente1, contrasena_cliente1
+    character(len=100) :: documento_capa, documento_imagen, documento_album
     do
         call mostrar_menu()
         read(*,*) opcion_principal
@@ -87,7 +85,7 @@ contains
         else if(lista_simple_cliente%iniciar_sesion_c(usuario, contrasena))then
             dpi_global = usuario
             print *, "---------------------------------------"
-            print*,"BIENVENIDO CLIENTE"
+            print*,"BIENVENIDO CLIENTE: ", dpi_global
             call menu_cliente()
         else
             print *, "CREDENCIALES INCORRECTAS"
@@ -130,11 +128,11 @@ contains
                 case(1)
                     call lista_simple_cliente%grafica_cliente("Lista_Cliente")
                 case(2)
-                    call menu_manejo_cliente()
+                    call abc_cliente()
                 case(3)
                     call carga_masiva_cliente()
                 case(4)
-                    print*,""
+                    call reportes_administrador()
                 case(5)
                     exit
                 case default
@@ -143,7 +141,7 @@ contains
         end do
     end subroutine menu_administrador
 
-    subroutine menu_manejo_cliente()
+    subroutine abc_cliente()
         integer :: opcion_cliente
         character(len=100) :: linea
         do
@@ -199,12 +197,39 @@ contains
                     print *, "OPCION INVALIDA"
             end select
         end do
-    end subroutine menu_manejo_cliente
+    end subroutine abc_cliente
+
+    subroutine reportes_administrador()
+        integer :: opcion_carga
+        do
+            print *, "---------------------------------------"
+            print *, "Menu de Carga Masiva - Pixel Print Studio"
+            print *, "1. Capas"
+            print *, "2. Imagenes"
+            print *, "3. Albumes"
+            print *, "4. Regresar Al Menu Cliente"
+            print *, "---------------------------------------"
+            print *, "Seleccione El Numero De Opcion:"
+            print *, "---------------------------------------"
+            read(*,*) opcion_carga
+            select case(opcion_carga)
+                case(1)
+                    print*,"Carga De Capas Correctamente."
+                case(2)
+                    print*,"Carga De Imagenes Correctamente."
+                case(3)
+                    print*,"Carga De Albumes Correctamente."
+                case(4)
+                    exit
+                case default
+                    print *, "OPCION INVALIDA"
+            end select
+        end do
+    end subroutine reportes_administrador
 
     subroutine menu_cliente()
         integer :: opcion_cliente, numero_imagen
         logical :: existe_imagen
-        character(len=20) :: imagen
         do
             print *, "---------------------------------------"
             print *, "Menu Cliente - Pixel Print Studio"
@@ -228,19 +253,7 @@ contains
                 case(4)
                     call reportes_usuario()
                 case(5)
-                    print *, "---------------------------------------"
-                    print *, "ELIMINAR UNA IMAGEN"
-                    print *, "---------------------------------------"
-                    print *, "Escribe el numero de imagen a eliminar:"
-                    read(*,*) numero_imagen
-                    existe_imagen = arbol_avl_imagen%valor_existe(numero_imagen)
-                    if(existe_imagen)then
-                        write(imagen, '(I0)') numero_imagen
-                        call arbol_avl_imagen%eliminar_nodo(numero_imagen)
-                        call lista_doble_album%eliminar_imagen(imagen)
-                    else
-                        print*, "Imagen No Existe: ", int_to_str(numero_imagen)
-                    end if
+                    call abc_imagen()
                 case(6)
                     exit
                 case default
@@ -250,10 +263,12 @@ contains
     end subroutine menu_cliente
 
     subroutine visualizar_estructura()
+        type(nodo_cliente), pointer :: cliente_actual
         integer :: opcion_estructura, numero_capa, numero_imagen
         logical :: existe_matriz, existe_imagen
         type(matriz), pointer :: matriz_auxiliar
         do
+            cliente_actual => lista_simple_cliente%obtener_cliente(dpi_global)
             print *, "---------------------------------------"
             print *, "Menu Visualizar Estructuras - Pixel Print Studio"
             print *, "1. Ver Arbol De Capas"
@@ -268,22 +283,22 @@ contains
             read(*,*) opcion_estructura
             select case(opcion_estructura)
                 case(1)
-                    call arbol_abb_capa%graficar_arbol("Arbol_Capa_Abb")
+                    call cliente_actual%arbol_abb_capa%graficar_arbol("Arbol_Capa_Abb_"//dpi_global)
                 case(2)
-                    call arbol_avl_imagen%graficar_arbol("Arbol_Imagen_Avl")
+                    call cliente_actual%arbol_avl_imagen%graficar_arbol("Arbol_Imagen_Avl_"//dpi_global)
                 case(3)
-                    call lista_doble_album%graficar_album("Lista_Albumes")
+                    call cliente_actual%lista_doble_album%graficar_album("Lista_Albumes_"//dpi_global)
                 case(4)
                     print *, "---------------------------------------"
                     print *, "Ver Capa"
                     print *, "---------------------------------------"
-                    print *, "Escribe el numero de capas a vizualizar:"
+                    print *, "Escribe el ID de capa a vizualizar:"
                     read(*,*) numero_capa
-                    existe_matriz = arbol_abb_capa%valor_existe(numero_capa)
+                    existe_matriz = cliente_actual%arbol_abb_capa%valor_existe(numero_capa)
                     if (existe_matriz) then
                         allocate(matriz_auxiliar)
-                        matriz_auxiliar = arbol_abb_capa%buscar_matriz(numero_capa)
-                        call matriz_auxiliar%graficar_matriz("Ver_Capa")
+                        matriz_auxiliar = cliente_actual%arbol_abb_capa%buscar_matriz(numero_capa)
+                        call matriz_auxiliar%graficar_matriz("Ver_Capa_"//dpi_global)
                         deallocate(matriz_auxiliar)
                     else
                         print*, "Capa No Existe: ", int_to_str(numero_capa)
@@ -292,11 +307,11 @@ contains
                     print *, "---------------------------------------"
                     print *, "Ver Imagen y Arbol De Capas"
                     print *, "---------------------------------------"
-                    print *, "Escribe el numero de imagen a vizualizar:"
+                    print *, "Escribe el ID de imagen a vizualizar:"
                     read(*,*) numero_imagen
-                    existe_imagen = arbol_avl_imagen%valor_existe(numero_imagen)
+                    existe_imagen = cliente_actual%arbol_avl_imagen%valor_existe(numero_imagen)
                     if(existe_imagen)then
-                        call arbol_avl_imagen%graficar_arbol_imagen("Arbol_Imagen",numero_imagen)
+                        call cliente_actual%arbol_avl_imagen%graficar_arbol_imagen("Arbol_Imagen_"//dpi_global,numero_imagen)
                     else
                         print*, "Imagen No Existe: ", int_to_str(numero_imagen)
                     end if
@@ -309,6 +324,7 @@ contains
     end subroutine visualizar_estructura
 
     subroutine generador_imagen()
+        type(nodo_cliente), pointer :: cliente_actual
         type(matriz), pointer :: matriz_imagen, matriz_auxiliar
         type(arbol_abb_simple), pointer :: arbol_abb_simple
         integer :: opcion_imagen, numero_nodo, tipo_recorrido, contador, id_capa, id_imagen, cantidad_capa,numero_capa
@@ -316,6 +332,7 @@ contains
         character(len=:), allocatable :: recorrido
         character(len=20), dimension(:), allocatable :: nodo
         do
+            cliente_actual => lista_simple_cliente%obtener_cliente(dpi_global)
             print *, "---------------------------------------"
             print *, "Menu Generador Imagenes - Pixel Print Studio"
             print *, "1. Por Recorrido Limitado"
@@ -341,63 +358,63 @@ contains
                     read(*,*) tipo_recorrido
                     !------------------------------------------!
                     if (tipo_recorrido==1) then
-                        allocate(matriz_imagen)
-                        call arbol_abb_capa%recorrido_preorden(numero_nodo, recorrido)
+                        call cliente_actual%arbol_abb_capa%recorrido_preorden(numero_nodo, recorrido)
                         if(recorrido=="")then
                             print*, "No Existen Capas Cargadas."
                             exit
                         end if
+                        allocate(matriz_imagen)
                         print*, "Preorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
                             allocate(matriz_auxiliar)
                             print *, trim(nodo(contador))
                             read(nodo(contador), *) id_capa
-                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                            matriz_auxiliar = cliente_actual%arbol_abb_capa%buscar_matriz(id_capa)
                             call matriz_imagen%insertar_matriz(matriz_auxiliar)
                             deallocate(matriz_auxiliar)
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Preorden")
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Preorden_"//dpi_global)
                         deallocate(matriz_imagen)
                     !------------------------------------------!
                     else if (tipo_recorrido==2) then
-                        allocate(matriz_imagen)
-                        call arbol_abb_capa%recorrido_inorden(numero_nodo, recorrido)
+                        call cliente_actual%arbol_abb_capa%recorrido_inorden(numero_nodo, recorrido)
                         if(recorrido=="")then
                             print*, "No Existen Capas Cargadas."
                             exit
                         end if
+                        allocate(matriz_imagen)
                         print*, "Inorder: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
                             allocate(matriz_auxiliar)
                             print *, trim(nodo(contador))
                             read(nodo(contador), *) id_capa
-                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                            matriz_auxiliar = cliente_actual%arbol_abb_capa%buscar_matriz(id_capa)
                             call matriz_imagen%insertar_matriz(matriz_auxiliar)
                             deallocate(matriz_auxiliar)
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Inorden")
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Inorden_"//dpi_global)
                         deallocate(matriz_imagen)
                     !------------------------------------------!
                     else if (tipo_recorrido==3) then
-                        allocate(matriz_imagen)
-                        call arbol_abb_capa%recorrido_postorden(numero_nodo, recorrido)
+                        call cliente_actual%arbol_abb_capa%recorrido_postorden(numero_nodo, recorrido)
                         if(recorrido=="")then
                             print*, "No Existen Capas Cargadas."
                             exit
                         end if
+                        allocate(matriz_imagen)
                         print*, "Postorden: "
                         call split(recorrido, '-', nodo)
                         do contador = 1, size(nodo)
                             allocate(matriz_auxiliar)
                             print *, trim(nodo(contador))
                             read(nodo(contador), *) id_capa
-                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                            matriz_auxiliar = cliente_actual%arbol_abb_capa%buscar_matriz(id_capa)
                             call matriz_imagen%insertar_matriz(matriz_auxiliar)
                             deallocate(matriz_auxiliar)
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Postorden")
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Postorden_"//dpi_global)
                         deallocate(matriz_imagen)
                     end if
                     print *, "---------------------------------------"
@@ -406,12 +423,12 @@ contains
                     print *, "---------------------------------------"
                     print *, "ARBOL DE IMAGENES"
                     print *, "---------------------------------------"
-                    print *, "Escribe el id de la imagen:"
+                    print *, "Escribe el ID de la imagen:"
                     read(*,*) id_imagen
                     allocate(arbol_abb_simple)
-                    existe_imagen = arbol_avl_imagen%valor_existe(id_imagen)
+                    existe_imagen = cliente_actual%arbol_avl_imagen%valor_existe(id_imagen)
                     if (existe_imagen) then
-                        arbol_abb_simple = arbol_avl_imagen%buscar_valor(id_imagen)
+                        arbol_abb_simple = cliente_actual%arbol_avl_imagen%buscar_valor(id_imagen)
                         call arbol_abb_simple%recorrido_amplitud(recorrido)
                         allocate(matriz_imagen)
                         print*, "Amplitud: "
@@ -422,10 +439,10 @@ contains
                         print*,"----"
                         do contador = 1, size(nodo)
                             read(nodo(contador), *) id_capa
-                            existe_matriz = arbol_abb_capa%valor_existe(id_capa)
+                            existe_matriz = cliente_actual%arbol_abb_capa%valor_existe(id_capa)
                             if (existe_matriz) then
                                 allocate(matriz_auxiliar)
-                                matriz_auxiliar = arbol_abb_capa%buscar_matriz(id_capa)
+                                matriz_auxiliar = cliente_actual%arbol_abb_capa%buscar_matriz(id_capa)
                                 call matriz_imagen%insertar_matriz(matriz_auxiliar)
                                 deallocate(matriz_auxiliar)
                                 print*, "Capa: ",  trim(nodo(contador)), " Apilada."
@@ -434,7 +451,7 @@ contains
                             end if
                         end do
                         print*,"----"
-                        call matriz_imagen%graficar_matriz("Imagen_Recorrido_Amplitud")
+                        call matriz_imagen%graficar_matriz("I_Recorrido_Amplitud_"//dpi_global)
                         deallocate(matriz_imagen)
                     else
                         print *, "Imagen No Existe: ", int_to_str(id_imagen)
@@ -451,12 +468,12 @@ contains
                     allocate(matriz_imagen)
                     do contador = 1, cantidad_capa
                         print*,"----"
-                        print *, "Ingrese La Capa Numero ", int_to_str(contador)
+                        print *, "Ingrese El ID Capa Numero ", int_to_str(contador)
                         read(*,*) numero_capa
-                        existe_matriz = arbol_abb_capa%valor_existe(numero_capa)
+                        existe_matriz = cliente_actual%arbol_abb_capa%valor_existe(numero_capa)
                         if (existe_matriz) then
                             allocate(matriz_auxiliar)
-                            matriz_auxiliar = arbol_abb_capa%buscar_matriz(numero_capa)
+                            matriz_auxiliar = cliente_actual%arbol_abb_capa%buscar_matriz(numero_capa)
                             call matriz_imagen%insertar_matriz(matriz_auxiliar)
                             deallocate(matriz_auxiliar)
                             print*, "Capa Apilada: ", int_to_str(numero_capa)
@@ -465,7 +482,7 @@ contains
                         end if
                     end do
                     print*,"--------"
-                    call matriz_imagen%graficar_matriz("Imagen_Por_Capa")
+                    call matriz_imagen%graficar_matriz("Imagen_Por_Capa_"//dpi_global)
                     deallocate(matriz_imagen)
                 case(4)
                     exit
@@ -507,10 +524,12 @@ contains
     end subroutine carga_masiva
 
     subroutine reportes_usuario()
+        type(nodo_cliente), pointer :: cliente_actual
         integer :: opcion_reporte, numero_nodo, contador
         character(len=:), allocatable :: recorrido
         character(len=20), dimension(:), allocatable :: nodo
         do
+            cliente_actual => lista_simple_cliente%obtener_cliente(dpi_global)
             print *, "---------------------------------------"
             print *, "Menu de Carga Masiva - Pixel Print Studio"
             print *, "1. Top 5 Imagenes Con Mas Numero De Capas"
@@ -527,36 +546,36 @@ contains
                     print *, "---------------------------------------"
                     print *, "TOP5 IMAGENES CON MAYOR NO. DE CAPAS"
                     print *, "---------------------------------------"
-                    call arbol_avl_imagen%top_5_imagenes()
+                    call cliente_actual%arbol_avl_imagen%top_5_imagenes()
                 case(2)
                     print *, "---------------------------------------"
                     print *, "CAPAS QUE SON HOJAS"
                     print *, "---------------------------------------"
-                    call arbol_abb_capa%imprimir_hoja()
+                    call cliente_actual%arbol_abb_capa%imprimir_hoja()
                 case(3)
                     print *, "---------------------------------------"
                     print *, "PROFUNDIDAD DEL ARBOL"
                     print *, "---------------------------------------"
-                    call arbol_abb_capa%profundidad_arbol()
+                    call cliente_actual%arbol_abb_capa%profundidad_arbol()
                 case(4)
                     print *, "---------------------------------------"
                     print *, "LISTAR LAS CAPAS"
                     print *, "---------------------------------------"
-                    call arbol_abb_capa%recorrido_preorden(numero_nodo, recorrido)
+                    call cliente_actual%arbol_abb_capa%recorrido_preorden(numero_nodo, recorrido)
                     print*, "Recorrido Preorden:"
                     call split(recorrido, '-', nodo)
                     do contador = 1, size(nodo)
                         print *, trim(nodo(contador))
                     end do
                     print *, "---------------------------"
-                    call arbol_abb_capa%recorrido_inorden(numero_nodo, recorrido)
+                    call cliente_actual%arbol_abb_capa%recorrido_inorden(numero_nodo, recorrido)
                     print*, "Recorrido Inorder:"
                     call split(recorrido, '-', nodo)
                     do contador = 1, size(nodo)
                         print *, trim(nodo(contador))
                     end do
                     print *, "---------------------------"
-                    call arbol_abb_capa%recorrido_postorden(numero_nodo, recorrido)
+                    call cliente_actual%arbol_abb_capa%recorrido_postorden(numero_nodo, recorrido)
                     print*, "Recorrido Postorden:"
                     call split(recorrido, '-', nodo)
                     do contador = 1, size(nodo)
@@ -569,14 +588,93 @@ contains
             end select
         end do
     end subroutine reportes_usuario
+
+    subroutine abc_imagen()
+        type(nodo_cliente), pointer :: cliente_actual
+        type(arbol_abb_simple), pointer :: arbol_abb_capa_simple
+        integer :: opcion_abc, numero_imagen, numero_capa, cantidad_capa, contador
+        logical :: existe_matriz, existe_imagen
+        character(len=20) :: imagen
+        do
+            cliente_actual => lista_simple_cliente%obtener_cliente(dpi_global)
+            print *, "---------------------------------------"
+            print *, "Menu ABC Imagen - Pixel Print Studio"
+            print *, "1. Registrar Imagen"
+            print *, "2. Eliminar Imagen"
+            print *, "3. Regresar Al Menu Cliente"
+            print *, "---------------------------------------"
+            print *, "Seleccione El Numero De Opcion:"
+            print *, "---------------------------------------"
+            read(*,*) opcion_abc
+            select case(opcion_abc)
+                case(1)
+                    print *, "---------------------------------------"
+                    print *, "REGISTRAR UNA IMAGEN"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el ID de imagen a registrar:"
+                    read(*,*) numero_imagen
+                    existe_imagen = cliente_actual%arbol_avl_imagen%valor_existe(numero_imagen)
+                    if(existe_imagen)then
+                        print*, "Imagen Ya Existe En El Sistema: ", int_to_str(numero_imagen)
+                        exit
+                    else
+                        allocate(arbol_abb_capa_simple)
+                        print *, "---------------------------------------"
+                        print *, "Escribe el numero de capas a Ingresar:"
+                        read(*,*) cantidad_capa
+                        do contador = 1, cantidad_capa
+                            print*,"----"
+                            print *, "Ingrese El ID Capa Numero ", int_to_str(contador)
+                            read(*,*) numero_capa
+                            existe_matriz = cliente_actual%arbol_abb_capa%valor_existe(numero_capa)
+                            if (existe_matriz) then
+                                call arbol_abb_capa_simple%insertar(numero_capa)
+                                print*, "Capa Insertada: ", int_to_str(numero_capa)
+                            else
+                                print*, "Capa No Existe: ", int_to_str(numero_capa)
+                            end if
+                        end do
+                        call cliente_actual%arbol_avl_imagen%insertar_nodo(numero_imagen, arbol_abb_capa_simple)
+                        deallocate(arbol_abb_capa_simple)
+                        print*,"Imagen: ",numero_imagen," Registrada Correctamente."
+                    end if
+                case(2)
+                    print *, "---------------------------------------"
+                    print *, "ELIMINAR UNA IMAGEN"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el ID de imagen a eliminar:"
+                    read(*,*) numero_imagen
+                    existe_imagen = cliente_actual%arbol_avl_imagen%valor_existe(numero_imagen)
+                    if(existe_imagen)then
+                        write(imagen, '(I0)') numero_imagen
+                        call cliente_actual%arbol_avl_imagen%eliminar_nodo(numero_imagen)
+                        call cliente_actual%lista_doble_album%eliminar_imagen(imagen)
+                    else
+                        print*, "Imagen No Existe: ", int_to_str(numero_imagen)
+                    end if
+                case(3)
+                    exit
+                case default
+                    print *, "OPCION INVALIDA"
+            end select
+        end do
+    end subroutine abc_imagen
     !------------------------------------------------------------------------
     !CARGA MASIVA CAPAS
     !------------------------------------------------------------------------
     subroutine carga_masiva_capa()
         character(len=30) :: colorD
         type(matriz), pointer :: matriz_dispersa_capa
+        type(nodo_cliente), pointer :: cliente_actual
+        print *, "---------------------------------------"
+        print *, "CARGA MASIVA CAPAS"
+        print *, "---------------------------------------"
+        print *, "Ingrese el nombre del documento de capa:"
+        print *, "---------------------------------------"
+        read(*,*) documento_capa
+        print *, "---------------------------------------"
         call json%initialize()
-        call json%load(filename='2ImagenMa.json')
+        call json%load(filename=documento_capa)
         call json%info('',n_children=size_capa)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCapa, capa_encontrada)
@@ -601,7 +699,17 @@ contains
                 colorD=color
                 call matriz_dispersa_capa%insertar_nodo(columna_int, fila_int, colorD)
             end do
-            call arbol_abb_capa%insertar_nodo(id_capa_int, matriz_dispersa_capa)
+            !----------
+            cliente_actual => lista_simple_cliente%cabeza
+            do while (associated(cliente_actual))
+                if (trim(cliente_actual%dpi) == dpi_global) then
+                    call cliente_actual%arbol_abb_capa%insertar_nodo(id_capa_int, matriz_dispersa_capa)
+                    exit
+                end if
+                cliente_actual => cliente_actual%siguiente
+            end do
+            !----------
+            !call arbol_abb_capa%insertar_nodo(id_capa_int, matriz_dispersa_capa)
             deallocate(matriz_dispersa_capa)
         end do
         call json%destroy()
@@ -611,8 +719,16 @@ contains
     !------------------------------------------------------------------------
     subroutine carga_masiva_imagen()
         type(arbol_abb_simple), pointer :: arbol_abb_capa_simple
+        type(nodo_cliente), pointer :: cliente_actual
+        print *, "---------------------------------------"
+        print *, "CARGA MASIVA IMAGEN"
+        print *, "---------------------------------------"
+        print *, "Ingrese el nombre del documento de imagen:"
+        print *, "---------------------------------------"
+        read(*,*) documento_imagen
+        print *, "---------------------------------------"
         call json%initialize()
-        call json%load(filename='3IMAGEN.json')
+        call json%load(filename=documento_imagen)
         call json%info('',n_children=size_imagen)
         call json%get_core(jsonc)
         call json%get('', listaPunteroImagen, imagen_encontrada)
@@ -628,7 +744,17 @@ contains
                 call jsonc%get(punteroCapa, id_capas)
                 call arbol_abb_capa_simple%insertar(id_capas)
             end do
-            call arbol_avl_imagen%insertar_nodo(id_imagen, arbol_abb_capa_simple)
+            !----------
+            cliente_actual => lista_simple_cliente%cabeza
+            do while (associated(cliente_actual))
+                if (trim(cliente_actual%dpi) == dpi_global) then
+                    call cliente_actual%arbol_avl_imagen%insertar_nodo(id_imagen, arbol_abb_capa_simple)
+                    exit
+                end if
+                cliente_actual => cliente_actual%siguiente
+            end do
+            !----------
+            !call arbol_avl_imagen%insertar_nodo(id_imagen, arbol_abb_capa_simple)
             deallocate(arbol_abb_capa_simple)
         end do
         call json%destroy()
@@ -638,8 +764,16 @@ contains
     !------------------------------------------------------------------------
     subroutine carga_masiva_album()
         type(lista_imagen), pointer :: lista_imagen_album
+        type(nodo_cliente), pointer :: cliente_actual
+        print *, "---------------------------------------"
+        print *, "CARGA MASIVA ALBUM"
+        print *, "---------------------------------------"
+        print *, "Ingrese el nombre del documento del album:"
+        print *, "---------------------------------------"
+        read(*,*) documento_album
+        print *, "---------------------------------------"
         call json%initialize()
-        call json%load(filename='4ALBUMES.json')
+        call json%load(filename=documento_album)
         call json%info('',n_children=size_album)
         call json%get_core(jsonc)
         call json%get('', listaPunteroAlbum, album_encontrado)
@@ -655,7 +789,17 @@ contains
                 call jsonc%get(punteroAlbum, imgs)
                 call lista_imagen_album%insertar_imagen(trim(imgs))
             end do
-            call lista_doble_album%insertar_album(nombre_album, lista_imagen_album)
+            !----------
+            cliente_actual => lista_simple_cliente%cabeza
+            do while (associated(cliente_actual))
+                if (trim(cliente_actual%dpi) == dpi_global) then
+                    call cliente_actual%lista_doble_album%insertar_album(nombre_album, lista_imagen_album)
+                    exit
+                end if
+                cliente_actual => cliente_actual%siguiente
+            end do
+            !----------
+            !call lista_doble_album%insertar_album(nombre_album, lista_imagen_album)
             deallocate(lista_imagen_album)
         end do
         call json%destroy()
