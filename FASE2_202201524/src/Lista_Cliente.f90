@@ -1,9 +1,15 @@
 module modulo_lista_cliente
+    use modulo_arbol_abb_c
+    use modulo_arbol_avl_c
+    use modulo_lista_album
     implicit none
     type :: nodo_cliente
         character(len=:), allocatable :: dpi
         character(len=:), allocatable :: nombre
         character(len=:), allocatable :: contrasena
+        type(arbol_abb) :: arbol_abb_capa
+        type(arbol_avl) :: arbol_avl_imagen
+        type(lista_album) :: lista_doble_album
         type(nodo_cliente), pointer :: siguiente => null()
     end type nodo_cliente
 
@@ -15,6 +21,7 @@ module modulo_lista_cliente
         procedure :: modificar_cliente
         procedure :: grafica_cliente
         procedure :: cliente_existe
+        procedure :: iniciar_sesion_c
     end type lista_cliente
 
 contains
@@ -102,6 +109,28 @@ contains
         end do
         print*, "Cliente: ",trim(dpi)," Eliminado Correctamente."
     end subroutine eliminar_cliente
+
+    function iniciar_sesion_c(self, dpi, contrasena) result(coincide)
+        class(lista_cliente), intent(inout) :: self
+        character(len=*), intent(in) :: dpi, contrasena
+        logical :: coincide
+        type(nodo_cliente), pointer :: actual
+        coincide = .false.
+        if (.not. self%cliente_existe(dpi)) then
+            print*, "Usuario: ",trim(dpi)," No Esta Registrado."
+            print*,"-----"
+            return
+        end if
+        actual => self%cabeza
+        do while (associated(actual))
+            if (trim(actual%dpi) == trim(dpi) .and. trim(actual%contrasena) == trim(contrasena)) then
+                coincide = .true.
+                exit
+            end if
+            actual => actual%siguiente
+        end do
+    end function iniciar_sesion_c
+    
 
     subroutine grafica_cliente(self, filename)
         class(lista_cliente), intent(inout) :: self

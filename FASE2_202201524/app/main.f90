@@ -1,6 +1,7 @@
 program main
     use json_module
     use modulo_split
+    use global_variable
     use modulo_lista_cliente
     use modulo_lista_imagen
     use modulo_lista_album
@@ -81,9 +82,12 @@ contains
         read(*,*) contrasena
         if (usuario == "admin" .and. contrasena == "EDD2024") then
             print *, "---------------------------------------"
-            print*,"Bienvenido Admin"
+            print*,"BIENVENIDO ADMINISTRADOR"
             call menu_administrador()
-        else if(usuario == "carlos" .and. contrasena == "1234")then
+        else if(lista_simple_cliente%iniciar_sesion_c(usuario, contrasena))then
+            dpi_global = usuario
+            print *, "---------------------------------------"
+            print*,"BIENVENIDO CLIENTE"
             call menu_cliente()
         else
             print *, "CREDENCIALES INCORRECTAS"
