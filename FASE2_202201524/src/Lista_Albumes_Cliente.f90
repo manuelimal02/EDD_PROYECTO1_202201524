@@ -1,29 +1,4 @@
-module modulo_lista_imagen
-    implicit none
-    type :: nodo_imagen
-        character(len=:), allocatable :: imagen
-        type(nodo_imagen), pointer :: siguiente => null()
-    end type nodo_imagen
-    type :: lista_imagen
-        type(nodo_imagen), pointer :: cabeza => null()
-        contains
-        procedure :: insertar_imagen
-    end type lista_imagen
-
-    contains
-    subroutine insertar_imagen(self, imagen)
-        class(lista_imagen), intent(inout) :: self
-        character(len=*), intent(in) :: imagen
-        type(nodo_imagen), pointer :: nuevo_nodo
-        allocate(nuevo_nodo)
-        nuevo_nodo%imagen = imagen
-        nuevo_nodo%siguiente => self%cabeza
-        self%cabeza => nuevo_nodo
-    end subroutine insertar_imagen
-
-end module modulo_lista_imagen
-
-module modulo_lista_album
+module md
     use modulo_lista_imagen
     implicit none
     type :: nodo_album
@@ -37,6 +12,7 @@ module modulo_lista_album
         procedure :: insertar_album
         procedure :: graficar_album
         procedure :: eliminar_imagen
+        procedure :: imprimir_albumes
     end type lista_album
 
     contains
@@ -90,7 +66,29 @@ module modulo_lista_album
             if (associated(actual_album, self%cabeza)) exit
         end do
     end subroutine eliminar_imagen
-    
+
+    subroutine imprimir_albumes(self)
+        class(lista_album), intent(inout) :: self
+        type(nodo_album), pointer :: actual_album
+        type(nodo_imagen), pointer :: actual_imagen
+        if (.not. associated(self%cabeza)) then
+            print*, "No hay albumes para mostrar."
+            return
+        end if
+        actual_album => self%cabeza
+        do
+            print *, "--------------------"
+            print*, "Album: ", trim(actual_album%album)
+            print *, "--------------------"
+            actual_imagen => actual_album%lista_imagenes%cabeza
+            do while (associated(actual_imagen))
+                print*, "Imagen: ", trim(actual_imagen%imagen)
+                actual_imagen => actual_imagen%siguiente
+            end do
+            actual_album => actual_album%siguiente
+            if (associated(actual_album, self%cabeza)) exit
+        end do
+    end subroutine imprimir_albumes
 
     subroutine graficar_album(self, filename)
         class(lista_album), intent(inout) :: self
@@ -145,4 +143,4 @@ module modulo_lista_album
         print *, "Grafica '"//trim(filename)//"' Generada Correctamente."
     end subroutine graficar_album
     
-end module modulo_lista_album
+end module md

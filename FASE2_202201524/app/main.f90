@@ -4,7 +4,7 @@ program main
     use global_variable
     use modulo_lista_cliente
     use modulo_lista_imagen
-    use modulo_lista_album
+    use md
     use modulo_arbol_abb_c
     use modulo_arbol_abb_s
     use modulo_arbol_avl_c
@@ -42,7 +42,7 @@ program main
     character(len=100) :: usuario
     character(len=100) :: contrasena
     character(len=100) :: dpi_cliente1, nombre_cliente1, contrasena_cliente1
-    character(len=100) :: documento_capa, documento_imagen, documento_album
+    character(len=100) :: documento_capa, documento_imagen, documento_album, documento_cliente
     do
         call mostrar_menu()
         read(*,*) opcion_principal
@@ -108,7 +108,6 @@ contains
         contrasena_cliente1 = trim(linea)
         call lista_simple_cliente%insertar_cliente(dpi_cliente1, nombre_cliente1, contrasena_cliente1)
     end subroutine registrarse
-    
 
     subroutine menu_administrador()
         integer :: opcion_admin
@@ -200,26 +199,59 @@ contains
     end subroutine abc_cliente
 
     subroutine reportes_administrador()
-        integer :: opcion_carga
+        integer :: opcion_reporte_a
+        character(len=20) :: dpi_cliente_reporte
         do
             print *, "---------------------------------------"
-            print *, "Menu de Carga Masiva - Pixel Print Studio"
-            print *, "1. Capas"
-            print *, "2. Imagenes"
-            print *, "3. Albumes"
-            print *, "4. Regresar Al Menu Cliente"
+            print *, "Menu De Reportes Admin - Pixel Print Studio"
+            print *, "1. Mostrar Informacion: Nombre, DPI Y Password."
+            print *, "2. Cantidad De Albumes Y Sus Imagenes."
+            print *, "3. Cantidad De Imagenes Totales."
+            print *, "4. Cantidad De Capas Totales"
+            print *, "5. Listar Clientes"
+            print *, "6. Regresar Al Menu Administrador"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
-            read(*,*) opcion_carga
-            select case(opcion_carga)
+            read(*,*) opcion_reporte_a
+            select case(opcion_reporte_a)
                 case(1)
-                    print*,"Carga De Capas Correctamente."
+                    print *, "---------------------------------------"
+                    print *, "MOSTRAR INFORMACION CLIENTE"
+                    print *, "---------------------------------------"
+                    print *, "Ingrese el DPI del cliente:"
+                    print *, "---------------------------------------"
+                    read(*,*) dpi_cliente_reporte
+                    call lista_simple_cliente%mostrar_cliente(dpi_cliente_reporte)
                 case(2)
-                    print*,"Carga De Imagenes Correctamente."
+                    print *, "---------------------------------------"
+                    print *, "CANTIDAD DE ALBUMES Y SUS IMAGENES"
+                    print *, "---------------------------------------"
+                    print *, "Ingrese el DPI del cliente:"
+                    print *, "---------------------------------------"
+                    read(*,*) dpi_cliente_reporte
+                    call lista_simple_cliente%reporte_albumes_cliente(dpi_cliente_reporte)
                 case(3)
-                    print*,"Carga De Albumes Correctamente."
+                    print *, "---------------------------------------"
+                    print *, "CANTIDAD DE IMAGENES TOTALES"
+                    print *, "---------------------------------------"
+                    print *, "Ingrese el DPI del cliente:"
+                    print *, "---------------------------------------"
+                    read(*,*) dpi_cliente_reporte
+                    call lista_simple_cliente%reporte_imagenes_cliente(dpi_cliente_reporte)
                 case(4)
+                    print *, "---------------------------------------"
+                    print *, "CANTIDAD DE CAPAS TOTALES"
+                    print *, "---------------------------------------"
+                    print *, "Ingrese el DPI del cliente:"
+                    print *, "---------------------------------------"
+                    read(*,*) dpi_cliente_reporte
+                    call lista_simple_cliente%reporte_capas_cliente(dpi_cliente_reporte)
+                case(5)
+                    print *, "---------------------------------------"
+                    print *, "LISTAR CLIENTES"
+                    call lista_simple_cliente%reporte_listar_cliente()
+                case(6)
                     exit
                 case default
                     print *, "OPCION INVALIDA"
@@ -808,8 +840,15 @@ contains
     !CARGA MASIVA CLIENTE
     !------------------------------------------------------------------------
     subroutine carga_masiva_cliente()
+        print *, "---------------------------------------"
+        print *, "CARGA MASIVA CLIENTE"
+        print *, "---------------------------------------"
+        print *, "Ingrese el nombre del documento del cliente:"
+        print *, "---------------------------------------"
+        read(*,*) documento_cliente
+        print *, "---------------------------------------"
         call json%initialize()
-        call json%load(filename='5CLIENTE.json')
+        call json%load(filename=documento_cliente)
         call json%info('',n_children=size_cliente)
         call json%get_core(jsonc)
         call json%get('', listaPunteroCliente, cliente_encontrado)

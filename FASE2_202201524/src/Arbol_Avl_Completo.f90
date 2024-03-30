@@ -19,6 +19,7 @@ module modulo_arbol_avl_c
         procedure :: top_5_imagenes
         procedure :: graficar_arbol
         procedure :: graficar_arbol_imagen
+        procedure :: cantidad_imagenes
     end type arbol_avl
 
 contains
@@ -284,6 +285,23 @@ contains
         write(trim_m,'(I0)') valor
         trim_m = trim(adjustl(trim_m))
     end function trim_m
+    !-----------------------------------------------------------------------------------------
+    recursive function contar_imagen(raiz) result(n)
+        type(nodo_avl), pointer, intent(in) :: raiz
+        integer :: n
+        if (.not. associated(raiz)) then
+            n = 0
+        else
+            n = 1 + contar_imagen(raiz%izquierda) + contar_imagen(raiz%derecha)
+        end if
+    end function contar_imagen
+    !----
+    subroutine cantidad_imagenes(self)
+        class(arbol_avl), intent(inout) :: self
+        integer :: cantidad
+        cantidad = contar_imagen(self%raiz)
+        print*, "Cantidad De Imagenes: ", cantidad
+    end subroutine cantidad_imagenes
     !-----------------------------------------------------------------------------------------
     subroutine graficar_arbol(this,nombre_grafica)
         class(arbol_avl), intent(inout) :: this

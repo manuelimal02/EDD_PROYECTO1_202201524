@@ -20,6 +20,7 @@ module modulo_arbol_abb_c
         procedure :: valor_existe
         procedure :: imprimir_hoja
         procedure :: profundidad_arbol
+        procedure :: cantidad_capas
     end type arbol_abb
 
 contains    
@@ -207,6 +208,23 @@ contains
             profundidad = max(profundidad_izquierda, profundidad_derecha) + 1
         end if
     end function profundidad_recursivo
+
+    recursive function contar_capas(raiz) result(n)
+        type(nodo_abb), pointer, intent(in) :: raiz
+        integer :: n
+        if (.not. associated(raiz)) then
+            n = 0
+        else
+            n = 1 + contar_capas(raiz%izquierda) + contar_capas(raiz%derecha)
+        end if
+    end function contar_capas
+
+    subroutine cantidad_capas(self)
+        class(arbol_abb), intent(inout) :: self
+        integer :: cantidad
+        cantidad = contar_capas(self%raiz)
+        print*, "Cantidad De Capas: ", cantidad
+    end subroutine cantidad_capas
     
     subroutine graficar_arbol(self, nombre_archivo)
         class(arbol_abb), intent(in) :: self
