@@ -222,8 +222,10 @@ contains
     subroutine cantidad_capas(self)
         class(arbol_abb), intent(inout) :: self
         integer :: cantidad
+        character(len=32) :: cantidad_str
         cantidad = contar_capas(self%raiz)
-        print*, "Cantidad De Capas: ", cantidad
+        write(cantidad_str,'(I0)') cantidad
+        print*, "Cantidad De Capas: ", trim(adjustl(cantidad_str))
     end subroutine cantidad_capas
     
     subroutine graficar_arbol(self, nombre_archivo)

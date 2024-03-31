@@ -54,7 +54,7 @@ program main
             case(3)
                 exit
             case default
-                print *, "OPCION INVALIDA "
+                print *, "OPCION INVALIDA"
         end select
     end do
 
@@ -74,7 +74,7 @@ contains
         print *, "---------------------------------------"
         print *, "INICIAR SESION"   
         print *, "---------------------------------------"
-        print *, "Ingrese nombre de usuario:"
+        print *, "Ingrese su nombre de usuario:"
         read(*,*) usuario
         print *, "Ingrese su contrasenia:"
         read(*,*) contrasena
@@ -97,7 +97,7 @@ contains
         print *, "---------------------------------------"
         print *, "REGISTRARSE"  
         print *, "---------------------------------------"
-        print*,"Ingrese el numero de DPI: "
+        print*,"Ingrese su numero de DPI: "
         read(*,'(a)') linea
         dpi_cliente1 = trim(linea)
         print*,"Ingrese su nombre y apellido: "
@@ -118,7 +118,7 @@ contains
             print *, "2. Manejo De Clientes"
             print *, "3. Carga Masiva Cliente"
             print *, "4. Reportes"
-            print *, "5. Regresar Al Login"
+            print *, "5. Cerrar Sesion"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
@@ -159,10 +159,10 @@ contains
                     print *, "---------------------------------------"
                     print *, "NUEVO CLIENTE"  
                     print *, "---------------------------------------"
-                    print*,"Ingrese el numero de DPI: "
+                    print*,"Ingrese El Numero De DPI: "
                     read(*,'(a)') linea
                     dpi_cliente1 = trim(linea)
-                    print*,"Ingrese El Nombre y Apellido: "
+                    print*,"Ingrese El Nombre Y Apellido: "
                     read(*,'(a)') linea
                     nombre_cliente1 = trim(linea)
                     print*,"Ingrese La Contrasena: "
@@ -270,7 +270,7 @@ contains
             print *, "3. Carga Masiva Informacion"
             print *, "4. Reportes"
             print *, "5. Manejo De Imagenes"
-            print *, "6. Regresar Al Login"
+            print *, "6. Cerrar Sesion"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
@@ -406,7 +406,7 @@ contains
                             call matriz_imagen%insertar_matriz(matriz_auxiliar)
                             deallocate(matriz_auxiliar)
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Preorden_"//dpi_global)
+                        call matriz_imagen%graficar_matriz("Preorden_"//dpi_global)
                         deallocate(matriz_imagen)
                     !------------------------------------------!
                     else if (tipo_recorrido==2) then
@@ -426,7 +426,7 @@ contains
                             call matriz_imagen%insertar_matriz(matriz_auxiliar)
                             deallocate(matriz_auxiliar)
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Inorden_"//dpi_global)
+                        call matriz_imagen%graficar_matriz("Inorden_"//dpi_global)
                         deallocate(matriz_imagen)
                     !------------------------------------------!
                     else if (tipo_recorrido==3) then
@@ -446,7 +446,7 @@ contains
                             call matriz_imagen%insertar_matriz(matriz_auxiliar)
                             deallocate(matriz_auxiliar)
                         end do
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Postorden_"//dpi_global)
+                        call matriz_imagen%graficar_matriz("Postorden_"//dpi_global)
                         deallocate(matriz_imagen)
                     end if
                     print *, "---------------------------------------"
@@ -483,7 +483,7 @@ contains
                             end if
                         end do
                         print*,"----"
-                        call matriz_imagen%graficar_matriz("I_Recorrido_Amplitud_"//dpi_global)
+                        call matriz_imagen%graficar_matriz("Amplitud_"//dpi_global)
                         deallocate(matriz_imagen)
                     else
                         print *, "Imagen No Existe: ", int_to_str(id_imagen)
@@ -514,7 +514,7 @@ contains
                         end if
                     end do
                     print*,"--------"
-                    call matriz_imagen%graficar_matriz("Imagen_Por_Capa_"//dpi_global)
+                    call matriz_imagen%graficar_matriz("ImagenCapa_"//dpi_global)
                     deallocate(matriz_imagen)
                 case(4)
                     exit
@@ -668,7 +668,7 @@ contains
                         end do
                         call cliente_actual%arbol_avl_imagen%insertar_nodo(numero_imagen, arbol_abb_capa_simple)
                         deallocate(arbol_abb_capa_simple)
-                        print*,"Imagen: ",numero_imagen," Registrada Correctamente."
+                        print*, "Imagen Insertada Correctamente: ", int_to_str(numero_imagen)
                     end if
                 case(2)
                     print *, "---------------------------------------"
@@ -681,6 +681,7 @@ contains
                         write(imagen, '(I0)') numero_imagen
                         call cliente_actual%arbol_avl_imagen%eliminar_nodo(numero_imagen)
                         call cliente_actual%lista_doble_album%eliminar_imagen(imagen)
+                        print*, "Imagen Eliminada Correctamente: ", int_to_str(numero_imagen)
                     else
                         print*, "Imagen No Existe: ", int_to_str(numero_imagen)
                     end if
@@ -741,7 +742,6 @@ contains
                 cliente_actual => cliente_actual%siguiente
             end do
             !----------
-            !call arbol_abb_capa%insertar_nodo(id_capa_int, matriz_dispersa_capa)
             deallocate(matriz_dispersa_capa)
         end do
         call json%destroy()
@@ -786,7 +786,6 @@ contains
                 cliente_actual => cliente_actual%siguiente
             end do
             !----------
-            !call arbol_avl_imagen%insertar_nodo(id_imagen, arbol_abb_capa_simple)
             deallocate(arbol_abb_capa_simple)
         end do
         call json%destroy()
@@ -831,7 +830,6 @@ contains
                 cliente_actual => cliente_actual%siguiente
             end do
             !----------
-            !call lista_doble_album%insertar_album(nombre_album, lista_imagen_album)
             deallocate(lista_imagen_album)
         end do
         call json%destroy()

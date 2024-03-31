@@ -23,14 +23,14 @@ module modulo_arbol_avl_c
     end type arbol_avl
 
 contains
-    !------------------------------------------------------------------------------
+    
     subroutine insertar_nodo(self, valor, arbol)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
         type(arbol_abb_simple), intent(in) :: arbol
         call insertar_recursivo(self%raiz, valor, arbol)
     end subroutine insertar_nodo
-    !-----
+    
     recursive subroutine insertar_recursivo(raiz, valor, arbol)
         type(nodo_avl), pointer, intent(inout) :: raiz
         integer, intent(in) :: valor
@@ -61,13 +61,13 @@ contains
             end if
         end if
     end subroutine insertar_recursivo
-    !------------------------------------------------------------------------------
+    
     subroutine eliminar_nodo(self, valor)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
         self%raiz => eliminar_recursivo(self%raiz, valor)
     end subroutine eliminar_nodo
-    !----
+    
     recursive function eliminar_recursivo(raiz, valor) result(res)
         type(nodo_avl), pointer :: raiz
         integer, intent(in) :: valor
@@ -117,7 +117,7 @@ contains
         end if
         res => raiz
     end function eliminar_recursivo
-    !------------------------------------------------------------------------------
+    
     function rotacionIzquierda(raiz) result(raizDerecha)
         type(nodo_avl), pointer, intent(in) :: raiz
         type(nodo_avl), pointer :: raizDerecha
@@ -129,7 +129,7 @@ contains
         raiz%altura = maximo(obtenerAltura(raiz%izquierda), obtenerAltura(raiz%derecha)) + 1
         raizDerecha%altura = maximo(obtenerAltura(raizDerecha%izquierda), obtenerAltura(raizDerecha%derecha)) + 1
     end function rotacionIzquierda
-    !-----
+    
     function rotacionDerecha(raiz) result(raizIzquierda)
         type(nodo_avl), pointer, intent(in) :: raiz
         type(nodo_avl), pointer :: raizIzquierda
@@ -141,7 +141,7 @@ contains
         raiz%altura = maximo(obtenerAltura(raiz%izquierda), obtenerAltura(raiz%derecha)) + 1
         raizIzquierda%altura = maximo(obtenerAltura(raizIzquierda%izquierda), obtenerAltura(raizIzquierda%derecha)) + 1
     end function rotacionDerecha
-    !------------------------------------------------------------------------------
+    
     recursive subroutine obtenerMayorDeMenores(raiz, mayor)
         type(nodo_avl), pointer :: raiz, mayor
         if(associated(raiz%derecha)) then
@@ -150,7 +150,7 @@ contains
             mayor => raiz
         end if
     end subroutine obtenerMayorDeMenores
-    !----
+    
     function maximo(izquierda, derecha) result(res)
         integer, intent(in) :: izquierda
         integer, intent(in) :: derecha
@@ -161,13 +161,13 @@ contains
             return
         end if
     end function maximo
-    !----
+    
     function obtenerBalance(raiz) result(res)
         type(nodo_avl), pointer, intent(in) :: raiz
         integer :: res
         res = obtenerAltura(raiz%derecha) - obtenerAltura(raiz%izquierda)
     end function
-    !----
+    
     function obtenerAltura(n) result(res)
         type(nodo_avl), pointer :: n
         integer :: res
@@ -175,7 +175,7 @@ contains
         if(.not. associated(n)) return
         res = n%altura
     end function obtenerAltura
-    !------------------------------------------------------------------------------
+    
     function valor_existe(self, valor) result(existe)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
@@ -184,7 +184,7 @@ contains
         nodo_encontrado => buscar_recursivo(self%raiz, valor)
         existe = associated(nodo_encontrado)
     end function valor_existe
-    !------------------------------------------------------------------------------
+    
     function buscar_valor(self, valor) result(arbol)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
@@ -195,7 +195,7 @@ contains
             arbol => nodo_encontrado%arbol_interno
         end if
     end function buscar_valor
-    !----
+    
     recursive function buscar_recursivo(raiz, valor) result(nodo_resultado)
         type(nodo_avl), pointer :: raiz, nodo_resultado
         integer, intent(in) :: valor
@@ -209,7 +209,7 @@ contains
             nodo_resultado => raiz
         end if
     end function buscar_recursivo
-    !------------------------------------------------------------------------------
+    
     subroutine top_5_imagenes(self)
         class(arbol_avl), intent(inout) :: self
         integer :: max1, max2, max3, max4, max5
@@ -225,13 +225,13 @@ contains
         id4 = 0
         id5 = 0
         call buscar_top_5(self%raiz, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
-        print *, "ID Imagen: ", trim_m(id1), "Total De Capas:  ", trim_m(max1)
-        print *, "ID Imagen: ", trim_m(id2), "Total De Capas:  ", trim_m(max2)
-        print *, "ID Imagen: ", trim_m(id3), "Total De Capas:  ", trim_m(max3)
-        print *, "ID Imagen: ", trim_m(id4), "Total De Capas:  ", trim_m(max4)
-        print *, "ID Imagen: ", trim_m(id5), "Total De Capas:  ", trim_m(max5)
+        print *, "ID Imagen: ", id1, "Total De Capas:  ", max1
+        print *, "ID Imagen: ", id2, "Total De Capas:  ", max2
+        print *, "ID Imagen: ", id3, "Total De Capas:  ", max3
+        print *, "ID Imagen: ", id4, "Total De Capas:  ", max4
+        print *, "ID Imagen: ", id5, "Total De Capas:  ", max5
     end subroutine top_5_imagenes
-    !----
+    
     recursive subroutine buscar_top_5(raiz, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
         type(nodo_avl), pointer, intent(in) :: raiz
         integer, intent(inout) :: max1, max2, max3, max4, max5
@@ -278,14 +278,7 @@ contains
         call buscar_top_5(raiz%izquierda, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
         call buscar_top_5(raiz%derecha, max1, max2, max3, max4, max5, id1, id2, id3, id4, id5)
     end subroutine buscar_top_5
-    !----
-    function trim_m(valor)
-        integer, intent(in) :: valor
-        character(len=32) :: trim_m
-        write(trim_m,'(I0)') valor
-        trim_m = trim(adjustl(trim_m))
-    end function trim_m
-    !-----------------------------------------------------------------------------------------
+    
     recursive function contar_imagen(raiz) result(n)
         type(nodo_avl), pointer, intent(in) :: raiz
         integer :: n
@@ -295,14 +288,16 @@ contains
             n = 1 + contar_imagen(raiz%izquierda) + contar_imagen(raiz%derecha)
         end if
     end function contar_imagen
-    !----
+    
     subroutine cantidad_imagenes(self)
         class(arbol_avl), intent(inout) :: self
         integer :: cantidad
+        character(len=32) :: cantidad_str
         cantidad = contar_imagen(self%raiz)
-        print*, "Cantidad De Imagenes: ", cantidad
+        write(cantidad_str,'(I0)') cantidad
+        print*, "Cantidad De Imagenes: ", trim(adjustl(cantidad_str))
     end subroutine cantidad_imagenes
-    !-----------------------------------------------------------------------------------------
+    
     subroutine graficar_arbol(this,nombre_grafica)
         class(arbol_avl), intent(inout) :: this
         character(len=:), allocatable :: codigo_dot
@@ -324,7 +319,7 @@ contains
         call generar_grafica(nombre_grafica, codigo_dot)
         print *, "Grafica '"//trim(nombre_grafica)//"' Generada Correctamente."
     end subroutine graficar_arbol
-    !-----
+    
     recursive subroutine RoamTree(actual, crear_nodo, direccion_nodo)
             type(nodo_avl), pointer :: actual
             character(len=:), allocatable, intent(inout) :: crear_nodo
@@ -353,7 +348,7 @@ contains
             call RoamTree(actual%derecha, crear_nodo, direccion_nodo)
             end if
     end subroutine RoamTree
-    !-----------------------------------------------------------------------------------------
+    
     subroutine graficar_arbol_imagen(this, nombre_grafica, valor_destacado)
         class(arbol_avl), intent(in) :: this
         character(len=*), intent(in) :: nombre_grafica
@@ -376,7 +371,7 @@ contains
         call generar_grafica(nombre_grafica, codigo_dot)
         print *, "Grafica '"//trim(nombre_grafica)//"' Generada Correctamente."
     end subroutine graficar_arbol_imagen
-    !----
+    
     recursive subroutine recorrer_arbol_avl(actual, crear_nodo, direccion_nodo, valor_destacado)
         type(nodo_avl), pointer :: actual
         character(len=:), allocatable, intent(inout) :: crear_nodo, direccion_nodo
@@ -407,7 +402,7 @@ contains
             call recorrer_arbol_avl(actual%derecha, crear_nodo, direccion_nodo, valor_destacado)
         end if
     end subroutine recorrer_arbol_avl
-    !-----------------------------------------------------------------------------------------
+    
     function obtener_direccion_memoria_avl(node) result(direccion)
         type(nodo_avl), pointer :: node
         character(len=20) :: direccion
@@ -416,7 +411,7 @@ contains
         write(direccion, 10) i 
         10 format(I0)
     end function obtener_direccion_memoria_avl
-    !----
+    
     subroutine generar_grafica(nombre_grafica, codigo)
         character(len=*), intent(in) :: codigo, nombre_grafica
         character(len=:), allocatable :: dot_nombre_grafica, png_nombre_grafica
