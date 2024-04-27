@@ -1,0 +1,27 @@
+digraph G{
+node [shape=doublecircle];
+Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Binario AVL"]
+{rank=same; Titulo;}
+"1434105610128"[fontname="Courier New" label="10"];
+"1434105610192"[fontname="Courier New" label="4"];
+"1434105610064"[fontname="Courier New" label="1"];
+"1434108198416"[fontname="Courier New" label="8"];
+"1434106523536"[fontname="Courier New" label="20"];
+"1434108198608"[fontname="Courier New" label="17"];
+"1434108198672"[fontname="Courier New" label="12"];
+"1434108198480"[fontname="Courier New" label="33"];
+"1434105610256"[fontname="Courier New" label="25"];
+"1434108198544"[fontname="Courier New" label="38"];
+"1434106653072"[fontname="Courier New" label="35"];
+"1434105610128" -> "1434105610192" [label = "L"];
+"1434105610128" -> "1434106523536" [label = "R"];
+"1434105610192" -> "1434105610064" [label = "L"];
+"1434105610192" -> "1434108198416" [label = "R"];
+"1434106523536" -> "1434108198608" [label = "L"];
+"1434106523536" -> "1434108198480" [label = "R"];
+"1434108198608" -> "1434108198672" [label = "L"];
+"1434108198480" -> "1434105610256" [label = "L"];
+"1434108198480" -> "1434108198544" [label = "R"];
+"1434108198544" -> "1434106653072" [label = "L"];
+}
+

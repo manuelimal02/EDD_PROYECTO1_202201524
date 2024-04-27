@@ -1,0 +1,65 @@
+digraph G{
+node [shape=doublecircle];
+Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Binario De Busqueda Capas"]
+{rank=same; Titulo;}
+"1434105474944"[fontname="Courier New" label="29"];
+"1434106523056"[fontname="Courier New" label="28"];
+"1434106523216"[fontname="Courier New" label="26"];
+"1434106523296"[fontname="Courier New" label="25"];
+"1434105609680"[fontname="Courier New" label="27"];
+"1434105443200"[fontname="Courier New" label="30"];
+"1434105442736"[fontname="Courier New" label="32"];
+"1434106523376"[fontname="Courier New" label="31"];
+"1434106523136"[fontname="Courier New" label="38"];
+"1434106523456"[fontname="Courier New" label="37"];
+"1434105609440"[fontname="Courier New" label="33"];
+"1434105609520"[fontname="Courier New" label="36"];
+"1434105609600"[fontname="Courier New" label="34"];
+"1434105609760"[fontname="Courier New" label="35"];
+"1434105609872"[fontname="Courier New" label="104"];
+"1434106466432"[fontname="Courier New" label="103"];
+"1434105659104"[fontname="Courier New" label="102"];
+"1434105659424"[fontname="Courier New" label="101"];
+"1434105659504"[fontname="Courier New" label="100"];
+"1434105609952"[fontname="Courier New" label="109"];
+"1434105659904"[fontname="Courier New" label="107"];
+"1434105659744"[fontname="Courier New" label="106"];
+"1434106118112"[fontname="Courier New" label="105"];
+"1434105659184"[fontname="Courier New" label="108"];
+"1434105659824"[fontname="Courier New" label="114"];
+"1434105659264"[fontname="Courier New" label="112"];
+"1434105659584"[fontname="Courier New" label="111"];
+"1434105659664"[fontname="Courier New" label="110"];
+"1434106118032"[fontname="Courier New" label="113"];
+"1434105659344"[fontname="Courier New" label="115"];
+"1434105474944" -> "1434106523056" [label = "L"];
+"1434105474944" -> "1434105443200" [label = "R"];
+"1434106523056" -> "1434106523216" [label = "L"];
+"1434106523216" -> "1434106523296" [label = "L"];
+"1434106523216" -> "1434105609680" [label = "R"];
+"1434105443200" -> "1434105442736" [label = "R"];
+"1434105442736" -> "1434106523376" [label = "L"];
+"1434105442736" -> "1434106523136" [label = "R"];
+"1434106523136" -> "1434106523456" [label = "L"];
+"1434106523136" -> "1434105609872" [label = "R"];
+"1434106523456" -> "1434105609440" [label = "L"];
+"1434105609440" -> "1434105609520" [label = "R"];
+"1434105609520" -> "1434105609600" [label = "L"];
+"1434105609600" -> "1434105609760" [label = "R"];
+"1434105609872" -> "1434106466432" [label = "L"];
+"1434105609872" -> "1434105609952" [label = "R"];
+"1434106466432" -> "1434105659104" [label = "L"];
+"1434105659104" -> "1434105659424" [label = "L"];
+"1434105659424" -> "1434105659504" [label = "L"];
+"1434105609952" -> "1434105659904" [label = "L"];
+"1434105609952" -> "1434105659824" [label = "R"];
+"1434105659904" -> "1434105659744" [label = "L"];
+"1434105659904" -> "1434105659184" [label = "R"];
+"1434105659744" -> "1434106118112" [label = "L"];
+"1434105659824" -> "1434105659264" [label = "L"];
+"1434105659824" -> "1434105659344" [label = "R"];
+"1434105659264" -> "1434105659584" [label = "L"];
+"1434105659264" -> "1434106118032" [label = "R"];
+"1434105659584" -> "1434105659664" [label = "L"];
+}
+
