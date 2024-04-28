@@ -1,0 +1,18 @@
+[
+    {
+        "dpi":"1234567890123",
+        "nombre": "Juan Pablo",
+        "apellido": "Gonzales Carrillo",
+        "genero": "Masculino",
+        "direccion": "8 Calle 89-0 Guatemala",
+        "telefono": 12345678
+    },
+    {
+        "dpi": "1234567890112",
+        "nombre": "Maria Jose",
+        "apellido": "Portillo Vezaquez",
+        "genero": "Femenino",
+        "direccion": "78-0 Zona 8, Villa Nueva",
+        "telefono": 87654321
+    }
+]

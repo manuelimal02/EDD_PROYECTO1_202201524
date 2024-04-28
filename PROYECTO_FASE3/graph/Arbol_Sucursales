@@ -1,0 +1,6 @@
+digraph G{
+node [shape=component];
+Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Avl Sucursales"]
+{rank=same; Titulo;}
+}
+
