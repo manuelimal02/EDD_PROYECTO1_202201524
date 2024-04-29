@@ -25,7 +25,6 @@ module modulo_arbol_avl
     end type arbol_avl
 
     contains
-    
     subroutine insertar_nodo(self, valor, departamento, direccion, contrasena)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
@@ -37,12 +36,9 @@ module modulo_arbol_avl
         type(nodo_avl), pointer, intent(inout) :: raiz
         integer, intent(in) :: valor
         character(len=*), intent(in) :: departamento, direccion, contrasena
-        integer, parameter :: tamano_tabla = 7
         if(.not. associated(raiz)) then
             allocate(raiz)
             raiz = nodo_avl(valor=valor, departamento=departamento, direccion=direccion, contrasena=contrasena)
-            allocate(raiz%tabla%arreglo(0:tamano_tabla-1))
-            raiz%tabla%arreglo(:)%dpi = -1
         else if(valor < raiz%valor) then 
             call insertar_recursivo(raiz%izquierda, valor, departamento, direccion, contrasena)
         else if(valor > raiz%valor) then
@@ -102,7 +98,6 @@ module modulo_arbol_avl
             nodo_resultado => null()
         end if
     end function buscar_recursivo
-
 
     function rotacionIzquierda(raiz) result(raizDerecha)
         type(nodo_avl), pointer, intent(in) :: raiz

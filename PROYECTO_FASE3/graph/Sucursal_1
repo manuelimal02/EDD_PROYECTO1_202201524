@@ -1,0 +1,44 @@
+digraph G{
+rankdir=LR;
+node [shape=component];
+Titulo [fontname="Courier New", color=red shape=box3d label="Tabla Hash Tecnicos"]
+{rank=same; Titulo;}
+node [fontname="Courier New"]
+subgraph cluster_1                               {
+a1                               [shape=none label=<
+<TABLE border="0" cellspacing="10" cellpadding="10">
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">1                               </TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">1234567890123                   </TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Juan Pablo</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Gonzales Carrillo</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">8 Calle 89-0 Guatemala</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">12345678                        </TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
+</TABLE>>];}
+subgraph cluster_4                               {
+a4                               [shape=none label=<
+<TABLE border="0" cellspacing="10" cellpadding="10">
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">4                               </TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">1234567890112                   </TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Maria Jose</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Portillo Vezaquez</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">78-0 Zona 8, Villa Nueva</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">87654321                        </TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Femenino</TD></TR>
+</TABLE>>];}
+}
+

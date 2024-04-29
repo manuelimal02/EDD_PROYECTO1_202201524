@@ -1,6 +1,7 @@
 program main
     use json_module
     use modulo_arbol_avl
+    use modulo_tabla_hash
     !LECTURA JSON
     type(json_file) :: json
     type(json_core) :: jsonc
@@ -186,12 +187,14 @@ program main
     end subroutine manejo_sucursal
 
     subroutine reportes_graficos()
-        integer :: opcion_carga
+        integer :: opcion_carga, id_sucursal
+        character(len=100) :: contrasena
+        logical :: existe_matriz
         do
             print *, "---------------------------------------"
             print *, "Menu de Reportes Graficos - Pixel Print Studio"
-            print *, "1. Grafo De Sucursales"
-            print *, "2. Rutas"
+            print *, "1. Arbol De Sucursales"
+            print *, "2. Tabla Hash Tecnico"
             print *, "3. Regresar Al Menu Principal"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
@@ -201,7 +204,19 @@ program main
                 case(1)
                     call arbol_avl_sucursal%graficar_arbol("Arbol_Sucursales")
                 case(2)
-                    print*,""
+                    print *, "---------------------------------------"
+                    print *, "CREDENCIALES SUCURSALES"
+                    print *, "---------------------------------------"
+                    print *, "Escribe el ID de la sucursal:"
+                    read(*,*) id_sucursal
+                    print *, "Escribe la contrasena de la sucursal:"
+                    read(*,*) contrasena
+                    existe_matriz = arbol_avl_sucursal%valor_existe(id_sucursal, contrasena)
+                    if(existe_matriz)then
+                        call grafica_tabla_hash(id_sucursal, contrasena)
+                    else
+                        print*, "Credenciales De Sucursal Incorrectas."
+                    end if
                 case(3)
                     exit
                 case default
@@ -227,16 +242,27 @@ program main
 
     subroutine listar_informacion_tecnico(id_sucursal, contrasena)
         type(nodo_avl), pointer :: sucursal_actual
-        integer(8) :: dpi_int
         integer, intent(in) :: id_sucursal
         character(len=*), intent(in) :: contrasena
         sucursal_actual => arbol_avl_sucursal%obtener_nodo(id_sucursal, contrasena)
         print *, "---------------------------------------"
         print *, "LISTAR INFORMACION TECNICOS"
         print *, "---------------------------------------"
-        !call sucursal_actual%tabla%listar_tecnico()
+        call sucursal_actual%tabla%listar_tecnico()
     end subroutine listar_informacion_tecnico
 
+    subroutine grafica_tabla_hash(id_sucursal, contrasena)
+        type(nodo_avl), pointer :: sucursal_actual
+        integer, intent(in) :: id_sucursal
+        character(len=*), intent(in) :: contrasena
+        character(len=32) :: id_sucursal_str
+        sucursal_actual => arbol_avl_sucursal%obtener_nodo(id_sucursal, contrasena)
+        write(id_sucursal_str, '(I0)') id_sucursal
+        print *, "---------------------------------------"
+        print *, "GRAFICA TABLA HASH TECNICO"
+        print *, "---------------------------------------"
+        call sucursal_actual%tabla%grafica_tabla("Sucursal_"//id_sucursal_str)
+    end subroutine grafica_tabla_hash
 !------------------------------------------------------------------------
 !CARGA MASIVA SUCURSALES
 !------------------------------------------------------------------------
@@ -269,13 +295,13 @@ program main
         end do
         call json%destroy()
     end subroutine carga_masiva_sucursal
-
 !------------------------------------------------------------------------
 !CARGA MASIVA TECNICOS
 !------------------------------------------------------------------------
     subroutine carga_masiva_tecnico(id_sucursal, contrasena)
         type(nodo_avl), pointer :: sucursal_actual
         integer, intent(in) :: id_sucursal
+        integer :: i
         character(len=*), intent(in) :: contrasena
         sucursal_actual => arbol_avl_sucursal%obtener_nodo(id_sucursal, contrasena)
         print *, "---------------------------------------"

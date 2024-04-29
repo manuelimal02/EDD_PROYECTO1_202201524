@@ -11,9 +11,7 @@ module modulo_tabla_hash
         integer :: elemento = 0
         type(tecnico), allocatable :: arreglo(:)
         contains
-        procedure :: insertar
-        procedure :: imprimir
-        !procedure :: listar_tecnico
+        procedure :: insertar, imprimir, listar_tecnico, grafica_tabla
         procedure, private :: resolver_colision
     end type TablaHash
 
@@ -87,6 +85,10 @@ contains
         class(TablaHash), intent(inout) :: self
         integer(8), intent(in) :: dpi
         integer(8) :: posicion
+        if (.not. allocated(self%arreglo)) then
+            print*, 'No Existen Tecnicos Registrados.'
+            return
+        end if
         posicion = obtener_posicion(dpi)
         if (self%arreglo(posicion)%dpi == dpi) then
             print*, 'DPI: ', self%arreglo(posicion)%dpi
@@ -100,21 +102,91 @@ contains
         end if
     end subroutine imprimir
 
-    !subroutine listar_tecnico(self)
-    !    class(TablaHash), intent(inout) :: self
-    !    integer :: i
-    !    do i = 1, size(self%arreglo)
-    !        if (self%arreglo(i)%dpi /= -1) then
-    !            print*, 'Posicion: ', i
-    !            print*, 'DPI: ', self%arreglo(i)%dpi
-    !            print*, 'Nombre: ', trim(self%arreglo(i)%nombre)
-    !            print*, 'Apellido: ', trim(self%arreglo(i)%apellido)
-    !            print*, 'Direccion: ', trim(self%arreglo(i)%direccion)
-    !            print*, 'Telefono: ', self%arreglo(i)%telefono
-    !            print*, 'Genero: ', trim(self%arreglo(i)%genero)
-    !            print*, '------------------------'
-    !        end if
-    !    end do
-    !end subroutine listar_tecnico
+    subroutine listar_tecnico(self)
+        class(TablaHash), intent(inout) :: self
+        integer :: i
+        if (.not. allocated(self%arreglo)) then
+            print*, 'No Existen Tecnicos Registrados.'
+            return
+        end if
+        do i = 0, size(self%arreglo)-1
+            if (self%arreglo(i)%dpi /= -1) then
+                print*, 'Posicion: ', i
+                print*, 'DPI: ', self%arreglo(i)%dpi
+                print*, 'Nombre: ', trim(self%arreglo(i)%nombre)
+                print*, 'Apellido: ', trim(self%arreglo(i)%apellido)
+                print*, 'Direccion: ', trim(self%arreglo(i)%direccion)
+                print*, 'Telefono: ', self%arreglo(i)%telefono
+                print*, 'Genero: ', trim(self%arreglo(i)%genero)
+                print*, '------------------------'
+            end if
+        end do
+    end subroutine listar_tecnico
+
+    subroutine grafica_tabla(self, nombre_grafica)
+        class(TablaHash), intent(inout) :: self
+        character(len=*), intent(in) :: nombre_grafica
+        character(len=:), allocatable :: dot
+        character(len=32) :: posicion_str, dpi_str, telefono_str
+        integer :: i
+        if (.not. allocated(self%arreglo)) then
+            print*, 'No Existen Tecnicos Registrados.'
+            return
+        end if
+        dot = "digraph G{" // new_line('a')
+        dot = dot // 'rankdir=LR;'// new_line('a')
+        dot = dot // "node [shape=component];" // new_line('a')
+        dot = dot //&
+        'Titulo [fontname="Courier New", color=red shape=box3d label="Tabla Hash Tecnicos"]' &
+        // new_line('a')
+        dot = dot // "{rank=same; Titulo;}" // new_line('a')
+        dot = dot // 'node [fontname="Courier New"]'// new_line('a')
+        do i = 0, size(self%arreglo)-1
+            if (self%arreglo(i)%dpi /= -1) then
+                write(posicion_str, '(I0)') i
+                write(dpi_str, '(I0)') self%arreglo(i)%dpi
+                write(telefono_str, '(I0)') self%arreglo(i)%telefono
+                dot = dot // 'subgraph cluster_'//posicion_str//'{'// new_line('a')
+                dot = dot // 'a'//posicion_str//'[shape=none label=<'// new_line('a')
+                dot = dot // '<TABLE border="0" cellspacing="10" cellpadding="10">' // new_line('a')
+                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>' // new_line('a')
+                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                //posicion_str//'</TD></TR>'// new_line('a')
+                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">DPI</TD>' // new_line('a')
+                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                //dpi_str//'</TD></TR>'// new_line('a')
+                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Nombre</TD>' // new_line('a')
+                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                //trim(self%arreglo(i)%nombre)//'</TD></TR>'// new_line('a')
+                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Apellido</TD>' // new_line('a')
+                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                //trim(self%arreglo(i)%apellido)//'</TD></TR>'// new_line('a')
+                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Direccion</TD>' // new_line('a')
+                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                //trim(self%arreglo(i)%direccion)//'</TD></TR>'// new_line('a')
+                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Telefono</TD>' // new_line('a')
+                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                //telefono_str//'</TD></TR>'// new_line('a')
+                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Genero</TD>' // new_line('a')
+                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                //trim(self%arreglo(i)%genero)//'</TD></TR>'// new_line('a')
+                dot = dot // "</TABLE>>];}" // new_line('a')
+            end if
+        end do
+        dot = dot // "}" // new_line('a')
+        call generar_grafica(nombre_grafica, dot)
+        print *, "Grafica '"//trim(nombre_grafica)//"' Generada Correctamente."
+    end subroutine grafica_tabla
+
+    subroutine generar_grafica(nombre_grafica, codigo)
+        character(len=*), intent(in) :: codigo, nombre_grafica
+        character(len=:), allocatable :: filepath
+        filepath = 'graph/' // trim(nombre_grafica) 
+        open(10, file=filepath, status='replace', action='write')
+        write(10, '(A)') trim(codigo)
+        close(10)
+        call system('dot -Tpdf ' // trim(filepath) // ' -o ' // trim(adjustl(filepath)) // '.pdf')
+        call system('start ' // trim(adjustl(filepath)) // '.pdf')
+    end subroutine generar_grafica
     
 end module modulo_tabla_hash
