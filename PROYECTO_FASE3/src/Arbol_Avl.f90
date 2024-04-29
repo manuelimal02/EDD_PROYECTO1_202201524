@@ -1,7 +1,10 @@
 module modulo_arbol_avl
     use modulo_encriptacion
+    use modulo_tabla_hash
     implicit none
     private
+    public :: nodo_avl 
+    public :: arbol_avl
     type :: nodo_avl
         integer :: valor
         character(:), allocatable :: departamento
@@ -10,16 +13,17 @@ module modulo_arbol_avl
         integer :: altura = 1
         type(nodo_avl), pointer :: derecha => null()
         type(nodo_avl), pointer :: izquierda => null() 
+        type(TablaHash) :: tabla
     end type
-    type, public :: arbol_avl
+    type arbol_avl
         type(nodo_avl), pointer :: raiz => null()
     contains
         procedure :: insertar_nodo
-        procedure :: buscar_valor
+        procedure :: obtener_nodo
         procedure :: valor_existe
         procedure :: graficar_arbol
     end type arbol_avl
-    
+
     contains
     
     subroutine insertar_nodo(self, valor, departamento, direccion, contrasena)
@@ -33,9 +37,12 @@ module modulo_arbol_avl
         type(nodo_avl), pointer, intent(inout) :: raiz
         integer, intent(in) :: valor
         character(len=*), intent(in) :: departamento, direccion, contrasena
+        integer, parameter :: tamano_tabla = 7
         if(.not. associated(raiz)) then
             allocate(raiz)
             raiz = nodo_avl(valor=valor, departamento=departamento, direccion=direccion, contrasena=contrasena)
+            allocate(raiz%tabla%arreglo(0:tamano_tabla-1))
+            raiz%tabla%arreglo(:)%dpi = -1
         else if(valor < raiz%valor) then 
             call insertar_recursivo(raiz%izquierda, valor, departamento, direccion, contrasena)
         else if(valor > raiz%valor) then
@@ -60,38 +67,42 @@ module modulo_arbol_avl
         end if
     end subroutine insertar_recursivo
 
-    function valor_existe(self, valor) result(existe)
+    function valor_existe(self, valor, contrasena) result(existe)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
+        character(len=*), intent(in) :: contrasena
         logical :: existe
         type(nodo_avl), pointer :: nodo_encontrado
-        nodo_encontrado => buscar_recursivo(self%raiz, valor)
+        nodo_encontrado => buscar_recursivo(self%raiz, valor, contrasena)
         existe = associated(nodo_encontrado)
     end function valor_existe
     
-    subroutine buscar_valor(self, valor, existe)
+    function obtener_nodo(self, valor, contrasena) result(nodo_encontrado)
         class(arbol_avl), intent(inout) :: self
         integer, intent(in) :: valor
-        logical, intent(out) :: existe
+        character(len=*), intent(in) :: contrasena
         type(nodo_avl), pointer :: nodo_encontrado
-        nodo_encontrado => buscar_recursivo(self%raiz, valor)
-        existe = associated(nodo_encontrado)
-    end subroutine buscar_valor
-    
-    recursive function buscar_recursivo(raiz, valor) result(nodo_resultado)
+        nodo_encontrado => buscar_recursivo(self%raiz, valor, contrasena)
+    end function obtener_nodo
+
+    recursive function buscar_recursivo(raiz, valor, contrasena) result(nodo_resultado)
         type(nodo_avl), pointer :: raiz, nodo_resultado
         integer, intent(in) :: valor
+        character(len=*), intent(in) :: contrasena
+
         if (.not. associated(raiz)) then
             nodo_resultado => null()
         else if (valor < raiz%valor) then
-            nodo_resultado => buscar_recursivo(raiz%izquierda, valor)
+            nodo_resultado => buscar_recursivo(raiz%izquierda, valor, contrasena)
         else if (valor > raiz%valor) then
-            nodo_resultado => buscar_recursivo(raiz%derecha, valor)
-        else
+            nodo_resultado => buscar_recursivo(raiz%derecha, valor, contrasena)
+        else if (raiz%contrasena == contrasena) then
             nodo_resultado => raiz
+        else
+            nodo_resultado => null()
         end if
     end function buscar_recursivo
-    
+
 
     function rotacionIzquierda(raiz) result(raizDerecha)
         type(nodo_avl), pointer, intent(in) :: raiz

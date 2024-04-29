@@ -2,5 +2,14 @@ digraph G{
 node [shape=component];
 Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Avl Sucursales"]
 {rank=same; Titulo;}
+"1452945011680"[fontname="Courier New" label="ID: 1
+Departamento: Guatemala
+Direccion: 8 calle 3-45 zona 1
+Password: A9BC5F21B712680000162089959D2D5367B1F722FD79576D8EC2D81AF73FB144"];
+"1452945011920"[fontname="Courier New" label="ID: 2
+Departamento: Huehuetenango
+Direccion: 3 avenida 5-45 zona 2
+Password: 5EF3253BD23A91BA7C0CE730EB0E5F0A6011332E61A8CE6F17B7342345CA538B"];
+"1452945011680" -> "1452945011920" [label = "R"];
 }
 

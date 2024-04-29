@@ -3,23 +3,17 @@ module modulo_tabla_hash
     private
     integer :: tamano_tabla = 7
     integer, parameter :: porcentaje_maximo = 70
-
     type tecnico
-        integer(8) :: dpi
-        integer(8) :: telefono
-        character(:), allocatable::nombre
-        character(:), allocatable::apellido
-        character(:), allocatable::genero
-        character(:), allocatable::direccion
+        integer(8) :: dpi, telefono
+        character(:), allocatable::nombre, apellido, genero, direccion
     end type tecnico
-
     type, public :: TablaHash
         integer :: elemento = 0
         type(tecnico), allocatable :: arreglo(:)
         contains
         procedure :: insertar
         procedure :: imprimir
-        procedure :: buscar
+        !procedure :: listar_tecnico
         procedure, private :: resolver_colision
     end type TablaHash
 
@@ -32,17 +26,14 @@ contains
         type(tecnico), allocatable :: arreglo_anterior(:)
         real :: porcentaje_utilizado
         integer(8) :: posicion
-
         if(.not. allocated(self%arreglo)) then
             allocate(self%arreglo(0:tamano_tabla-1))
             self%arreglo(:)%dpi = -1
         end if
-
         posicion = obtener_posicion(dpi)
         if(self%arreglo(posicion)%dpi /= -1 .and. self%arreglo(posicion)%dpi /= dpi) then
             call self%resolver_colision(posicion)
         end if
-
         self%arreglo(posicion)%dpi=dpi
         self%arreglo(posicion)%nombre=nombre
         self%arreglo(posicion)%apellido= apellido
@@ -92,18 +83,38 @@ contains
         posicion = mod(dpi,tamano_tabla)
     end function obtener_posicion
 
-    subroutine buscar(self, dpi)
+    subroutine imprimir(self, dpi)
         class(TablaHash), intent(inout) :: self
         integer(8), intent(in) :: dpi
         integer(8) :: posicion
         posicion = obtener_posicion(dpi)
-        print '(a i0 a i0)' , "Posición: ", posicion, " Clave: ", self%arreglo(posicion)%dpi
-    end subroutine buscar
-    
-    subroutine imprimir(self)
-        class(TablaHash), intent(inout) :: self
-        print '(a, i0)', "Tamaño de la tabla: ", tamano_tabla
-        print '(a, i0)', "Elementos en la tabla: ", self%elemento
-        print '(I0)', self%arreglo%dpi
+        if (self%arreglo(posicion)%dpi == dpi) then
+            print*, 'DPI: ', self%arreglo(posicion)%dpi
+            print*, 'Nombre: ', trim(self%arreglo(posicion)%nombre)
+            print*, 'Apellido: ', trim(self%arreglo(posicion)%apellido)
+            print*, 'Direccion: ', trim(self%arreglo(posicion)%direccion)
+            print*, 'Telefono: ', self%arreglo(posicion)%telefono
+            print*, 'Genero: ', trim(self%arreglo(posicion)%genero)
+        else
+            print*, 'No Existe Un Tecnico Con DPI: ',dpi
+        end if
     end subroutine imprimir
+
+    !subroutine listar_tecnico(self)
+    !    class(TablaHash), intent(inout) :: self
+    !    integer :: i
+    !    do i = 1, size(self%arreglo)
+    !        if (self%arreglo(i)%dpi /= -1) then
+    !            print*, 'Posicion: ', i
+    !            print*, 'DPI: ', self%arreglo(i)%dpi
+    !            print*, 'Nombre: ', trim(self%arreglo(i)%nombre)
+    !            print*, 'Apellido: ', trim(self%arreglo(i)%apellido)
+    !            print*, 'Direccion: ', trim(self%arreglo(i)%direccion)
+    !            print*, 'Telefono: ', self%arreglo(i)%telefono
+    !            print*, 'Genero: ', trim(self%arreglo(i)%genero)
+    !            print*, '------------------------'
+    !        end if
+    !    end do
+    !end subroutine listar_tecnico
+    
 end module modulo_tabla_hash

@@ -1,7 +1,6 @@
 program main
     use json_module
     use modulo_arbol_avl
-    use modulo_tabla_hash
     !LECTURA JSON
     type(json_file) :: json
     type(json_core) :: jsonc
@@ -31,6 +30,7 @@ program main
 
     !VARIABLES GLOBALES
     integer :: opcion_principal, id_s_int
+    integer(8) ::  dpi_t_int, telefono_t_int
     character(len=100) :: usuario
     character(len=100) :: contrasena
     character(len=100) :: documento_sucursal, documento_grafo, documento_tecnico
@@ -128,6 +128,7 @@ program main
                     call carga_masiva_sucursal()
                     print*,"Carga De Sucursales Correctamente."
                 case(2)
+                    call carga_masiva_ruta()
                     print*,"Carga De Rutas Correctamente."
                 case(3)
                     exit
@@ -138,29 +139,50 @@ program main
     end subroutine carga_masiva
 
     subroutine manejo_sucursal()
-        integer :: opcion_carga
-        do
-            print *, "---------------------------------------"
-            print *, "Menu de Manejo Sucursal - Pixel Print Studio"
-            print *, "1. Carga De Tecnicos"
-            print *, "2. Rutas"
-            print *, "3. Regresar Al Menu Principal"
-            print *, "---------------------------------------"
-            print *, "Seleccione El Numero De Opcion:"
-            print *, "---------------------------------------"
-            read(*,*) opcion_carga
-            select case(opcion_carga)
-                case(1)
-                    call carga_masiva_tecnico()
-                    print*,"Carga De Tecnicos Correctamente."
-                case(2)
-                    print*,"Carga De Rutas Correctamente."
-                case(3)
-                    exit
-                case default
-                    print *, "OPCION INVALIDA"
-            end select
-        end do
+        integer :: opcion_carga, id_sucursal
+        character(len=100) :: contrasena
+        logical :: existe_matriz
+        print *, "---------------------------------------"
+        print *, "CREDENCIALES SUCURSALES"
+        print *, "---------------------------------------"
+        print *, "Escribe el ID de la sucursal:"
+        read(*,*) id_sucursal
+        print *, "Escribe la contrasena de la sucursal:"
+        read(*,*) contrasena
+        existe_matriz = arbol_avl_sucursal%valor_existe(id_sucursal, contrasena)
+        if(existe_matriz)then
+            do
+                print *, "---------------------------------------"
+                print *, "Bienvenido Sucursal: ", id_sucursal
+                print *, "---------------------------------------"
+                print *, "Menu de Manejo Sucursal - Pixel Print Studio"
+                print *, "1. Carga De Tecnicos"
+                print *, "2. Generar Recorrido Mas Optimo"
+                print *, "3. Informacion Tecnico En Especifico"
+                print *, "4. Listar Tecnicos"
+                print *, "5. Regresar Al Menu Principal"
+                print *, "---------------------------------------"
+                print *, "Seleccione El Numero De Opcion:"
+                print *, "---------------------------------------"
+                read(*,*) opcion_carga
+                select case(opcion_carga)
+                    case(1)
+                        call carga_masiva_tecnico(id_sucursal, contrasena)
+                    case(2)
+                        print*,"Recorrido Más Optimo"
+                    case(3)
+                        call informacion_tecnico_especifico(id_sucursal, contrasena)
+                    case(4)
+                        call listar_informacion_tecnico(id_sucursal, contrasena)
+                    case(5)
+                        exit
+                    case default
+                        print *, "OPCION INVALIDA"
+                end select
+            end do
+        else 
+            print*, "Credenciales De Sucursal Incorrectas."
+        end if
     end subroutine manejo_sucursal
 
     subroutine reportes_graficos()
@@ -187,6 +209,34 @@ program main
             end select
         end do
     end subroutine reportes_graficos
+
+    subroutine informacion_tecnico_especifico(id_sucursal, contrasena)
+        type(nodo_avl), pointer :: sucursal_actual
+        integer(8) :: dpi_int
+        integer, intent(in) :: id_sucursal
+        character(len=*), intent(in) :: contrasena
+        sucursal_actual => arbol_avl_sucursal%obtener_nodo(id_sucursal, contrasena)
+        print *, "---------------------------------------"
+        print *, "INFORMACION TECINCO ESPECIFICO"
+        print *, "---------------------------------------"
+        print *, "Ingrese el DPI del tecnico:"
+        print *, "---------------------------------------"
+        read(*,*) dpi_int
+        call sucursal_actual%tabla%imprimir(dpi_int)
+    end subroutine informacion_tecnico_especifico
+
+    subroutine listar_informacion_tecnico(id_sucursal, contrasena)
+        type(nodo_avl), pointer :: sucursal_actual
+        integer(8) :: dpi_int
+        integer, intent(in) :: id_sucursal
+        character(len=*), intent(in) :: contrasena
+        sucursal_actual => arbol_avl_sucursal%obtener_nodo(id_sucursal, contrasena)
+        print *, "---------------------------------------"
+        print *, "LISTAR INFORMACION TECNICOS"
+        print *, "---------------------------------------"
+        !call sucursal_actual%tabla%listar_tecnico()
+    end subroutine listar_informacion_tecnico
+
 !------------------------------------------------------------------------
 !CARGA MASIVA SUCURSALES
 !------------------------------------------------------------------------
@@ -223,7 +273,11 @@ program main
 !------------------------------------------------------------------------
 !CARGA MASIVA TECNICOS
 !------------------------------------------------------------------------
-    subroutine carga_masiva_tecnico()
+    subroutine carga_masiva_tecnico(id_sucursal, contrasena)
+        type(nodo_avl), pointer :: sucursal_actual
+        integer, intent(in) :: id_sucursal
+        character(len=*), intent(in) :: contrasena
+        sucursal_actual => arbol_avl_sucursal%obtener_nodo(id_sucursal, contrasena)
         print *, "---------------------------------------"
         print *, "CARGA MASIVA TECNICOS"
         print *, "---------------------------------------"
@@ -250,17 +304,52 @@ program main
             call jsonc%get(atributo_puntero_t, direccion_t)
             call jsonc%get_child(puntero_t, 'telefono', atributo_puntero_t, tecnico_encontrado)
             call jsonc%get(atributo_puntero_t, telefono_t)
-            print *, "----------"
-            print *, dpi_t
-            print *, nombre_t
-            print *, apellido_t
-            print *, genero_t
-            print *, direccion_t
-            print *, telefono_t
+            print *, "Procesando Tecnico: ", dpi_t
+            read(dpi_t, *) dpi_t_int
+            read(telefono_t, *) telefono_t_int
+            call sucursal_actual%tabla%insertar(dpi_t_int, nombre_t, apellido_t, direccion_t, telefono_t_int, genero_t)
+        end do
+        print*,"Tecnicos Cargados Correctamente. Sucursal: ", id_sucursal
+        call json%destroy()
+    end subroutine carga_masiva_tecnico
+!------------------------------------------------------------------------
+!CARGA MASIVA RUTAS
+!------------------------------------------------------------------------
+    subroutine carga_masiva_ruta()
+        print *, "---------------------------------------"
+        print *, "CARGA MASIVA RUTAS"
+        print *, "---------------------------------------"
+        print *, "Ingrese el nombre del documento de ruta:"
+        print *, "---------------------------------------"
+        read(*,*) documento_grafo
+        print *, "---------------------------------------"
+        call json%initialize()
+        call json%load(filename=documento_grafo)
+        call json%info('',n_children=size_grafo)
+        call json%get_core(jsonc)
+        call json%get('', lista_puntero_r, grafo_encontrado)
+        do contador_grafo = 1, size_grafo
+            call jsonc%get_child(lista_puntero_r, contador_grafo, puntero_r, grafo_encontrado)
+            call jsonc%get_child(puntero_r, 'grafo', atributo_puntero_r, grafo_encontrado)
+            call jsonc%info(atributo_puntero_r, n_children=size_ruta)
+            do contador_ruta = 1, size_ruta
+                call jsonc%get_child(atributo_puntero_r, contador_ruta, puntero_aux, grafo_encontrado)
+                call jsonc%get_child(puntero_aux, 's1', atributo_puntero_aux, grafo_encontrado)
+                call jsonc%get(atributo_puntero_aux, s1)
+                call jsonc%get_child(puntero_aux, 's2', atributo_puntero_aux, grafo_encontrado)
+                call jsonc%get(atributo_puntero_aux, s2)
+                call jsonc%get_child(puntero_aux, 'distancia', atributo_puntero_aux, grafo_encontrado)
+                call jsonc%get(atributo_puntero_aux, distancia)
+                call jsonc%get_child(puntero_aux, 'imp_mantenimiento', atributo_puntero_aux, grafo_encontrado)
+                call jsonc%get(atributo_puntero_aux, imp_mantenimiento)
+                print *, "--------------"
+                print *, "s1: ", s1
+                print *, "s1: ", s2
+                print *, "distancia: ", distancia
+                print *, "imp_mantenimiento: ", imp_mantenimiento
+            end do
         end do
         call json%destroy()
-end subroutine carga_masiva_tecnico
-
-
+    end subroutine carga_masiva_ruta
 
 end program main
