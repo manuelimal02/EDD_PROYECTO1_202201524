@@ -89,7 +89,7 @@ program main
             print *, "1. Carga Masiva Archivos"
             print *, "2. Manejo Sucursales"
             print *, "3. Reportes Graficos"
-            print *, "4. Reportes Impresos"
+            print *, "4. Datos De La empresa"
             print *, "5. Cerrar Sesion"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
@@ -103,7 +103,7 @@ program main
                 case(3)
                     call reportes_graficos()
                 case(4)
-                    print *, ""
+                    call reporte_datos_empresa()
                 case(5)
                     exit
                 case default
@@ -193,17 +193,20 @@ program main
         do
             print *, "---------------------------------------"
             print *, "Menu de Reportes Graficos - Pixel Print Studio"
-            print *, "1. Arbol De Sucursales"
-            print *, "2. Tabla Hash Tecnico"
-            print *, "3. Regresar Al Menu Principal"
+            print *, "1. Grafo De Sucursales Y Sus Rutas"
+            print *, "2. Arbol De Sucursales"
+            print *, "3. Tabla Hash Tecnico"
+            print *, "4. Regresar Al Menu Principal"
             print *, "---------------------------------------"
             print *, "Seleccione El Numero De Opcion:"
             print *, "---------------------------------------"
             read(*,*) opcion_carga
             select case(opcion_carga)
                 case(1)
-                    call arbol_avl_sucursal%graficar_arbol("Arbol_Sucursales")
+                    print *, "Reporte 1." 
                 case(2)
+                    call arbol_avl_sucursal%graficar_arbol("Arbol_Sucursales")
+                case(3)
                     print *, "---------------------------------------"
                     print *, "CREDENCIALES SUCURSALES"
                     print *, "---------------------------------------"
@@ -217,13 +220,50 @@ program main
                     else
                         print*, "Credenciales De Sucursal Incorrectas."
                     end if
-                case(3)
+                case(4)
                     exit
                 case default
                     print *, "OPCION INVALIDA"
             end select
         end do
     end subroutine reportes_graficos
+
+    subroutine reporte_datos_empresa()
+        integer :: opcion_carga
+        do
+            print *, "---------------------------------------"
+            print *, "Menu de Datos de la Empresa - Pixel Print Studio"
+            print *, "1. Top 5 Tecnicos Con Mas Trabajos Realizados"
+            print *, "2. Top 5 Sucursales Con Mas Trabajos Solicitados."
+            print *, "3. Ganancias.Costos.Ganancias Totales."
+            print *, "4. Costos"
+            print *, "5. Ganancias Totales."
+            print *, "6. Ruta De Viaje Por Trabajo Realizado"
+            print *, "7. Regresar Al Menu Principal"
+            print *, "---------------------------------------"
+            print *, "Seleccione El Numero De Opcion:"
+            print *, "---------------------------------------"
+            read(*,*) opcion_carga
+            select case(opcion_carga)
+                case(1)
+                    print*, "Reporte 1."
+                case(2) 
+                    print*, "Reporte 2."
+                case(3) 
+                    print*, "Reporte 3."
+                case(4) 
+                    print*, "Reporte 4."
+                case(5) 
+                    print*, "Reporte 5."
+                case(6) 
+                    print*, "Reporte 6."
+                case(7)
+                    exit
+                case default
+                    print *, "OPCION INVALIDA"
+            end select
+        end do
+    end subroutine reporte_datos_empresa
 
     subroutine informacion_tecnico_especifico(id_sucursal, contrasena)
         type(nodo_avl), pointer :: sucursal_actual
