@@ -90,6 +90,10 @@ contains
             return
         end if
         posicion = obtener_posicion(dpi)
+        do while (self%arreglo(posicion)%dpi /= dpi .and. self%arreglo(posicion)%dpi /= -1)
+            posicion = posicion + 1
+            posicion = mod(posicion, tamano_tabla)
+        end do
         if (self%arreglo(posicion)%dpi == dpi) then
             print*, 'DPI: ', self%arreglo(posicion)%dpi
             print*, 'Nombre: ', trim(self%arreglo(posicion)%nombre)
@@ -134,46 +138,43 @@ contains
             return
         end if
         dot = "digraph G{" // new_line('a')
-        dot = dot // 'rankdir=LR;'// new_line('a')
         dot = dot // "node [shape=component];" // new_line('a')
         dot = dot //&
         'Titulo [fontname="Courier New", color=red shape=box3d label="Tabla Hash Tecnicos"]' &
         // new_line('a')
         dot = dot // "{rank=same; Titulo;}" // new_line('a')
         dot = dot // 'node [fontname="Courier New"]'// new_line('a')
+        dot = dot // 'a0[shape=none label=<'// new_line('a')
+        dot = dot // '<TABLE border="0" cellspacing="10" cellpadding="10">' // new_line('a')
         do i = 0, size(self%arreglo)-1
             if (self%arreglo(i)%dpi /= -1) then
                 write(posicion_str, '(I0)') i
                 write(dpi_str, '(I0)') self%arreglo(i)%dpi
                 write(telefono_str, '(I0)') self%arreglo(i)%telefono
-                dot = dot // 'subgraph cluster_'//posicion_str//'{'// new_line('a')
-                dot = dot // 'a'//posicion_str//'[shape=none label=<'// new_line('a')
-                dot = dot // '<TABLE border="0" cellspacing="10" cellpadding="10">' // new_line('a')
                 dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>' // new_line('a')
-                dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
+                dot = dot // '<TD bgcolor="#ed695a" gradientangle="315">'&
                 //posicion_str//'</TD></TR>'// new_line('a')
-                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">DPI</TD>' // new_line('a')
+                dot = dot // '<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>' // new_line('a')
                 dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
                 //dpi_str//'</TD></TR>'// new_line('a')
-                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Nombre</TD>' // new_line('a')
+                dot = dot // '<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>' // new_line('a')
                 dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
                 //trim(self%arreglo(i)%nombre)//'</TD></TR>'// new_line('a')
-                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Apellido</TD>' // new_line('a')
+                dot = dot // '<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>' // new_line('a')
                 dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
                 //trim(self%arreglo(i)%apellido)//'</TD></TR>'// new_line('a')
-                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Direccion</TD>' // new_line('a')
+                dot = dot // '<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>' // new_line('a')
                 dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
                 //trim(self%arreglo(i)%direccion)//'</TD></TR>'// new_line('a')
-                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Telefono</TD>' // new_line('a')
+                dot = dot // '<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>' // new_line('a')
                 dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
                 //telefono_str//'</TD></TR>'// new_line('a')
-                dot = dot // '<TR><TD bgcolor="#ed695a" gradientangle="315">Genero</TD>' // new_line('a')
+                dot = dot // '<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>' // new_line('a')
                 dot = dot // '<TD bgcolor="#37c9c6" gradientangle="315">'&
                 //trim(self%arreglo(i)%genero)//'</TD></TR>'// new_line('a')
-                dot = dot // "</TABLE>>];}" // new_line('a')
             end if
         end do
-        dot = dot // "}" // new_line('a')
+        dot = dot // "</TABLE>>];}" // new_line('a')
         call generar_grafica(nombre_grafica, dot)
         print *, "Grafica '"//trim(nombre_grafica)//"' Generada Correctamente."
     end subroutine grafica_tabla

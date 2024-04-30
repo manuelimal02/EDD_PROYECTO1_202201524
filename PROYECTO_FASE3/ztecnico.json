@@ -1,18 +1,34 @@
 [
     {
-        "dpi":"1234567890123",
-        "nombre": "Juan Pablo",
-        "apellido": "Gonzales Carrillo",
+        "dpi": "3423423423442",
+        "nombre":"Juan pablo ",
+        "apellido":"Gonzales Carrillo",
         "genero": "Masculino",
-        "direccion": "8 Calle 89-0 Guatemala",
-        "telefono": 12345678
+        "direccion": "8 calle 3-45 zona 1",
+        "telefono": 111112332
     },
     {
-        "dpi": "1234567890112",
-        "nombre": "Maria Jose",
-        "apellido": "Portillo Vezaquez",
-        "genero": "Femenino",
-        "direccion": "78-0 Zona 8, Villa Nueva",
-        "telefono": 87654321
+        "dpi": "3423423423423",
+        "nombre":"Luis pablo ",
+        "apellido":"Gonzales Carrillo",
+        "genero": "Masculino",
+        "direccion": "8 calle 3-45 zona 1",
+        "telefono": 111112338
+    },
+    {
+        "dpi": "3423423423456",
+        "nombre":"Pedro pablo ",
+        "apellido":"Gonzales Carrillo",
+        "genero": "Masculino",
+        "direccion": "8 calle 3-45 zona 1",
+        "telefono": 111112330
+    },
+    {
+        "dpi": "3423423423478",
+        "nombre":"David pablo ",
+        "apellido":"Gonzales Carrillo",
+        "genero": "Masculino",
+        "direccion": "8 calle 3-45 zona 1",
+        "telefono": 111112332
     }
 ]
