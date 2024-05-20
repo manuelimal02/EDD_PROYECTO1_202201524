@@ -2,14 +2,74 @@ digraph G{
 node [shape=component];
 Titulo [fontname="Courier New", color=red shape=box3d label="Arbol Avl Sucursales"]
 {rank=same; Titulo;}
-"2144450278368"[fontname="Courier New" label="ID: 1
+"2297825005760"[fontname="Courier New" label="ID: 7
 Departamento: Guatemala
-Direccion: 8 calle 3-45 zona 1
-Password: A9BC5F21B712680000162089959D2D5367B1F722FD79576D8EC2D81AF73FB144"];
-"2144450278608"[fontname="Courier New" label="ID: 2
-Departamento: Huehuetenango
-Direccion: 3 avenida 5-45 zona 2
-Password: 5EF3253BD23A91BA7C0CE730EB0E5F0A6011332E61A8CE6F17B7342345CA538B"];
-"2144450278368" -> "2144450278608" [label = "R"];
+Direccion: Avenida 6 901
+Password: 2851A4656A0172413C9E510FCED3FE881D9C8073ADEEDA03DFDAB22414FAA2CC"];
+"2297826537760"[fontname="Courier New" label="ID: 4
+Departamento: Guatemala
+Direccion: Avenida 7 501
+Password: E410FC90DCD6FD1EB2EF353512ACC30B77CD2D339AE25699D7D12FCE9A1F6BAA"];
+"2297826556400"[fontname="Courier New" label="ID: 2
+Departamento: Guatemala
+Direccion: Avenida Norte 456
+Password: 30EEBC5D932B9D9F3263200936E1BD5DF2817786664B0B32BDBAA8F0DCC64893"];
+"2297825009376"[fontname="Courier New" label="ID: 1
+Departamento: Guatemala
+Direccion: Avenida Principal 123
+Password: 2A8C49D96A8E17AA5A3C620FBF11B9BCB8104F65DC7C127139BF5A45CBECE426"];
+"2297826555680"[fontname="Courier New" label="ID: 3
+Departamento: Guatemala
+Direccion: Calle Sur 789
+Password: 5FEEE95973559B02348E90D2B8A6369E6346F8A5D7B6BCD2C571B4C40DD4F792"];
+"2297826554480"[fontname="Courier New" label="ID: 5
+Departamento: Guatemala
+Direccion: Avenida Oeste 345
+Password: 9CAA2257002FBD000E7F30FA9A994E325A3761120F84B8BD9D01DCE877B8CC16"];
+"2297826555920"[fontname="Courier New" label="ID: 6
+Departamento: Guatemala
+Direccion: Calle 5 678
+Password: 448EB68E329B773FC0B2977C807DEFD1453720AE25192AAA7CB78A704CEAB2A8"];
+"2297826555200"[fontname="Courier New" label="ID: 11
+Departamento: Guatemala
+Direccion: Avenida 10 1234
+Password: B117CBD378745CC28F836EF2329C83F2CCD9F3CEEA57CD906B3CD3E57FE74098"];
+"2297826554960"[fontname="Courier New" label="ID: 9
+Departamento: Guatemala
+Direccion: Avenida 8 567
+Password: A8922D4BE2A9A6970489334FE1B6268CE0A08DDB92D46D8EFB5E17A5942554B2"];
+"2297826555440"[fontname="Courier New" label="ID: 8
+Departamento: Guatemala
+Direccion: Calle 7 234
+Password: E340E7525309BD972242AE95711B7192F9220C3D811F28052A7C70DEEB6E41C4"];
+"2297826556160"[fontname="Courier New" label="ID: 10
+Departamento: Guatemala
+Direccion: Calle 9 890
+Password: 180745B1D360D1F7351680EE029BAABB3967705D15204307911A8F3B49119762"];
+"2297826556640"[fontname="Courier New" label="ID: 13
+Departamento: Guatemala
+Direccion: Avenida 12 9012
+Password: C0F094D84AF9C2349CA50FFE8D716F0839DCE177C789CDD88E61FD2392E1E1D5"];
+"2297826554720"[fontname="Courier New" label="ID: 12
+Departamento: Guatemala
+Direccion: Calle 11 5678
+Password: 964D527426255A7E5AE648D093FF837164143AD4610024E933E9AD8F1DDBE0C0"];
+"2297825009136"[fontname="Courier New" label="ID: 14
+Departamento: Guatemala
+Direccion: Calle 13 2345
+Password: 4D15CE3E324523F00DDF5B66B3FE5CF285237EE96F9FC74B40DBF82526FB2768"];
+"2297825005760" -> "2297826537760" [label = "L"];
+"2297825005760" -> "2297826555200" [label = "R"];
+"2297826537760" -> "2297826556400" [label = "L"];
+"2297826537760" -> "2297826554480" [label = "R"];
+"2297826556400" -> "2297825009376" [label = "L"];
+"2297826556400" -> "2297826555680" [label = "R"];
+"2297826554480" -> "2297826555920" [label = "R"];
+"2297826555200" -> "2297826554960" [label = "L"];
+"2297826555200" -> "2297826556640" [label = "R"];
+"2297826554960" -> "2297826555440" [label = "L"];
+"2297826554960" -> "2297826556160" [label = "R"];
+"2297826556640" -> "2297826554720" [label = "L"];
+"2297826556640" -> "2297825009136" [label = "R"];
 }
 

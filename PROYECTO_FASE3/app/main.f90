@@ -2,6 +2,7 @@ program main
     use json_module
     use modulo_arbol_avl
     use modulo_tabla_hash
+    use modulo_lista_adyacencia
     !LECTURA JSON
     type(json_file) :: json
     type(json_core) :: jsonc
@@ -28,9 +29,10 @@ program main
 
     !ESTRUCTURAS
     type(arbol_avl) :: arbol_avl_sucursal  
+    type(lista_adyacencia) :: grafo_ruta
 
     !VARIABLES GLOBALES
-    integer :: opcion_principal, id_s_int
+    integer :: opcion_principal, id_s_int, s1_int, s2_int, distancia_int, imp_mantenimiento_int
     integer(8) ::  dpi_t_int, telefono_t_int
     character(len=100) :: usuario
     character(len=100) :: contrasena
@@ -129,8 +131,12 @@ program main
                     call carga_masiva_sucursal()
                     print*,"Carga De Sucursales Correctamente."
                 case(2)
-                    call carga_masiva_ruta()
-                    print*,"Carga De Rutas Correctamente."
+                    if (.not. associated(arbol_avl_sucursal%raiz)) then
+                        print*, "No Existen Sucursales Cargadas."
+                    else
+                        call carga_masiva_ruta()
+                        print*, "Carga De Rutas Correctamente."
+                    end if                    
                 case(3)
                     exit
                 case default
@@ -170,7 +176,7 @@ program main
                     case(1)
                         call carga_masiva_tecnico(id_sucursal, contrasena)
                     case(2)
-                        print*,"Recorrido Más Optimo"
+                        print *, "Recorrido."
                     case(3)
                         call informacion_tecnico_especifico(id_sucursal, contrasena)
                     case(4)
@@ -203,7 +209,7 @@ program main
             read(*,*) opcion_carga
             select case(opcion_carga)
                 case(1)
-                    print *, "Reporte 1." 
+                    call grafo_ruta%generar_grafo("Grafo_Rutas")
                 case(2)
                     call arbol_avl_sucursal%graficar_arbol("Arbol_Sucursales")
                 case(3)
@@ -408,11 +414,12 @@ program main
                 call jsonc%get(atributo_puntero_aux, distancia)
                 call jsonc%get_child(puntero_aux, 'imp_mantenimiento', atributo_puntero_aux, grafo_encontrado)
                 call jsonc%get(atributo_puntero_aux, imp_mantenimiento)
-                print *, "--------------"
-                print *, "s1: ", s1
-                print *, "s1: ", s2
-                print *, "distancia: ", distancia
-                print *, "imp_mantenimiento: ", imp_mantenimiento
+                read(s1, *) s1_int
+                read(s2, *) s2_int
+                read(distancia, *) distancia_int
+                read(imp_mantenimiento, *) imp_mantenimiento_int
+                call grafo_ruta%insertar_nodo(s1_int, s2_int, distancia_int,imp_mantenimiento_int)
+                print *, "Creando Ruta Entre S1: ", trim(s1), " Y S2: ", trim(s2)
             end do
         end do
         call json%destroy()

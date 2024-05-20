@@ -123,15 +123,6 @@ module modulo_arbol_avl
         raizIzquierda%altura = maximo(obtenerAltura(raizIzquierda%izquierda), obtenerAltura(raizIzquierda%derecha)) + 1
     end function rotacionDerecha
     
-    recursive subroutine obtenerMayorDeMenores(raiz, mayor)
-        type(nodo_avl), pointer :: raiz, mayor
-        if(associated(raiz%derecha)) then
-            call obtenerMayorDeMenores(raiz%derecha, mayor)
-        else
-            mayor => raiz
-        end if
-    end subroutine obtenerMayorDeMenores
-    
     function maximo(izquierda, derecha) result(res)
         integer, intent(in) :: izquierda
         integer, intent(in) :: derecha

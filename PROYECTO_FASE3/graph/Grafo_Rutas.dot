@@ -1,0 +1,40 @@
+ digraph G {
+ node [shape=doublecircle];
+ node [fontname="Courier New"]
+ Titulo [fontname="Courier New", color=red shape=box3d label="Grafo Rutas Sucursales"]
+ {rank=same; Titulo;}
+           1 [label = "1"]
+           1  -> 5 [dir = both];
+           1  -> 10 [dir = both];
+           2 [label = "2"]
+           2  -> 3 [dir = both];
+           2  -> 14 [dir = both];
+           3 [label = "3"]
+           3  -> 1 [dir = both];
+           3  -> 9 [dir = both];
+           4 [label = "4"]
+           4  -> 8 [dir = both];
+           5 [label = "5"]
+           5  -> 7 [dir = both];
+           6 [label = "6"]
+           6  -> 2 [dir = both];
+           6  -> 12 [dir = both];
+           7 [label = "7"]
+           7  -> 5 [dir = both];
+           7  -> 11 [dir = both];
+           8 [label = "8"]
+           8  -> 11 [dir = both];
+           9 [label = "9"]
+           9  -> 4 [dir = both];
+          10 [label = "10"]
+          10  -> 6 [dir = both];
+          11 [label = "11"]
+          11  -> 13 [dir = both];
+          12 [label = "12"]
+          12  -> 9 [dir = both];
+          13 [label = "13"]
+          13  -> 2 [dir = both];
+          14 [label = "14"]
+          14  -> 11 [dir = both];
+          14  -> 9 [dir = both];
+ }

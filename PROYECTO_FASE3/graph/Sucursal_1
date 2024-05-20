@@ -6,60 +6,144 @@ node [fontname="Courier New"]
 a0[shape=none label=<
 <TABLE border="0" cellspacing="10" cellpadding="10">
 <TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
-<TD bgcolor="#ed695a" gradientangle="315">1                               </TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">3423423423442                   </TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Juan pablo</TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Gonzales Carrillo</TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">8 calle 3-45 zona 1</TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">111112332                       </TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
-<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
-<TD bgcolor="#ed695a" gradientangle="315">2                               </TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">3423423423456                   </TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Pedro pablo</TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Gonzales Carrillo</TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">8 calle 3-45 zona 1</TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">111112330                       </TD></TR>
-<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
-<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
 <TD bgcolor="#ed695a" gradientangle="315">3                               </TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">3423423423423                   </TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">8392016475839                   </TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Luis pablo</TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">Carlos</TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Gonzales Carrillo</TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">Hernández García</TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">8 calle 3-45 zona 1</TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">3 calle 10-23 zona 4</TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">111112338                       </TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">34567890                        </TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
 <TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
 <TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
-<TD bgcolor="#ed695a" gradientangle="315">4                               </TD></TR>
+<TD bgcolor="#ed695a" gradientangle="315">5                               </TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">3423423423478                   </TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">9012345678901                   </TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">David pablo</TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">Pedro</TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">Gonzales Carrillo</TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">Gómez Sánchez</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">9 calle 15-32 zona 5</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">56789012                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">10                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">2837465890234                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">María</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">López Pérez</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">12 avenida 5-67 zona 2</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">23456789                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Femenino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">11                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">6789012345678                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Luis</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Torres Ramírez</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">11 calle 4-21 zona 7</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">78901234                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">15                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">1111111111111                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Calificacion</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Fase3</TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
 <TD bgcolor="#37c9c6" gradientangle="315">8 calle 3-45 zona 1</TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
-<TD bgcolor="#37c9c6" gradientangle="315">111112332                       </TD></TR>
+<TD bgcolor="#37c9c6" gradientangle="315">12345678                        </TD></TR>
 <TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
 <TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">16                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">1234567890123                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Elena</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Vásquez Méndez</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">4 avenida 9-87 zona 8</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">89012345                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Femenino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">17                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">4567890123456                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Javier</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Jiménez Hernández</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">10 calle 6-78 zona 9</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">90123456                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Masculino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">19                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">5678234890123                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Ana</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Martínez Rodríguez</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">15 avenida 8-90 zona 3</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">45678901                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Femenino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">21                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">7890123456789                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Laura</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Pérez García</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">5 avenida 11-43 zona 10</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">12345678                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Femenino</TD></TR>
+<TR><TD bgcolor="#ed695a" gradientangle="315">Posicion</TD>
+<TD bgcolor="#ed695a" gradientangle="315">25                              </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">DPI</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">3456789012345                   </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Nombre</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Sofía</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Apellido</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Díaz López</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Direccion</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">6 avenida 7-54 zona 6</TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Telefono</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">67890123                        </TD></TR>
+<TR><TD bgcolor="#37c9c6" gradientangle="315">Genero</TD>
+<TD bgcolor="#37c9c6" gradientangle="315">Femenino</TD></TR>
 </TABLE>>];}
 
